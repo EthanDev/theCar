@@ -1,14 +1,59 @@
 // This sample demonstrates handling intents from an Alexa skill using the Alexa Skills Kit SDK (v2).
 // Please visit https://alexa.design/cookbook for additional examples on implementing slots, dialog management,
 // session persistence, api calls, and more.
-const Alexa = require('ask-sdk-core');
+const Alexa = require('ask-sdk');
+const Adapter = require('ask-sdk-dynamodb-persistence-adapter');
+
+const utils = require('./util');
+
+
+// Constants
+const ddbTableName = 'theCarPersistantAttributesTable';
 
 const LaunchRequestHandler = {
     canHandle(handlerInput) {
         return Alexa.getRequestType(handlerInput.requestEnvelope) === 'LaunchRequest';
     },
-    handle(handlerInput) {
-        const speakOutput = 'Welcome, you can say Hello or Help. Which would you like to try?';
+    async handle(handlerInput) {
+
+        const attributesManager = handlerInput.attributesManager;
+        const persistentAttributes = await attributesManager.getPersistentAttributes();
+        let sessionAttributes = handlerInput.attributesManager.getSessionAttributes();
+
+        // Save the time the skill was accessed
+        persistentAttributes.lastAccessTime = Date.now();
+        attributesManager.setPersistentAttributes(persistentAttributes);
+        await attributesManager.savePersistentAttributes();
+
+        // Check if device is registered
+        let lDeviceId = handlerInput.requestEnvelope.context.System.device.deviceId;
+        let lRtnDeviceDetails = await utils.checkRegisteredDevice(lDeviceId);
+
+        if (lRtnDeviceDetails.registered) {
+            // Device is registered to a vehicle
+            // So set the session attribute, non persistent
+
+            sessionAttributes.carMakeModel = lRtnDeviceDetails.carMakeModel;
+
+            // Save the session variables
+            handlerInput.attributesManager.setSessionAttributes(sessionAttributes);
+        } else {
+            // Scenario 1.1 - The device is not registered to the car 
+            speakOutput = `Welcome to the car. First things first, first we need to link the device to this vehicle.`;
+            return handlerInput.responseBuilder
+                .addElicitSlotDirective('carMake', {
+                    name: 'vehicleVerificationIntent',
+                    confirmationStatus: 'NONE',
+                    slots: {}
+                })
+                .speak(`I've just sent you an access code to your phone, what is it ?`)
+                .reprompt("What is the verification code ?")
+                .getResponse();
+        }
+
+
+
+        const speakOutput = 'Welcome to the ';
         return handlerInput.responseBuilder
             .speak(speakOutput)
             .reprompt(speakOutput)
@@ -17,8 +62,8 @@ const LaunchRequestHandler = {
 };
 const HelloWorldIntentHandler = {
     canHandle(handlerInput) {
-        return Alexa.getRequestType(handlerInput.requestEnvelope) === 'IntentRequest'
-            && Alexa.getIntentName(handlerInput.requestEnvelope) === 'HelloWorldIntent';
+        return Alexa.getRequestType(handlerInput.requestEnvelope) === 'IntentRequest' &&
+            Alexa.getIntentName(handlerInput.requestEnvelope) === 'HelloWorldIntent';
     },
     handle(handlerInput) {
         const speakOutput = 'Hello World!';
@@ -30,8 +75,8 @@ const HelloWorldIntentHandler = {
 };
 const HelpIntentHandler = {
     canHandle(handlerInput) {
-        return Alexa.getRequestType(handlerInput.requestEnvelope) === 'IntentRequest'
-            && Alexa.getIntentName(handlerInput.requestEnvelope) === 'AMAZON.HelpIntent';
+        return Alexa.getRequestType(handlerInput.requestEnvelope) === 'IntentRequest' &&
+            Alexa.getIntentName(handlerInput.requestEnvelope) === 'AMAZON.HelpIntent';
     },
     handle(handlerInput) {
         const speakOutput = 'You can say hello to me! How can I help?';
@@ -44,9 +89,9 @@ const HelpIntentHandler = {
 };
 const CancelAndStopIntentHandler = {
     canHandle(handlerInput) {
-        return Alexa.getRequestType(handlerInput.requestEnvelope) === 'IntentRequest'
-            && (Alexa.getIntentName(handlerInput.requestEnvelope) === 'AMAZON.CancelIntent'
-                || Alexa.getIntentName(handlerInput.requestEnvelope) === 'AMAZON.StopIntent');
+        return Alexa.getRequestType(handlerInput.requestEnvelope) === 'IntentRequest' &&
+            (Alexa.getIntentName(handlerInput.requestEnvelope) === 'AMAZON.CancelIntent' ||
+                Alexa.getIntentName(handlerInput.requestEnvelope) === 'AMAZON.StopIntent');
     },
     handle(handlerInput) {
         const speakOutput = 'Goodbye!';
@@ -106,6 +151,11 @@ const ErrorHandler = {
 // payloads to the handlers above. Make sure any new handlers or interceptors you've
 // defined are included below. The order matters - they're processed top to bottom.
 exports.handler = Alexa.SkillBuilders.custom()
+    .withPersistenceAdapter(
+        new Adapter.DynamoDbPersistenceAdapter({
+            tableName: process.env.DYNAMO_TABLE_NAME || '',
+        })
+    )
     .addRequestHandlers(
         LaunchRequestHandler,
         HelloWorldIntentHandler,
@@ -113,8 +163,14 @@ exports.handler = Alexa.SkillBuilders.custom()
         CancelAndStopIntentHandler,
         SessionEndedRequestHandler,
         IntentReflectorHandler, // make sure IntentReflectorHandler is last so it doesn't override your custom intent handlers
-        ) 
+    )
     .addErrorHandlers(
         ErrorHandler,
-        )
+    )
+    .addRequestInterceptors(
+        ...require('./interceptors/request')
+    )
+    .addResponseInterceptors(
+        ...require('./interceptors/response')
+    )
     .lambda();

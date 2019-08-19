@@ -1,39 +1,371 @@
 {
-  "interactionModel": {
-      "languageModel": {
-          "invocationName": "hello world",
-          "intents": [
-              {
-                  "name": "AMAZON.CancelIntent",
-                  "samples": []
-              },
-              {
-                  "name": "AMAZON.HelpIntent",
-                  "samples": []
-              },
-              {
-                  "name": "AMAZON.StopIntent",
-                  "samples": []
-              },
-              {
-                  "name": "HelloWorldIntent",
-                  "slots": [],
-                  "samples": [
-                      "hello",
-                      "how are you",
-                      "say hi world",
-                      "say hi",
-                      "hi",
-                      "say hello world",
-                      "say hello"
-                  ]
-              },
-              {
-                  "name": "AMAZON.NavigateHomeIntent",
-                  "samples": []
-              }
-          ],
-          "types": []
-      }
-  }
+    "interactionModel": {
+        "languageModel": {
+            "invocationName": "the car",
+            "intents": [
+                {
+                    "name": "AMAZON.FallbackIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.CancelIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.HelpIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.StopIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.NavigateHomeIntent",
+                    "samples": []
+                },
+                {
+                    "name": "registerIntent",
+                    "slots": [],
+                    "samples": [
+                        "Setup a new device",
+                        "atatch the new device",
+                        "Link this device",
+                        "Attach this device to a new car",
+                        "Assign this new car",
+                        "Setu this new car",
+                        "register this car",
+                        "Setu this car",
+                        "I want to register this car"
+                    ]
+                },
+                {
+                    "name": "interiorGeneralIntent",
+                    "slots": [],
+                    "samples": [
+                        "What about the car interior",
+                        "tell me about the car interior",
+                        "what are the materials of the interior of the car",
+                        "What is new about the interior ",
+                        "what do you know about the interior of car",
+                        "What is the interior of the car made of"
+                    ]
+                },
+                {
+                    "name": "seatMaterialIntent",
+                    "slots": [],
+                    "samples": [
+                        "Do you have any info on the seat material",
+                        "Do you know about the seat material",
+                        "Tell me about the material on the drivers seat",
+                        "What material is on the seats",
+                        "How were the seats made",
+                        "What material was used for the seats",
+                        "Describe the material of the seats",
+                        "Tell me what the seats are made of",
+                        "What materials are on the seats",
+                        "What leather are the seats made from",
+                        "Whats the material of the seats",
+                        "What material are the seats made of",
+                        "What are the seats made of"
+                    ]
+                },
+                {
+                    "name": "leatherOptionsIntent",
+                    "slots": [],
+                    "samples": [
+                        "What leather trims come with this car",
+                        "leather seat choices",
+                        "What leather options are there",
+                        "What leather options are the for the seats",
+                        "What different leather option are there",
+                        "What types of leather are available"
+                    ]
+                },
+                {
+                    "name": "aerodynamicsIntent",
+                    "slots": [],
+                    "samples": [
+                        "how good are the aerodynamics",
+                        "how it performs with aerodynamics",
+                        "How does the car produce less drag"
+                    ]
+                },
+                {
+                    "name": "fuelConsumptionIntent",
+                    "slots": [],
+                    "samples": [
+                        "the rate of fule consumption",
+                        "Is the fuel consumption good",
+                        "Do it drink fuel quickly",
+                        "How about fuel consumption",
+                        "How good is the fuel consumption on this car",
+                        "How much fuel does it use",
+                        "What are the fuel consumption figures",
+                        "Does it use alt of fuel",
+                        "How good is this on fuel ",
+                        "How efficicent is this car on fuel",
+                        "what is the fuel consumption like",
+                        "How good is the fuel consumption"
+                    ]
+                },
+                {
+                    "name": "efficientDynamicsIntent",
+                    "slots": [],
+                    "samples": [
+                        "what is the efficient dynamic feature",
+                        "explain the efficient dynamics package",
+                        "describe the efficient dynamics feature",
+                        "tell me about the efficient dynamics package",
+                        "What is the efficient dynamics package"
+                    ]
+                },
+                {
+                    "name": "engineIntent",
+                    "slots": [],
+                    "samples": [
+                        "the special features of the engine",
+                        "about the engine",
+                        "Main engine highlights",
+                        "Are there any special engine features",
+                        "whats so good about the engine",
+                        "Tell me about the engine"
+                    ]
+                },
+                {
+                    "name": "driverAssistanceIntent",
+                    "slots": [],
+                    "samples": [
+                        "How does the driver assistant hgelp me",
+                        "How does the drievr assistant works",
+                        "how the driver assistance works",
+                        "What happens in the assistant for drivers",
+                        "What's available in the driver assiatance",
+                        "What do I get with the driver assistance feature",
+                        "What is included in the driver assistance package",
+                        "What's so special about the driver assistance feature",
+                        "What's good about the driver assistance",
+                        "What benefits do I get with the copilot",
+                        "how does copilot work",
+                        "copilot feature",
+                        "How does the copilot operate",
+                        "How does the copilot work",
+                        "What features does the personal copilot have",
+                        "What's so good about the personal copilot",
+                        "What is the driver assiatance feature",
+                        "What is the bmw personal copilot"
+                    ]
+                },
+                {
+                    "name": "connectedDriveIntent",
+                    "slots": [],
+                    "samples": [
+                        "about the connected driver feature",
+                        "What do the connected drive features do",
+                        "features of the conected drive",
+                        "whats in the connected drive features",
+                        "tell me about the conected drive feature",
+                        "what are the connected drive features",
+                        "what is the connected drive features",
+                        "What is BMW connected drive"
+                    ]
+                },
+                {
+                    "name": "packageInformationIntent",
+                    "slots": [
+                        {
+                            "name": "packageType",
+                            "type": "packageType",
+                            "samples": [
+                                "I want the {packageType}",
+                                "The {packageType} package",
+                                "I wanted to have the {packageType}",
+                                "How about {packageType}",
+                                "I wanted to know about {packageType}",
+                                "{packageType}"
+                            ]
+                        }
+                    ],
+                    "samples": []
+                },
+                {
+                    "name": "carSizeIntent",
+                    "slots": [],
+                    "samples": [
+                        "whats the height",
+                        "whats the width of the car",
+                        "how long in the car",
+                        "what are the measurements of the car",
+                        "what are the dimensions of the vehicle",
+                        "how large is the car",
+                        "tell me the car size",
+                        "whats the size",
+                        "whats the size of the car",
+                        "how big is it",
+                        "How big is the car"
+                    ]
+                },
+                {
+                    "name": "luggageCapacity",
+                    "slots": [],
+                    "samples": [
+                        "The capacity of the boot",
+                        "The size of the trunk",
+                        "How much luggage can it hold",
+                        "how much luggage can I carry with this car",
+                        "What size is the boot",
+                        "how big is the boot",
+                        "whats the size of the luggage trunk",
+                        "whats the capcity of the boot",
+                        "how much can the boot hold",
+                        "Whats the size of the trunk"
+                    ]
+                },
+                {
+                    "name": "pricePackageIntent",
+                    "slots": [
+                        {
+                            "name": "packageType",
+                            "type": "packageType"
+                        }
+                    ],
+                    "samples": [
+                        "The cost of the {packageType}",
+                        "cost options for {packageType}",
+                        "what are the price options for the {packageType}",
+                        "for the price for the {packageType}",
+                        "price for different packages"
+                    ]
+                }
+            ],
+            "types": [
+                {
+                    "name": "packageType",
+                    "values": [
+                        {
+                            "id": "MSPORT",
+                            "name": {
+                                "value": "M Sport",
+                                "synonyms": [
+                                    "m",
+                                    "M",
+                                    "sport",
+                                    "m sport",
+                                    "MSPORT"
+                                ]
+                            }
+                        },
+                        {
+                            "id": "XLINE",
+                            "name": {
+                                "value": "XLine",
+                                "synonyms": [
+                                    "x line"
+                                ]
+                            }
+                        },
+                        {
+                            "id": "BASE",
+                            "name": {
+                                "value": "Base",
+                                "synonyms": [
+                                    "bass"
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "carMakeType",
+                    "values": [
+                        {
+                            "id": "BMW_X5",
+                            "name": {
+                                "value": "BMW X5",
+                                "synonyms": [
+                                    "BMW X5",
+                                    "X5"
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "carModelType",
+                    "values": [
+                        {
+                            "id": "M50D",
+                            "name": {
+                                "value": "M50d",
+                                "synonyms": [
+                                    "im 50 D",
+                                    "em 50 D",
+                                    "M50D",
+                                    "M 50 D",
+                                    "m 50"
+                                ]
+                            }
+                        },
+                        {
+                            "id": "XDRIVE30D",
+                            "name": {
+                                "value": "xDrive30d",
+                                "synonyms": [
+                                    "X Drive 30 D",
+                                    "30 d",
+                                    "30 d"
+                                ]
+                            }
+                        },
+                        {
+                            "id": "XDRIVE40I",
+                            "name": {
+                                "value": "xDrive40i",
+                                "synonyms": [
+                                    "drive 40 i",
+                                    "x drive 40 i",
+                                    "40i"
+                                ]
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        "dialog": {
+            "intents": [
+                {
+                    "name": "packageInformationIntent",
+                    "confirmationRequired": false,
+                    "prompts": {},
+                    "slots": [
+                        {
+                            "name": "packageType",
+                            "type": "packageType",
+                            "confirmationRequired": false,
+                            "elicitationRequired": true,
+                            "prompts": {
+                                "elicitation": "Elicit.Slot.1282364056646.564940276892"
+                            }
+                        }
+                    ]
+                }
+            ],
+            "delegationStrategy": "ALWAYS"
+        },
+        "prompts": [
+            {
+                "id": "Elicit.Slot.1282364056646.564940276892",
+                "variations": [
+                    {
+                        "type": "PlainText",
+                        "value": "Tell me the package name"
+                    },
+                    {
+                        "type": "PlainText",
+                        "value": "What is the package you wanted to know about"
+                    }
+                ]
+            }
+        ]
+    }
 }
