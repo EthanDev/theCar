@@ -10,6 +10,11 @@ CarView is an Alexa skill that allows clients to speak with their vehicle of int
 * Find out about certain offers
 * Request a test drive
 
+## Setting up the skill
+The skill requires the device used to registered to a car make and model
+
+Once registed the devcie can be moved into a new  vehicle and reregistered with another
+vehicle make or model.
 
 ## Additional Resources
 

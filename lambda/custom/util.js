@@ -1,6 +1,9 @@
 const AWS = require('aws-sdk');
 var AWS = require("aws-sdk");
 
+// Load credentials and set region from JSON file
+AWS.config.loadFromPath('./config.json');
+
 const s3SigV4Client = new AWS.S3({
     signatureVersion: 'v4'
 });

@@ -3,12 +3,19 @@
 // session persistence, api calls, and more.
 const Alexa = require('ask-sdk');
 const Adapter = require('ask-sdk-dynamodb-persistence-adapter');
+var _ = require('lodash');
 
 const utils = require('./util');
+
+const generalConstants = require('../custom/constants/general');
+const helper = require('./helperFunctions');
 
 
 // Constants
 const ddbTableName = 'theCarPersistantAttributesTable';
+
+// Global variables
+let reprompt, speakOutput;
 
 const LaunchRequestHandler = {
     canHandle(handlerInput) {
@@ -25,7 +32,8 @@ const LaunchRequestHandler = {
         attributesManager.setPersistentAttributes(persistentAttributes);
         await attributesManager.savePersistentAttributes();
 
-        // Check if device is registered
+        // Check if device is registered - the device id is from the request data pased to 
+        // the skill
         let lDeviceId = handlerInput.requestEnvelope.context.System.device.deviceId;
         let lRtnDeviceDetails = await utils.checkRegisteredDevice(lDeviceId);
 
@@ -33,27 +41,42 @@ const LaunchRequestHandler = {
             // Device is registered to a vehicle
             // So set the session attribute, non persistent
 
-            sessionAttributes.carMakeModel = lRtnDeviceDetails.carMakeModel;
+            sessionAttributes.vehicleMake = lRtnDeviceDetails.vehicleMake;
+            sessionAttributes.vehicleModel = lRtnDeviceDetails.vehicleModel;
+            sessionAttributes
+
+            Object.assign(sessionAttributes, {
+                "Make": lRtnDeviceDetails.vehicleMake,
+                "Model": lRtnDeviceDetails.vehicleModel,
+                "Year": lRtnDeviceDetails.vehicleYear,
+                "Reg": lRtnDeviceDetails.vehicleReg,
+                "Condition": lRtnDeviceDetails.vehicleCondition
+            });
 
             // Save the session variables
             handlerInput.attributesManager.setSessionAttributes(sessionAttributes);
+
+            // Now we can speak the main menu
+            let arraySize = _.size(generalConstants.greetings.mainMenu);
+            let pos = helper.randomIntFromInterval(1, arraySize);
+            speakOutput = generalConstants.greetings.mainMenu[pos];
+
         } else {
             // Scenario 1.1 - The device is not registered to the car 
-            speakOutput = `Welcome to the car. First things first, first we need to link the device to this vehicle.`;
+            speakOutput = `Welcome to the car. First things first, we need to link the device to this vehicle. What is the make of the vehicle?`;
+            reprompt = `Welcome to the car. Let's get this device setup. What's the vehicle make?`;
             return handlerInput.responseBuilder
                 .addElicitSlotDirective('carMake', {
                     name: 'vehicleVerificationIntent',
                     confirmationStatus: 'NONE',
                     slots: {}
                 })
-                .speak(`I've just sent you an access code to your phone, what is it ?`)
-                .reprompt("What is the verification code ?")
+                .speak(speakOutput)
+                .reprompt(reprompt)
                 .getResponse();
         }
 
-
-
-        const speakOutput = 'Welcome to the ';
+        speakOutput = 'Welcome to the ';
         return handlerInput.responseBuilder
             .speak(speakOutput)
             .reprompt(speakOutput)
