@@ -2,16 +2,33 @@
 // Please visit https://alexa.design/cookbook for additional examples on implementing slots, dialog management,
 // session persistence, api calls, and more.
 const Alexa = require('ask-sdk');
-const Adapter = require('ask-sdk-dynamodb-persistence-adapter');
+var persistenceAdapter;
 var _ = require('lodash');
 
 const utils = require('./util');
-const generalConstants = require('../custom/constants/general');
+const generalConstants = require('./constants/general');
 const helper = require('./helperFunctions');
 
+// IMPORTANT: don't forget to give DynamoDB access to the role you're to run this lambda (IAM)
+const {DynamoDbPersistenceAdapter} = require('ask-sdk-dynamodb-persistence-adapter');
+persistenceAdapter = new DynamoDbPersistenceAdapter({ 
+    tableName: process.env.DYNAMO_TABLE_NAME || '',
+    createTable: true,
+    partitionKeyGenerator: keyGenerator
+});
 
-// Constants
-const ddbTableName = 'theCarPersistantAttributesTable';
+// This function establishes the primary key of the database as the skill id (hence you get global persistence, not per user id)
+function keyGenerator(requestEnvelope){
+    if(requestEnvelope
+        && requestEnvelope.context
+        && requestEnvelope.context.System
+        && requestEnvelope.context.System.application
+        && requestEnvelope.context.System.application.applicationId){
+        
+        return requestEnvelope.context.System.application.applicationId;
+    }
+    throw 'Cannot retrieve app id from requets envelope';
+} // keyGenerator
 
 // Global variables
 let reprompt, speakOutput, currentIntent;
@@ -22,9 +39,14 @@ let reprompt, speakOutput, currentIntent;
  */
 const LaunchRequestHandler = {
     canHandle(handlerInput) {
-        return Alexa.getRequestType(handlerInput.requestEnvelope) === 'LaunchRequest';
+        return handlerInput.requestEnvelope.request.type === 'LaunchRequest';
     },
     async handle(handlerInput) {
+
+
+        let intro = `<speak><audio src="https://carview.s3.amazonaws.com/lYakQp6T-pre-650i-2.mp3"/></speak>`;
+
+        await helper.callDirectiveService(handlerInput, intro);
 
         const attributesManager = handlerInput.attributesManager;
         const persistentAttributes = await attributesManager.getPersistentAttributes();
@@ -41,6 +63,7 @@ const LaunchRequestHandler = {
         let lRtnDeviceDetails = await utils.checkRegisteredDevice(lDeviceId);
 
         if (lRtnDeviceDetails.registered) {
+            console.log('...Scenario 1.0 - The device is registered to the car ');
             // Device is registered to a vehicle
             // So set the session attribute, non persistent
             Object.assign(sessionAttributes, {
@@ -59,7 +82,16 @@ const LaunchRequestHandler = {
             let pos = helper.randomIntFromInterval(1, arraySize);
             speakOutput = generalConstants.greetings.mainMenu[pos];
 
+            // replace %s and %t
+            speakOutput = _.replace(speakOutput,'%s',lRtnDeviceDetails.vehicleMake);
+            speakOutput = _.replace(speakOutput,'%t',lRtnDeviceDetails.vehicleModel);
+            console.log('..speakOutput = ', speakOutput);
+            
+
         } else {
+            console.log('...Scenario 1.1 - The device is not registered to the car ');
+            
+
             // Scenario 1.1 - The device is not registered to the car 
             currentIntent = 'vehicleVerificationIntent';
 
@@ -101,7 +133,7 @@ const inProgressVehicleVerificationHandler = {
 
         return request.type === 'IntentRequest' &&
         request.intent.name === 'vehicleVerificationIntent' &&
-        request.dialogState === 'IN_PROGRESS';
+        request.dialogState !== 'COMPLETED';
         
     },
     async handle(handlerInput){
@@ -127,31 +159,38 @@ const completedVehicleVerificationHandler ={
             request.dialogState ==='COMPLETED';
     },
     async handle(handlerInput){
-        //To do
-    }
 
-};
+        const attributesManager = handlerInput.attributesManager;
+        const responseBuilder = handlerInput.responseBuilder;
+        const attributes = await attributesManager.getPersistentAttributes() || {};
 
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+        if (Object.keys(attributes).length === 0){
+            // Set the device id and the registered flag in the session persistent data
+            attributes.deviceId = handlerInput.requestEnvelope.context.System.device.deviceId;
+            attributes.registered = true;
+            attributesManager.setPersistentAttributes(attributes);
+            await attributesManager.savePersistentAttributes() || {};
+        }
 
-const HelloWorldIntentHandler = {
-    canHandle(handlerInput) {
-        return Alexa.getRequestType(handlerInput.requestEnvelope) === 'IntentRequest' &&
-            Alexa.getIntentName(handlerInput.requestEnvelope) === 'HelloWorldIntent';
-    },
-    handle(handlerInput) {
-        const speakOutput = 'Hello World!';
-        return handlerInput.responseBuilder
+        // Confirmation of registration
+        speakOutput = generalConstants.confirmations.postVehicleRegistration;
+
+
+        return responseBuilder
             .speak(speakOutput)
-            //.reprompt('add a reprompt if you want to keep the session open for the user to respond')
             .getResponse();
     }
 };
 
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+
+
 const HelpIntentHandler = {
     canHandle(handlerInput) {
-        return Alexa.getRequestType(handlerInput.requestEnvelope) === 'IntentRequest' &&
-            Alexa.getIntentName(handlerInput.requestEnvelope) === 'AMAZON.HelpIntent';
+        return handlerInput.requestEnvelope.request.type === 'IntentRequest' &&
+            handlerInput.requestEnvelope.request.intent.name === 'AMAZON.HelpIntent';
     },
     handle(handlerInput) {
         const speakOutput = 'You can say hello to me! How can I help?';
@@ -164,9 +203,9 @@ const HelpIntentHandler = {
 };
 const CancelAndStopIntentHandler = {
     canHandle(handlerInput) {
-        return Alexa.getRequestType(handlerInput.requestEnvelope) === 'IntentRequest' &&
-            (Alexa.getIntentName(handlerInput.requestEnvelope) === 'AMAZON.CancelIntent' ||
-                Alexa.getIntentName(handlerInput.requestEnvelope) === 'AMAZON.StopIntent');
+        return handlerInput.requestEnvelope.request.type === 'IntentRequest' &&
+            (handlerInput.requestEnvelope.request.intent.name === 'AMAZON.CancelIntent' ||
+                handlerInput.requestEnvelope.request.intent.name === 'AMAZON.StopIntent');
     },
     handle(handlerInput) {
         const speakOutput = 'Goodbye!';
@@ -177,9 +216,10 @@ const CancelAndStopIntentHandler = {
 };
 const SessionEndedRequestHandler = {
     canHandle(handlerInput) {
-        return Alexa.getRequestType(handlerInput.requestEnvelope) === 'SessionEndedRequest';
+        return handlerInput.requestEnvelope.request.type === 'SessionEndedRequest';
     },
     handle(handlerInput) {
+        console.log(`Session ended with reason: ${handlerInput.requestEnvelope.request.reason}`);
         // Any cleanup logic goes here.
         return handlerInput.responseBuilder.getResponse();
     }
@@ -191,10 +231,10 @@ const SessionEndedRequestHandler = {
 // handler chain below.
 const IntentReflectorHandler = {
     canHandle(handlerInput) {
-        return Alexa.getRequestType(handlerInput.requestEnvelope) === 'IntentRequest';
+        return handlerInput.requestEnvelope.request.type === 'IntentRequest';
     },
     handle(handlerInput) {
-        const intentName = Alexa.getIntentName(handlerInput.requestEnvelope);
+        const intentName = handlerInput.requestEnvelope.request.intent.name;
         const speakOutput = `You just triggered ${intentName}`;
 
         return handlerInput.responseBuilder
@@ -212,7 +252,7 @@ const ErrorHandler = {
         return true;
     },
     handle(handlerInput, error) {
-        console.log(`~~~~ Error handled: ${error.stack}`);
+       
         const speakOutput = `Sorry, I had trouble doing what you asked. Please try again.`;
 
         return handlerInput.responseBuilder
@@ -222,20 +262,16 @@ const ErrorHandler = {
     }
 };
 
+
+
 // The SkillBuilder acts as the entry point for your skill, routing all request and response
 // payloads to the handlers above. Make sure any new handlers or interceptors you've
 // defined are included below. The order matters - they're processed top to bottom.
 exports.handler = Alexa.SkillBuilders.custom()
-    .withPersistenceAdapter(
-        new Adapter.DynamoDbPersistenceAdapter({
-            tableName: process.env.DYNAMO_TABLE_NAME || '',
-        })
-    )
     .addRequestHandlers(
         LaunchRequestHandler,
         completedVehicleVerificationHandler,
         inProgressVehicleVerificationHandler,
-        HelloWorldIntentHandler,
         HelpIntentHandler,
         CancelAndStopIntentHandler,
         SessionEndedRequestHandler,
@@ -250,4 +286,7 @@ exports.handler = Alexa.SkillBuilders.custom()
     // .addResponseInterceptors(
     //     ...require('./interceptors/response')
     // )
+    .addRequestInterceptors(utils.PersistenceRequestInterceptor)
+    .addResponseInterceptors(utils.PersistenceResponseInterceptor)
+    .withPersistenceAdapter(persistenceAdapter)
     .lambda();

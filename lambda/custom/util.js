@@ -7,7 +7,9 @@ const s3SigV4Client = new AWS.S3({
     signatureVersion: 'v4'
 });
 
-AWS.config.update({region: "us-west-2"});
+AWS.config.update({
+    region: "us-east-1"
+});
 
 var docClient = new AWS.DynamoDB.DocumentClient();
 
@@ -29,8 +31,8 @@ module.exports.getS3PreSignedUrl = function getS3PreSignedUrl(s3ObjectKey) {
  * Check that the device is registered or not
  */
 var checkRegisteredDevice = pDeviceId => {
-    console.log('..IN checkRegisteredDevice with device id = %s',pDeviceId);
-    
+    console.log('..IN checkRegisteredDevice with device id = %s', pDeviceId);
+
 
     // Set query parameters for db query
     var params = {
@@ -66,4 +68,103 @@ var checkRegisteredDevice = pDeviceId => {
 }; // checkRegisteredDevice
 
 
+function getSlotValues(filledSlots) {
+    const slotValues = {};
+
+    console.log(`The filled slots: ${JSON.stringify(filledSlots)}`);
+    Object.keys(filledSlots).forEach((item) => {
+        const name = filledSlots[item].name;
+
+        if (filledSlots[item] &&
+            filledSlots[item].resolutions &&
+            filledSlots[item].resolutions.resolutionsPerAuthority[0] &&
+            filledSlots[item].resolutions.resolutionsPerAuthority[0].status &&
+            filledSlots[item].resolutions.resolutionsPerAuthority[0].status.code) {
+            switch (filledSlots[item].resolutions.resolutionsPerAuthority[0].status.code) {
+                case 'ER_SUCCESS_MATCH':
+                    slotValues[name] = {
+                        synonym: filledSlots[item].value,
+                        value: filledSlots[item].resolutions.resolutionsPerAuthority[0].values[0].value.name,
+                        id: filledSlots[item].resolutions.resolutionsPerAuthority[0].values[0].value.id,
+                        isValidated: true,
+                        canUnderstand: true,
+                        canFulfill: true,
+                    };
+                    break;
+                case 'ER_SUCCESS_NO_MATCH':
+                    slotValues[name] = {
+                        synonym: filledSlots[item].value,
+                        value: filledSlots[item].value,
+                        id: null,
+                        isValidated: false,
+                        canUnderstand: false,
+                        canFulfill: null,
+                    };
+                    break;
+                default:
+                    break;
+            }
+        } else {
+            slotValues[name] = {
+                synonym: filledSlots[item].value,
+                value: filledSlots[item].value,
+                id: filledSlots[item].id,
+                isValidated: false,
+                canUnderstand: false,
+                canFulfill: false,
+            };
+        }
+    }, this);
+    return slotValues;
+}; // getSlotValues
+
+
+// This response interceptor stores all session attributes into global persistent attributes
+// when the session ends and it stores the skill last used timestamp
+const PersistenceResponseInterceptor = { 
+    process(handlerInput, responseOutput) { 
+        const ses = (typeof responseOutput.shouldEndSession === "undefined" ? true : responseOutput.shouldEndSession); 
+        if(ses || handlerInput.requestEnvelope.request.type === 'SessionEndedRequest') { // skill was stopped or timed out 
+            let sessionAttributes = handlerInput.attributesManager.getSessionAttributes(); 
+            sessionAttributes['lastUseTimestamp'] = new Date(handlerInput.requestEnvelope.request.timestamp).getTime(); 
+            handlerInput.attributesManager.setPersistentAttributes(sessionAttributes); 
+            return new Promise((resolve, reject) => { 
+                handlerInput.attributesManager.savePersistentAttributes() 
+                    .then(() => { 
+                        resolve(); 
+                    }) 
+                    .catch((err) => { 
+                        reject(err); 
+                    }); 
+            }); 
+        } 
+    } 
+  };
+
+  // This request interceptor with each new session loads all global persistent attributes
+// into the session attributes and increments a launch counter
+const PersistenceRequestInterceptor = { 
+    process(handlerInput) { 
+        if(handlerInput.requestEnvelope.session['new']) { 
+            return new Promise((resolve, reject) => { 
+                handlerInput.attributesManager.getPersistentAttributes() 
+                    .then((persistentAttributes) => { 
+                        persistentAttributes = persistentAttributes || {};
+                        if(!persistentAttributes['launchCount'])
+                          persistentAttributes['launchCount'] = 0;
+                        persistentAttributes['launchCount'] += 1; 
+                        handlerInput.attributesManager.setSessionAttributes(persistentAttributes); 
+                        resolve();
+                    })
+                    .catch((err) => { 
+                      reject(err); 
+                  });
+            }); 
+        } // end session['new'] 
+    } 
+  };
+
 exports.checkRegisteredDevice = checkRegisteredDevice;
+exports.getSlotValues = getSlotValues;
+exports.PersistenceResponseInterceptor = PersistenceResponseInterceptor;
+exports.PersistenceRequestInterceptor = PersistenceRequestInterceptor;

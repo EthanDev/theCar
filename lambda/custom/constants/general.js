@@ -1,9 +1,12 @@
 module.exports = Object.freeze({
     greetings:{
         mainMenu:[
-            `Really you're here, tell you what, why don't you choose between the full vehicle tour, or just ask me question about this amazing ${carMake} ${carModel}`,
-            `Isn't this ${carMake} ${carModel} beautiful? Do you want to experience the full tour or ask any question you like?`,
+            `Really you're here, tell you what, why don't you choose between the full vehicle tour, or just ask me question about this amazing `,
+            `Isn't this %s %t beautiful? Maybe you would like to experience a full tour or just ask me any question you like.`,
         ]
+    },
+    confirmations:{
+        postVehicleRegistration: `Thank you for registering this vehicle. It is ready for the user to `
     }
 
 

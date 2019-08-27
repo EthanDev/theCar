@@ -42,6 +42,7 @@ var randomIntFromInterval = (min, max) => { // min and max included
 
 
 
+
 exports.callDirectiveService = callDirectiveService;
 exports.randomIntFromInterval = randomIntFromInterval;
 
