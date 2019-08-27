@@ -6,7 +6,6 @@ const Adapter = require('ask-sdk-dynamodb-persistence-adapter');
 var _ = require('lodash');
 
 const utils = require('./util');
-
 const generalConstants = require('../custom/constants/general');
 const helper = require('./helperFunctions');
 
@@ -15,8 +14,12 @@ const helper = require('./helperFunctions');
 const ddbTableName = 'theCarPersistantAttributesTable';
 
 // Global variables
-let reprompt, speakOutput;
+let reprompt, speakOutput, currentIntent;
 
+/**
+ * Function: LaunchRequestHandler
+ * Launch of the skill
+ */
 const LaunchRequestHandler = {
     canHandle(handlerInput) {
         return Alexa.getRequestType(handlerInput.requestEnvelope) === 'LaunchRequest';
@@ -40,11 +43,6 @@ const LaunchRequestHandler = {
         if (lRtnDeviceDetails.registered) {
             // Device is registered to a vehicle
             // So set the session attribute, non persistent
-
-            sessionAttributes.vehicleMake = lRtnDeviceDetails.vehicleMake;
-            sessionAttributes.vehicleModel = lRtnDeviceDetails.vehicleModel;
-            sessionAttributes
-
             Object.assign(sessionAttributes, {
                 "Make": lRtnDeviceDetails.vehicleMake,
                 "Model": lRtnDeviceDetails.vehicleModel,
@@ -63,26 +61,79 @@ const LaunchRequestHandler = {
 
         } else {
             // Scenario 1.1 - The device is not registered to the car 
-            speakOutput = `Welcome to the car. First things first, we need to link the device to this vehicle. What is the make of the vehicle?`;
-            reprompt = `Welcome to the car. Let's get this device setup. What's the vehicle make?`;
+            currentIntent = 'vehicleVerificationIntent';
+
+            speakOutput = `Welcome to the car. First things first, we need to link this device to this vehicle. What's the make and the model of the vehicle?`;
+            reprompt = `Welcome to the car. Let's get this device setup. What's the vehicle make and model?`;
+            // return handlerInput.responseBuilder
+            //     .addElicitSlotDirective('carMake', {
+            //         name: 'vehicleVerificationIntent',
+            //         confirmationStatus: 'NONE',
+            //         slots: {}
+            //     })
+            //     .speak(speakOutput)
+            //     .reprompt(reprompt)
+            //     .getResponse();
+
+            // Return the Dialog.Delegeate directive
             return handlerInput.responseBuilder
-                .addElicitSlotDirective('carMake', {
-                    name: 'vehicleVerificationIntent',
-                    confirmationStatus: 'NONE',
-                    slots: {}
-                })
-                .speak(speakOutput)
-                .reprompt(reprompt)
+                .addDelegateDirective(currentIntent)
                 .getResponse();
         }
-
-        speakOutput = 'Welcome to the ';
+        //  default handler for speaker output
         return handlerInput.responseBuilder
             .speak(speakOutput)
             .reprompt(speakOutput)
             .getResponse();
     }
 };
+
+/**
+ * Function: inProgressVehicleVerificationHandler
+ * Continue to get the next slot
+ */
+const inProgressVehicleVerificationHandler = {
+    canHandle(handlerInput){
+
+        console.log('...checking processVehicleVerificationIntent with request =', JSON.stringify(handlerInput.requestEnvelope.request));
+
+        const request = handlerInput.requestEnvelope.request;
+
+        return request.type === 'IntentRequest' &&
+        request.intent.name === 'vehicleVerificationIntent' &&
+        request.dialogState === 'IN_PROGRESS';
+        
+    },
+    async handle(handlerInput){
+        currentIntent = handlerInput.requestEnvelope.request;
+
+        return handlerInput.responseBuilder
+            .addDelegateDirective(currentIntent)
+            .getResponse();
+    },  
+};
+
+
+/**
+ * Function: completedVehicleVerificationHandler
+ * Handles the scenario when all the vehicle details, make and model 
+ * have been filled in and the slots are complete
+ */
+const completedVehicleVerificationHandler ={
+    canHandle(handlerInput){
+        const request = handlerInput.requestEnvelope.request;
+        return request.type === 'IntentRequest' &&
+            request.intent.name === 'vehicleVerificationIntent' &&
+            request.dialogState ==='COMPLETED';
+    },
+    async handle(handlerInput){
+        //To do
+    }
+
+};
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
 const HelloWorldIntentHandler = {
     canHandle(handlerInput) {
         return Alexa.getRequestType(handlerInput.requestEnvelope) === 'IntentRequest' &&
@@ -96,6 +147,7 @@ const HelloWorldIntentHandler = {
             .getResponse();
     }
 };
+
 const HelpIntentHandler = {
     canHandle(handlerInput) {
         return Alexa.getRequestType(handlerInput.requestEnvelope) === 'IntentRequest' &&
@@ -181,6 +233,8 @@ exports.handler = Alexa.SkillBuilders.custom()
     )
     .addRequestHandlers(
         LaunchRequestHandler,
+        completedVehicleVerificationHandler,
+        inProgressVehicleVerificationHandler,
         HelloWorldIntentHandler,
         HelpIntentHandler,
         CancelAndStopIntentHandler,
@@ -190,10 +244,10 @@ exports.handler = Alexa.SkillBuilders.custom()
     .addErrorHandlers(
         ErrorHandler,
     )
-    .addRequestInterceptors(
-        ...require('./interceptors/request')
-    )
-    .addResponseInterceptors(
-        ...require('./interceptors/response')
-    )
+    // .addRequestInterceptors(
+    //     ...require('./interceptors/request')
+    // )
+    // .addResponseInterceptors(
+    //     ...require('./interceptors/response')
+    // )
     .lambda();
