@@ -33,6 +33,9 @@ module.exports.getS3PreSignedUrl = function getS3PreSignedUrl(s3ObjectKey) {
 var checkRegisteredDevice = pDeviceId => {
     console.log('..IN checkRegisteredDevice with device id = %s', pDeviceId);
 
+    let rtnJsonBlank = {
+        registered: false
+    }
 
     // Set query parameters for db query
     var params = {
@@ -53,13 +56,19 @@ var checkRegisteredDevice = pDeviceId => {
         docClient.query(params, function (err, data) {
             if (err) {
                 console.error("Unable to query. Error:", JSON.stringify(err, null, 2));
-                reject();
+                resolve(rtnJsonBlank);
             } else {
                 console.log("Query succeeded.");
-                data.Items.forEach(function (item) {
-                    console.log('Itenm = ', item);
-                    resolve(item);
-                });
+                console.log('Data = ', data);
+
+                if (data.Count > 0) {
+                    data.Items.forEach(function (item) {
+                        console.log('Itenm = ', item);
+                        resolve(item);
+                    });
+                } else {
+                    resolve(rtnJsonBlank);
+                }
             }
         });
 
@@ -121,50 +130,93 @@ function getSlotValues(filledSlots) {
 
 // This response interceptor stores all session attributes into global persistent attributes
 // when the session ends and it stores the skill last used timestamp
-const PersistenceResponseInterceptor = { 
-    process(handlerInput, responseOutput) { 
-        const ses = (typeof responseOutput.shouldEndSession === "undefined" ? true : responseOutput.shouldEndSession); 
-        if(ses || handlerInput.requestEnvelope.request.type === 'SessionEndedRequest') { // skill was stopped or timed out 
-            let sessionAttributes = handlerInput.attributesManager.getSessionAttributes(); 
-            sessionAttributes['lastUseTimestamp'] = new Date(handlerInput.requestEnvelope.request.timestamp).getTime(); 
-            handlerInput.attributesManager.setPersistentAttributes(sessionAttributes); 
-            return new Promise((resolve, reject) => { 
-                handlerInput.attributesManager.savePersistentAttributes() 
-                    .then(() => { 
-                        resolve(); 
-                    }) 
-                    .catch((err) => { 
-                        reject(err); 
-                    }); 
-            }); 
-        } 
-    } 
-  };
-
-  // This request interceptor with each new session loads all global persistent attributes
-// into the session attributes and increments a launch counter
-const PersistenceRequestInterceptor = { 
-    process(handlerInput) { 
-        if(handlerInput.requestEnvelope.session['new']) { 
-            return new Promise((resolve, reject) => { 
-                handlerInput.attributesManager.getPersistentAttributes() 
-                    .then((persistentAttributes) => { 
-                        persistentAttributes = persistentAttributes || {};
-                        if(!persistentAttributes['launchCount'])
-                          persistentAttributes['launchCount'] = 0;
-                        persistentAttributes['launchCount'] += 1; 
-                        handlerInput.attributesManager.setSessionAttributes(persistentAttributes); 
+const PersistenceResponseInterceptor = {
+    process(handlerInput, responseOutput) {
+        const ses = (typeof responseOutput.shouldEndSession === "undefined" ? true : responseOutput.shouldEndSession);
+        if (ses || handlerInput.requestEnvelope.request.type === 'SessionEndedRequest') { // skill was stopped or timed out 
+            let sessionAttributes = handlerInput.attributesManager.getSessionAttributes();
+            sessionAttributes['lastUseTimestamp'] = new Date(handlerInput.requestEnvelope.request.timestamp).getTime();
+            handlerInput.attributesManager.setPersistentAttributes(sessionAttributes);
+            return new Promise((resolve, reject) => {
+                handlerInput.attributesManager.savePersistentAttributes()
+                    .then(() => {
                         resolve();
                     })
-                    .catch((err) => { 
-                      reject(err); 
-                  });
-            }); 
+                    .catch((err) => {
+                        reject(err);
+                    });
+            });
+        }
+    }
+};
+
+// This request interceptor with each new session loads all global persistent attributes
+// into the session attributes and increments a launch counter
+const PersistenceRequestInterceptor = {
+    process(handlerInput) {
+        if (handlerInput.requestEnvelope.session['new']) {
+            return new Promise((resolve, reject) => {
+                handlerInput.attributesManager.getPersistentAttributes()
+                    .then((persistentAttributes) => {
+                        persistentAttributes = persistentAttributes || {};
+                        if (!persistentAttributes['launchCount'])
+                            persistentAttributes['launchCount'] = 0;
+                        persistentAttributes['launchCount'] += 1;
+                        handlerInput.attributesManager.setSessionAttributes(persistentAttributes);
+                        resolve();
+                    })
+                    .catch((err) => {
+                        reject(err);
+                    });
+            });
         } // end session['new'] 
-    } 
-  };
+    }
+};
+
+const getVehicleInformation = (pMake, pModel) => {
+    console.log('..IN getVehicleInformation with make = %s and model = %s', pMake, pModel);
+
+    return new Promise(function (resolve, reject) {
+
+        // Set query parameters for db query
+        var queryParams = {
+            ExpressionAttributeNames: {
+                "#make": "make",
+                "#model": "model"
+            },
+            ExpressionAttributeValues: {
+                ":make": pMake,
+                ":model": pModel
+            },
+            FilterExpression: "#make = :make AND #model = :model",
+            ProjectionExpression: "#make, #model",
+            TableName: "vehicleInformation"
+        };
+
+        console.log('..getVehicleInformation query = ', queryParams);
+
+
+        docClient.scan(params, onScan);
+
+        docClient.scan(queryParams, function (err, data) {
+            if (err) {
+                console.error("Unable to query. Error:", JSON.stringify(err, null, 2));
+                resolve(rtnJson);
+            } else {
+                console.log("Query succeeded.", data);
+                if (data.Items.length !== 0) {
+                    data.Items.forEach(function (item) {
+                        resolve(item);
+                    }); // for each
+                } // end-if
+            } // end-if
+        }); // query
+
+    }); // promise
+}; // function
 
 exports.checkRegisteredDevice = checkRegisteredDevice;
 exports.getSlotValues = getSlotValues;
 exports.PersistenceResponseInterceptor = PersistenceResponseInterceptor;
 exports.PersistenceRequestInterceptor = PersistenceRequestInterceptor;
+exports.getVehicleInformation = getVehicleInformation;
