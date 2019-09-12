@@ -13,6 +13,8 @@ AWS.config.update({
 
 var docClient = new AWS.DynamoDB.DocumentClient();
 
+var ddb = new AWS.DynamoDB({apiVersion: '2012-08-10'});
+
 module.exports.getS3PreSignedUrl = function getS3PreSignedUrl(s3ObjectKey) {
 
     const bucketName = process.env.S3_PERSISTENCE_BUCKET;
@@ -23,6 +25,48 @@ module.exports.getS3PreSignedUrl = function getS3PreSignedUrl(s3ObjectKey) {
     });
     console.log(`Util.s3PreSignedUrl: ${s3ObjectKey} URL ${s3PreSignedUrl}`);
     return s3PreSignedUrl;
+
+}
+
+/**
+ * Regigster the device
+ * @param {string} pDeviceId 
+ */
+var registerDeviceToVehicle = (pDeviceId, pVehicleId) => {
+
+    var params = {
+        TableName: "theCarRegisteredDevices",
+        Item: {
+            "deviceId": {
+                S: pDeviceId
+            },
+            "vehicleId": {
+                S: pVehicleId
+            },
+            "registered":{
+                BOOL: true 
+            }
+        }
+    };
+
+    console.log('..IN registerDeviceToVehicle with pDeviceId = %s and pVehicleId = %s', pDeviceId, pVehicleId);
+    console.log('...params = %s', JSON.stringify(params));
+
+
+    return new Promise(function (resolve, reject) {
+
+        ddb.putItem(params, function (err, data) {
+            if (err) {
+                console.log('..Error = ', err);               
+                reject(err);
+            } else {
+                console.log('..successful write of data = ', data);
+                
+                resolve(data);
+            }
+        });
+
+    });
 
 }
 
@@ -182,21 +226,20 @@ const getVehicleInformation = (pMake, pModel) => {
         var queryParams = {
             ExpressionAttributeNames: {
                 "#make": "make",
-                "#model": "model"
+                "#model": "model",
+                "#id": "id"
             },
             ExpressionAttributeValues: {
                 ":make": pMake,
                 ":model": pModel
             },
             FilterExpression: "#make = :make AND #model = :model",
-            ProjectionExpression: "#make, #model",
+            ProjectionExpression: "#make, #model, #id",
             TableName: "vehicleInformation"
         };
 
         console.log('..getVehicleInformation query = ', queryParams);
 
-
-        docClient.scan(params, onScan);
 
         docClient.scan(queryParams, function (err, data) {
             if (err) {
@@ -208,15 +251,67 @@ const getVehicleInformation = (pMake, pModel) => {
                     data.Items.forEach(function (item) {
                         resolve(item);
                     }); // for each
-                } // end-if
+                } else {
+                    resolve();
+                }
             } // end-if
         }); // query
 
     }); // promise
 }; // function
 
+/**
+ * getVehicleInformationById
+ * @param {String} pVehicleId 
+ */
+var getVehicleInformationById = pVehicleId => {
+    console.log('..IN getVehicleInformationById with id = %s', pVehicleId);
+
+    return new Promise(function (resolve, reject) {
+
+        // Set query parameters for db query
+        var queryParams = {
+            ExpressionAttributeNames: {
+                "#make": "make",
+                "#model": "model",
+                "#id": "id"
+            },
+            ExpressionAttributeValues: {
+                ":id": pVehicleId
+            },
+            FilterExpression: "#id = :id",
+            ProjectionExpression: "#make, #model, #id",
+            TableName: "vehicleInformation"
+        };
+
+        console.log('..getVehicleInformationById query = ', queryParams);
+
+
+        docClient.scan(queryParams, function (err, data) {
+            if (err) {
+                console.error("Unable to query. Error:", JSON.stringify(err, null, 2));
+                resolve(rtnJson);
+            } else {
+                console.log("Query succeeded.", data);
+                if (data.Items.length !== 0) {
+                    data.Items.forEach(function (item) {
+                        resolve(item);
+                    }); // for each
+                } else {
+                    resolve();
+                }
+            } // end-if
+        }); // query
+
+    }); // promise
+
+}
+
+
+exports.getVehicleInformationById = getVehicleInformationById;
 exports.checkRegisteredDevice = checkRegisteredDevice;
 exports.getSlotValues = getSlotValues;
 exports.PersistenceResponseInterceptor = PersistenceResponseInterceptor;
 exports.PersistenceRequestInterceptor = PersistenceRequestInterceptor;
 exports.getVehicleInformation = getVehicleInformation;
+exports.registerDeviceToVehicle = registerDeviceToVehicle;

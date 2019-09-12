@@ -8,15 +8,16 @@ var _ = require('lodash');
 const utils = require('./util');
 const generalConstants = require('./constants/general');
 const helper = require('./helperFunctions');
+const menuOptionIntentHandlers = require('./menuOptionIntents');
 
 // IMPORTANT: don't forget to give DynamoDB access to the role you're to run this lambda (IAM)
 const {
     DynamoDbPersistenceAdapter
 } = require('ask-sdk-dynamodb-persistence-adapter');
+
 persistenceAdapter = new DynamoDbPersistenceAdapter({
     tableName: process.env.DYNAMO_TABLE_NAME || '',
-    createTable: true,
-    partitionKeyGenerator: keyGenerator
+    createTable: true
 });
 
 // This function establishes the primary key of the database as the skill id (hence you get global persistence, not per user id)
@@ -41,7 +42,13 @@ let reprompt, speakOutput, currentIntent;
  */
 const LaunchRequestHandler = {
     canHandle(handlerInput) {
-        return handlerInput.requestEnvelope.request.type === 'LaunchRequest';
+
+        console.log('Launch check ', handlerInput.requestEnvelope.request);
+        console.log('Intent = ', handlerInput.requestEnvelope.request.intent.name);
+        
+        return handlerInput.requestEnvelope.request.type === 'LaunchRequest'
+            || handlerInput.requestEnvelope.request.intent.name === 'registerIntent';
+
     },
     async handle(handlerInput) {
 
@@ -52,12 +59,12 @@ const LaunchRequestHandler = {
 
         const attributesManager = handlerInput.attributesManager;
         const persistentAttributes = await attributesManager.getPersistentAttributes();
-        let sessionAttributes = handlerInput.attributesManager.getSessionAttributes();
+        let sessionAttributes = attributesManager.getSessionAttributes();
 
         // Save the time the skill was accessed
-        persistentAttributes.lastAccessTime = Date.now();
-        attributesManager.setPersistentAttributes(persistentAttributes);
-        await attributesManager.savePersistentAttributes();
+        // persistentAttributes.lastAccessTime = Date.now();
+        // attributesManager.setPersistentAttributes(persistentAttributes);
+        // await attributesManager.savePersistentAttributes();
 
         // Check if device is registered - the device id is from the request data pased to 
         // the skill
@@ -66,33 +73,50 @@ const LaunchRequestHandler = {
 
         console.log('..Returned lRtnDeviceDetails = ', JSON.stringify(lRtnDeviceDetails));
 
-
         if (lRtnDeviceDetails.registered) {
-            console.log('...Scenario 1.0 - The device is registered to the car ');
-            // Device is registered to a vehicle
-            // So set the session attribute, non persistent
-            Object.assign(sessionAttributes, {
-                "Make": lRtnDeviceDetails.vehicleMake,
-                "Model": lRtnDeviceDetails.vehicleModel,
-                "Year": lRtnDeviceDetails.vehicleYear,
-                "Reg": lRtnDeviceDetails.vehicleReg,
-                "Condition": lRtnDeviceDetails.vehicleCondition
-            });
 
-            // Save the session variables
-            handlerInput.attributesManager.setSessionAttributes(sessionAttributes);
+            console.log('...Scenario 1.0 - The device is registered to the car ');
+
+            let lVehicleInfo = await utils.getVehicleInformationById(lRtnDeviceDetails.vehicleId);
+            console.log('...lVehicleInfo = ', JSON.stringify(lVehicleInfo));
+
+            sessionAttributes.Make = lVehicleInfo.make;
+            sessionAttributes.Model = lVehicleInfo.model;
+
+            persistentAttributes.Make = lVehicleInfo.make;
+            persistentAttributes.Model = lVehicleInfo.model;
+
+            console.log('...');
 
             // Now we can speak the main menu
             let arraySize = _.size(generalConstants.greetings.mainMenu);
+            console.log('...');
             let pos = helper.randomIntFromInterval(1, arraySize - 1);
+            console.log('...');
             console.log('Pos = ', pos);
 
-            speakOutput = `<speak>` + generalConstants.greetings.mainMenu[pos] + `</speak>`;
+            speakOutput = generalConstants.greetings.mainMenu[0];
 
             // replace %s and %t
-            speakOutput = _.replace(speakOutput, '%s', lRtnDeviceDetails.vehicleMake);
-            speakOutput = _.replace(speakOutput, '%t', lRtnDeviceDetails.vehicleModel);
+            speakOutput = _.replace(speakOutput, /%make/g, lVehicleInfo.make);
+            speakOutput = _.replace(speakOutput, /%model/g, lVehicleInfo.model);
             console.log('..speakOutput = ', speakOutput);
+
+            // Save the session variables
+            attributesManager.setSessionAttributes(sessionAttributes);
+
+            // Save session variables to persistent storage
+            attributesManager.setPersistentAttributes(persistentAttributes);
+            attributesManager.savePersistentAttributes();
+            
+            console.log('..Saved session attributes ', JSON.stringify(sessionAttributes));
+
+            // Here we are playing the intro and then waiting for the response.
+            return handlerInput.responseBuilder
+            .speak(speakOutput)
+            .reprompt(speakOutput)
+            .withShouldEndSession(false)
+            .getResponse();
 
 
         } else {
@@ -102,8 +126,8 @@ const LaunchRequestHandler = {
             // Scenario 1.1 - The device is not registered to the car 
             currentIntent = 'vehicleVerificationIntent';
 
-            speakOutput = `Welcome to the car. First things first, we need to link this device to this car. What's the make`;
-            reprompt = `Welcome to the car. Let's get this device setup. What's the vehicle make and model?`;
+            speakOutput = `Welcome, first things first, we need to link this device to this car. What's the make?`;
+            reprompt = `Welcome, let's get this device setup. What's the vehicle make and model?`;
             // return handlerInput.responseBuilder
             //     .addElicitSlotDirective('carMake', {
             //         name: 'vehicleVerificationIntent',
@@ -120,7 +144,7 @@ const LaunchRequestHandler = {
                     confirmationStatus: 'NONE',
                     slots: {}
                 })
-                .speak("Welcome to the car. First things first, we need to link this device to this car.")
+                .speak("Welcome, first things first, we need to link this device to this car.")
                 .getResponse();
 
 
@@ -133,6 +157,7 @@ const LaunchRequestHandler = {
         return handlerInput.responseBuilder
             .speak(speakOutput)
             .reprompt(speakOutput)
+            .withShouldEndSession(false)
             .getResponse();
     }
 };
@@ -182,44 +207,51 @@ const completedVehicleVerificationHandler = {
         console.log('..IN completedVehicleVerificationHandler');
 
         const request = handlerInput.requestEnvelope.request;
-        console.log('..');
-        const attributesManager = handlerInput.attributesManager;
-        console.log('..');
         const responseBuilder = handlerInput.responseBuilder;
-        console.log('..');
-        const attributes = await attributesManager.getPersistentAttributes() || {};
 
-        console.log('..');
-        
+        let lDeviceId = handlerInput.requestEnvelope.context.System.device.deviceId;
 
         let slotValues = utils.getSlotValues(request.intent.slots);
         console.log('...slots = ', JSON.stringify(slotValues));
-        
+
 
         // Get the vehicle ID from the vehicleDetails table
         let lVehicleInfo = await utils.getVehicleInformation(slotValues.carMake.value,
             slotValues.carModel.value);
 
         console.log('...lVehicleInfo = ', JSON.stringify(lVehicleInfo));
-        
 
+        console.log('..Saving persistent attributes...');
 
-        if (Object.keys(attributes).length === 0) {
-            // Set the device id and the registered flag in the session persistent data
-            attributes.deviceId = handlerInput.requestEnvelope.context.System.device.deviceId;
-            attributes.vehicleId = lVehicleInfo.id;
-            attributes.registered = true;
-            attributesManager.setPersistentAttributes(attributes);
-            await attributesManager.savePersistentAttributes() || {};
-        }
+        let attributes = handlerInput.attributesManager.getPersistentAttributes();
+
+        // Register the vehcile to the device ID
+        await utils.registerDeviceToVehicle(lDeviceId, lVehicleInfo.id);
+
+        // Set the device id and the registered flag in the session persistent data
+        attributes.deviceId = lDeviceId;
+        attributes.vehicleId = lVehicleInfo.id;
+        attributes.registered = true;
+
+        console.log('..Setting and saving attributes to persistent attributes = ', JSON.stringify(attributes));
+
+        handlerInput.attributesManager.setPersistentAttributes(attributes);
+        handlerInput.attributesManager.savePersistentAttributes();
+
+        console.log('..Now get the completion message');
 
         // Confirmation of registration
-        speakOutput = generalConstants.confirmations.postVehicleRegistration;
+        speakOutput = generalConstants.confirmations.completeVehicleRegistration;
+        speakOutput = _.replace(speakOutput, /%make/g, lVehicleInfo.make);
+        speakOutput = _.replace(speakOutput, /%model/g, lVehicleInfo.model);
+        
+        console.log('....speak....', speakOutput);
+        
 
         return responseBuilder
             .speak(speakOutput)
             .getResponse();
-    }
+    },
 };
 
 /**
@@ -249,7 +281,211 @@ const fullTourIntentHandler = {
 };
 
 
+/**
+ * Function: inProgressVehicleVerificationHandler
+ * Continue to get the next slot
+ */
+const seatMaterialIntentHandler = {
+    canHandle(handlerInput) {
 
+        console.log('...checking seatMaterialIntent with request =', JSON.stringify(handlerInput.requestEnvelope.request));
+
+        const request = handlerInput.requestEnvelope.request;
+
+        return request.type === 'IntentRequest' &&
+            request.intent.name === 'seatMaterialIntent' &&
+            request.dialogState !== 'COMPLETED';
+
+    },
+    async handle(handlerInput) {
+
+        console.log('..IN seatMaterialIntentHandler');
+
+        speakOutput = `<speak>So you're interested in these comfortable seats?  <break time="200ms"/> Let me tell you more. <break time="100ms"/>  Made from the finest <break time="100ms"/> luxurious Mocha Vernasca leather, <break time="200ms"/>this dynamic, yet uniquely comfortable seat you're sitting in, adjusts to your perfect seating position. <break time="250ms"/> By the way it's only available on the top range M Sport package. What else did you want to know about?</speak>`;
+
+        return handlerInput.responseBuilder
+            .speak(speakOutput)
+            .withShouldEndSession(false)
+            .getResponse();
+    },
+};
+
+
+const topSpeedIntentHandler ={
+    canHandle(handlerInput){
+        const request = handlerInput.requestEnvelope.request;
+
+        return request.type === 'IntentRequest' &&
+            request.intent.name === 'topSpeedIntent' &&
+            request.dialogState !== 'COMPLETED';
+    },
+    async handle(handlerInput){
+
+        console.log('..IN topSpeedIntentHandler');
+        
+
+        speakOutput = generalConstants.answers.topSpeedIntent
+        return handlerInput.responseBuilder
+            .speak(speakOutput)
+            .withShouldEndSession(false)
+            .getResponse();
+
+    },
+};
+
+/**
+ * driverAssistanceIntent
+ */
+const driverAssistanceIntentHandler ={
+    canHandle(handlerInput){
+        const request = handlerInput.requestEnvelope.request;
+
+        return request.type === 'IntentRequest' &&
+            request.intent.name === 'driverAssistanceIntent' &&
+            request.dialogState !== 'COMPLETED';
+    },
+    async handle(handlerInput){
+
+        console.log('..IN driverAssistanceIntentHandler');
+
+        const attributesManager = handlerInput.attributesManager;
+        let persistentAttributes = await attributesManager.getPersistentAttributes();
+
+        console.log('..persistentAttributes = ', JSON.stringify(persistentAttributes));
+        
+        speakOutput = generalConstants.answers.driverAssistanceIntent;
+
+        console.log('..speakerOutput = ', JSON.stringify(speakOutput));
+        
+
+        speakOutput = _.replace(speakOutput, /%make/g, persistentAttributes.Make);
+
+        console.log('..speakerOutput = ', JSON.stringify(speakOutput));
+        speakOutput = _.replace(speakOutput, /%model/g, persistentAttributes.Model);
+
+        console.log('..speakerOutput = ', JSON.stringify(speakOutput));
+
+        console.log('..output = ', JSON.stringify(speakOutput));
+        
+
+        return handlerInput.responseBuilder
+            .speak(speakOutput)
+            .withShouldEndSession(false)
+            .getResponse();
+
+    },
+};
+
+
+
+/**
+ * fuelConsumptionIntent
+ */
+const fuelConsumptionIntentHandler ={
+    canHandle(handlerInput){
+        const request = handlerInput.requestEnvelope.request;
+
+        return request.type === 'IntentRequest' &&
+            request.intent.name === 'fuelConsumptionIntent' &&
+            request.dialogState !== 'COMPLETED';
+    },
+    async handle(handlerInput){
+
+        console.log('..IN fuelConsumptionIntentHandler');
+
+        speakOutput = generalConstants.answers.fuelConsumptionIntent;
+
+        const attributesManager = handlerInput.attributesManager;
+        let persistentAttributes = await attributesManager.persistentAttributes();
+
+        speakOutput = _.replace(speakOutput, /%make/g, persistentAttributes.Make);
+        speakOutput = _.replace(speakOutput, /%model/g, persistentAttributes.Model);
+
+        return handlerInput.responseBuilder
+            .speak(speakOutput)
+            .withShouldEndSession(false)
+            .getResponse();
+
+    },
+};
+
+
+
+//luggageCapacityIntent
+const luggageCapacityIntentHandler ={
+    canHandle(handlerInput){
+        const request = handlerInput.requestEnvelope.request;
+
+        return request.type === 'IntentRequest' &&
+            request.intent.name === 'luggageCapacityIntent' &&
+            request.dialogState !== 'COMPLETED';
+    },
+    async handle(handlerInput){
+
+        console.log('..IN luggageCapacityIntentHandler');
+
+        speakOutput = generalConstants.answers.luggageCapacityIntent;
+
+        return handlerInput.responseBuilder
+            .speak(speakOutput)
+            .withShouldEndSession(false)
+            .getResponse();
+
+    },
+};
+
+//luggageCapacityIntent
+const efficientDynamicsIntentHandler ={
+    canHandle(handlerInput){
+        const request = handlerInput.requestEnvelope.request;
+
+        return request.type === 'IntentRequest' &&
+            request.intent.name === 'efficientDynamicsIntent' &&
+            request.dialogState !== 'COMPLETED';
+    },
+    async handle(handlerInput){
+
+        console.log('..IN efficientDynamicsIntentHandler');
+
+        speakOutput = generalConstants.answers.efficientDynamicsIntent;
+
+        return handlerInput.responseBuilder
+            .speak(speakOutput)
+            .withShouldEndSession(false)
+            .getResponse();
+
+    },
+};
+
+/**
+ * pricePacakageIntent
+ */
+const pricePacakageIntentHandler ={
+    canHandle(handlerInput){
+        const request = handlerInput.requestEnvelope.request;
+
+        return request.type === 'IntentRequest' &&
+            request.intent.name === 'pricePacakageIntent' &&
+            request.dialogState !== 'COMPLETED';
+    },
+    async handle(handlerInput){
+
+        console.log('..IN pricePacakageIntentHandler');
+
+        let slotValues = utils.getSlotValues(handlerInput.requestEnvelope.request.intent.slots);
+        console.log('...slots = ', JSON.stringify(slotValues));
+
+        speakOutput = _.replace(speakOutput, /%packageType/g, slotValues.packageType.value);
+        
+        speakOutput = generalConstants.answers.pricePacakageIntent;
+
+        return handlerInput.responseBuilder
+            .speak(speakOutput)
+            .withShouldEndSession(false)
+            .getResponse();
+
+    },
+};
 
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
@@ -277,7 +513,7 @@ const CancelAndStopIntentHandler = {
                 handlerInput.requestEnvelope.request.intent.name === 'AMAZON.StopIntent');
     },
     handle(handlerInput) {
-        const speakOutput = 'Goodbye!';
+        const speakOutput = `Thank you for asking about the BMW X5. <break time="250ms"/> I hope that you've had a great experience`;
         return handlerInput.responseBuilder
             .speak(speakOutput)
             .getResponse();
@@ -341,6 +577,14 @@ exports.handler = Alexa.SkillBuilders.custom()
         LaunchRequestHandler,
         completedVehicleVerificationHandler,
         inProgressVehicleVerificationHandler,
+        seatMaterialIntentHandler,
+        topSpeedIntentHandler,
+        driverAssistanceIntentHandler,
+        fuelConsumptionIntentHandler,
+        efficientDynamicsIntentHandler,
+        luggageCapacityIntentHandler,
+        menuOptionIntentHandlers.fullTourIntentHandler,
+        menuOptionIntentHandlers.questionIntentHandler,
         fullTourIntentHandler,
         HelpIntentHandler,
         CancelAndStopIntentHandler,
