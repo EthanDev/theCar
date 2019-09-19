@@ -305,9 +305,55 @@ var getVehicleInformationById = pVehicleId => {
 
     }); // promise
 
-}
+};
+
+var processNumberOfQuestions ={
+    process(handlerInput) {
+        console.log('IN processNumberOfQuestions with handlerInput = ', JSON.stringify(handlerInput));
+        
+        if (handlerInput.requestEnvelope.session['new']) {
+            return new Promise((resolve, reject) => {
+                
+                handlerInput.attributesManager.getPersistentAttributes()
+                    .then((persistentAttributes) => {
+
+                        persistentAttributes = persistentAttributes || {};
+
+                        if (!persistentAttributes['questionCount'])
+                        persistentAttributes['questionCount'] = 0;
+
+                        persistentAttributes['questionCount'] += 1;
+
+                        console.log('Setting session attributes = ', persistentAttributes);
+                        
+
+                        handlerInput.attributesManager.setSessionAttributes(persistentAttributes);
+                        console.log('Session attributes are now ', persistentAttributes);
+                        
+                        resolve();
+                    })
+                    .catch((err) => {
+                        reject(err);
+                    });
+                
+            });
+        } // end session['new'] 
+    }
+};
+
+var getResponse = pIntentName => {
+
+    console.log('..IN getVehicleInformationById with id = %s', pVehicleId);
+
+    return new Promise(function (resolve, reject) {
+
+    }); // end-promise
 
 
+}; // end-getResponse
+
+
+exports.getResponse = getResponse;
 exports.getVehicleInformationById = getVehicleInformationById;
 exports.checkRegisteredDevice = checkRegisteredDevice;
 exports.getSlotValues = getSlotValues;
@@ -315,3 +361,4 @@ exports.PersistenceResponseInterceptor = PersistenceResponseInterceptor;
 exports.PersistenceRequestInterceptor = PersistenceRequestInterceptor;
 exports.getVehicleInformation = getVehicleInformation;
 exports.registerDeviceToVehicle = registerDeviceToVehicle;
+exports.processNumberOfQuestions = processNumberOfQuestions;

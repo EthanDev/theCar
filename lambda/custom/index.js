@@ -45,6 +45,9 @@ const LaunchRequestHandler = {
 
         console.log('Launch check ', handlerInput.requestEnvelope.request);
         console.log('Intent = ', handlerInput.requestEnvelope.request.intent.name);
+
+        // Get the number of questions asked and if 1 then go into the launch process
+        let noOfQuestions = 
         
         return handlerInput.requestEnvelope.request.type === 'LaunchRequest'
             || handlerInput.requestEnvelope.request.intent.name === 'registerIntent';
@@ -600,7 +603,8 @@ exports.handler = Alexa.SkillBuilders.custom()
     // .addResponseInterceptors(
     //     ...require('./interceptors/response')
     // )
-    .addRequestInterceptors(utils.PersistenceRequestInterceptor)
+    .addRequestInterceptors(utils.PersistenceRequestInterceptor,
+                            utils.processNumberOfQuestions)
     .addResponseInterceptors(utils.PersistenceResponseInterceptor)
     .withPersistenceAdapter(persistenceAdapter)
     .lambda();
