@@ -1,4 +1,8 @@
 const AWS = require('aws-sdk');
+var _ = require('lodash');
+
+// Load constants
+const generalConstants = require('./constants/general');
 
 // Load credentials and set region from JSON file
 AWS.config.loadFromPath('./config.json');
@@ -309,7 +313,7 @@ var getVehicleInformationById = pVehicleId => {
 
 var processNumberOfQuestions ={
     process(handlerInput) {
-        console.log('IN processNumberOfQuestions with handlerInput = ', JSON.stringify(handlerInput));
+        console.log('IN processNumberOfQuestions with handlerInput = ', JSON.stringify(handlerInput.requestEnvelope));
         
         if (handlerInput.requestEnvelope.session['new']) {
             return new Promise((resolve, reject) => {
@@ -341,11 +345,74 @@ var processNumberOfQuestions ={
     }
 };
 
-var getResponse = pIntentName => {
+/**
+ * Get resposne from database file vehicleInformation
+ * @param {*} pVehicleId 
+ * @param {*} pIntentName 
+ */
+var getResponse = (pVehicleId, pIntentName) => {
 
-    console.log('..IN getVehicleInformationById with id = %s', pVehicleId);
+    console.log('- - - - - - - - - - - - - - - ');
+    console.log('..IN getResponse with intent = %s', pIntentName);
 
     return new Promise(function (resolve, reject) {
+
+        // query the database - vehicleInformation for content
+        let lRtnJson = {
+            responseContent: "",
+            responseType: ""
+        }
+
+        console.log('...');
+        
+
+        let lQueryParams = {
+            TableName: generalConstants.dbTableNames.vehicleInformation,
+            ProjectionExpression: "#pIntentName",
+            KeyConditionExpression: "id = :vehicleId",
+            ExpressionAttributeNames:{
+                "#pIntentName": pIntentName
+            },
+            ExpressionAttributeValues:{
+                ":vehicleId": pVehicleId.toString()
+            }
+        };
+
+        console.log('...Query parms = %s', JSON.stringify(lQueryParams));
+
+        docClient.query(lQueryParams, function (err, data) {
+            if (err) {
+                console.error("Unable to query. Error:", JSON.stringify(err, null, 2));
+                reject(err);
+            } else {
+                console.log("Query succeeded.", data);
+                if (data.Items.length !== 0) {
+                    data.Items.forEach(function (item) {
+
+                        console.log('..item = ', JSON.stringify(item));
+                        
+
+                        lRtnJson.responseContent = item[pIntentName];
+                        if(lRtnJson.responseContent.includes("mp3")){
+                            lRtnJson.responseType = generalConstants.types.mp3;
+                        } else {
+                            lRtnJson.responseType = generalConstants.types.words;
+                        }
+
+                        console.log('...rtnJson = ', JSON.stringify(lRtnJson));
+
+                        resolve(lRtnJson);
+                    }); // for each
+                } else {
+                    reject('No dataa exists for vehicle');
+                };
+
+            } // end-if
+        }); // end-query
+
+        
+
+
 
     }); // end-promise
 

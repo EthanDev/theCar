@@ -16,7 +16,7 @@ const {
 } = require('ask-sdk-dynamodb-persistence-adapter');
 
 persistenceAdapter = new DynamoDbPersistenceAdapter({
-    tableName: process.env.DYNAMO_TABLE_NAME || '',
+    tableName: process.env.DYNAMO_TABLE_NAME || 'carViewUsers',
     createTable: true
 });
 
@@ -47,7 +47,7 @@ const LaunchRequestHandler = {
         console.log('Intent = ', handlerInput.requestEnvelope.request.intent.name);
 
         // Get the number of questions asked and if 1 then go into the launch process
-        let noOfQuestions = 
+        //let noOfQuestions = 
         
         return handlerInput.requestEnvelope.request.type === 'LaunchRequest'
             || handlerInput.requestEnvelope.request.intent.name === 'registerIntent';
@@ -236,10 +236,9 @@ const completedVehicleVerificationHandler = {
         attributes.vehicleId = lVehicleInfo.id;
         attributes.registered = true;
 
-        console.log('..Setting and saving attributes to persistent attributes = ', JSON.stringify(attributes));
+        console.log('..Setting and saving attributes to session attributes = ', JSON.stringify(attributes));
 
-        handlerInput.attributesManager.setPersistentAttributes(attributes);
-        handlerInput.attributesManager.savePersistentAttributes();
+        handlerInput.attributesManager.setSessionAttributes(attributes);
 
         console.log('..Now get the completion message');
 
@@ -253,6 +252,7 @@ const completedVehicleVerificationHandler = {
 
         return responseBuilder
             .speak(speakOutput)
+            .withShouldEndSession(true)
             .getResponse();
     },
 };
@@ -274,11 +274,37 @@ const fullTourIntentHandler = {
     async handle(handlerInput) {
 
         console.log('..IN fullTourIntentHandler');
-        let sessionAttributes = handlerInput.attributesManager.getSessionAttributes();
+        const lAttributesManager = handlerInput.attributesManager;
+        const lPersistentAttributes = await lAttributesManager.getPersistentAttributes();
+        let sessionAttributes = lAttributesManager.getSessionAttributes();
 
+        const lRequestName = handlerInput.requestEnvelope.request.intent.name;
 
-        // Check the database for the url of the full tour text
-        utils.getFullTourSpeech(sess.vehicleMake, sessionAttributes.ve);
+        let lVehicleId = lPersistentAttributes.vehicleId;
+
+        console.log('...calling getResponse with %s and %s', lVehicleId, lRequestName);
+        
+
+        let lRtnJson = await utils.getResponse(lVehicleId,lRequestName);
+
+        if (lRtnJson.responseType === generalConstants.types.mp3){
+            speakOutput = generalConstants.speak.openingTag + 
+                          generalConstants.speak.audioSrcOpen +
+                        lRtnJson.responseContent +
+                        generalConstants.speak.audioSrcClose +
+                        generalConstants.speak.closingTag;
+        } else {
+            // Normal output using standard alexa voice
+            speakOutput = lRtnJson.responseContent;
+        }
+
+        console.log('..speak out will be ',speakOutput);
+
+        return handlerInput.responseBuilder
+            .speak(speakOutput)
+            .withShouldEndSession(false)
+            .getResponse();
+
 
     },
 };
@@ -319,15 +345,42 @@ const topSpeedIntentHandler ={
         const request = handlerInput.requestEnvelope.request;
 
         return request.type === 'IntentRequest' &&
-            request.intent.name === 'topSpeedIntent' &&
+            (request.intent.name === 'topSpeedIntent' ||
+            request.intent.name === 'driverAssistanceIntent') &&
             request.dialogState !== 'COMPLETED';
     },
     async handle(handlerInput){
 
-        console.log('..IN topSpeedIntentHandler');
+        const lAttributesManager = handlerInput.attributesManager;
+        const lPersistentAttributes = await lAttributesManager.getPersistentAttributes();
+        let sessionAttributes = lAttributesManager.getSessionAttributes();
+
+        console.log('..IN topSpeedIntentHandler/driverAssistanceIntent');
+
+        const lRequestName = handlerInput.requestEnvelope.request.intent.name;
+
+        let lVehicleId = lPersistentAttributes.vehicleId;
+
+        console.log('...calling getResponse with %s and %s', lVehicleId, lRequestName);
         
 
-        speakOutput = generalConstants.answers.topSpeedIntent
+        let lRtnJson = await utils.getResponse(lVehicleId,lRequestName);
+
+        if (lRtnJson.responseType === generalConstants.types.mp3){
+            speakOutput = generalConstants.speak.openingTag + 
+                          generalConstants.speak.audioSrcOpen +
+                        lRtnJson.responseContent +
+                        generalConstants.speak.audioSrcClose +
+                        generalConstants.speak.closingTag;
+        } else {
+            // Normal output using standard alexa voice
+            speakOutput = lRtnJson.responseContent;
+        }
+
+        console.log('..speak out will be ',speakOutput);
+        
+
+        //speakOutput = generalConstants.answers.topSpeedIntent
         return handlerInput.responseBuilder
             .speak(speakOutput)
             .withShouldEndSession(false)
@@ -582,7 +635,7 @@ exports.handler = Alexa.SkillBuilders.custom()
         inProgressVehicleVerificationHandler,
         seatMaterialIntentHandler,
         topSpeedIntentHandler,
-        driverAssistanceIntentHandler,
+        //driverAssistanceIntentHandler,
         fuelConsumptionIntentHandler,
         efficientDynamicsIntentHandler,
         luggageCapacityIntentHandler,

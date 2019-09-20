@@ -1,4 +1,17 @@
 module.exports = Object.freeze({
+    dbTableNames:{
+        vehicleInformation: "vehicleInformation",
+    },
+    types:{
+        mp3: "mp3",
+        words: "words"
+    },
+    speak:{
+        openingTag: `<speak>`,
+        closingTag: `</speak>`,
+        audioSrcOpen: `<audio src="`,
+        audioSrcClose: `" />`
+    },
     greetings:{
         mainMenu:[
             `<speak><audio src="https://carview.s3.amazonaws.com/CpdzOkQH-2018-bmw-x5-official-video-1.mp3"/><break time="500ms"/> You're sitting in exactly the right spot! I'm sure you can agree this %make %model is amazing! <break time="500ms"/> Nice to meet you, my name is Nikki and I'm your personal guide to this amazing %make %model. <break time="500ms"/> What would you like to do? experience a full tour? or just ask me any question you like.</speak>`,
@@ -6,7 +19,7 @@ module.exports = Object.freeze({
     },
     confirmations:{
         postVehicleRegistration: `<speak><audio src="soundbank://soundlibrary/doors/doors_cars/cars_04"/><audio src="soundbank://soundlibrary/doors/doors_cars/cars_10"/><audio src="soundbank://soundlibrary/vehicles/cars/cars_07"/>Great news! You have successfully registered this %make %model to the device. <break time="500ms"/> It's now ready for a buyer to use.<break time="500ms"/> Just tell the buyer to start the experience by saying <break time="250ms"/> "Alexa ask the car, and then their question.<break time="250ms"/> Happy exploring this beautiful %model.</speak>`,
-        completeVehicleRegistration: `<speak>Great news! You've successfully registered the device to the %make %model. <break time="500ms"/> It's now ready for a buyer to use.<break time="500ms"/> Start off by telling buyers to start their experience by saying <break time="250ms"/> "Alexa ask the car, and then their question.<break time="250ms"/> Happy exploring this beautiful %model.</speak>`
+        completeVehicleRegistration: `<speak><audio src="soundbank://soundlibrary/doors/doors_cars/cars_04"/><audio src="soundbank://soundlibrary/doors/doors_cars/cars_10"/><audio src="soundbank://soundlibrary/vehicles/cars/cars_07"/><audio src="https://carview.s3.amazonaws.com/CpdzOkQH-2018-bmw-x5-official-video-1.mp3"/>Great news! You've successfully registered the device to the %make %model. <break time="500ms"/> It's now ready for a buyer to use.<break time="500ms"/> Start off by telling buyers to start their experience by saying <break time="250ms"/> "Alexa ask the car, and then their question.<break time="250ms"/> Happy exploring this beautiful %model.</speak>`
     },
     answers:{
         topSpeedIntent: `<speak><prosody rate="medium">Speaking of speed, you're flying through questions! <break time="250ms"/> It's ok, I don't mind at all. <break time="250ms"/>Getting back, this xDrive 30d M Sport, V-8 model can hit the same 62-mph sprint in 6.2 seconds using the power of 265 horse power. <break time="250ms"/>Wow! <break time="250ms"/>Now that's what I call quick!<break time="250ms"/> What else can I tell you about?</prosody></speak>`,
