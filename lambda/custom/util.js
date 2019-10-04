@@ -420,6 +420,23 @@ var getResponse = (pVehicleId, pIntentName) => {
 }; // end-getResponse
 
 
+var addToProfile = {
+    
+}
+
+
+var getRandomCarFacts = pSessionAttributes => {
+    console.log('- - - - - - - - - - - - - - - ');
+    console.log('..IN getRandomCarFacts with SessionAttributes = %s', JSON.stringify(pSessionAttributes));
+
+    return new Promise(function (resolve, reject) {
+
+
+    });
+
+}; // end getRandomCarFacts
+
+
 exports.getResponse = getResponse;
 exports.getVehicleInformationById = getVehicleInformationById;
 exports.checkRegisteredDevice = checkRegisteredDevice;
@@ -429,3 +446,4 @@ exports.PersistenceRequestInterceptor = PersistenceRequestInterceptor;
 exports.getVehicleInformation = getVehicleInformation;
 exports.registerDeviceToVehicle = registerDeviceToVehicle;
 exports.processNumberOfQuestions = processNumberOfQuestions;
+exports.getRandomCarFacts = getRandomCarFacts;

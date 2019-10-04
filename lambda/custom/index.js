@@ -48,9 +48,9 @@ const LaunchRequestHandler = {
 
         // Get the number of questions asked and if 1 then go into the launch process
         //let noOfQuestions = 
-        
-        return handlerInput.requestEnvelope.request.type === 'LaunchRequest'
-            || handlerInput.requestEnvelope.request.intent.name === 'registerIntent';
+
+        return handlerInput.requestEnvelope.request.type === 'LaunchRequest' ||
+            handlerInput.requestEnvelope.request.intent.name === 'registerIntent';
 
     },
     async handle(handlerInput) {
@@ -111,15 +111,15 @@ const LaunchRequestHandler = {
             // Save session variables to persistent storage
             attributesManager.setPersistentAttributes(persistentAttributes);
             attributesManager.savePersistentAttributes();
-            
+
             console.log('..Saved session attributes ', JSON.stringify(sessionAttributes));
 
             // Here we are playing the intro and then waiting for the response.
             return handlerInput.responseBuilder
-            .speak(speakOutput)
-            .reprompt(speakOutput)
-            .withShouldEndSession(false)
-            .getResponse();
+                .speak(speakOutput)
+                .reprompt(speakOutput)
+                .withShouldEndSession(false)
+                .getResponse();
 
 
         } else {
@@ -246,9 +246,9 @@ const completedVehicleVerificationHandler = {
         speakOutput = generalConstants.confirmations.completeVehicleRegistration;
         speakOutput = _.replace(speakOutput, /%make/g, lVehicleInfo.make);
         speakOutput = _.replace(speakOutput, /%model/g, lVehicleInfo.model);
-        
+
         console.log('....speak....', speakOutput);
-        
+
 
         return responseBuilder
             .speak(speakOutput)
@@ -256,6 +256,7 @@ const completedVehicleVerificationHandler = {
             .getResponse();
     },
 };
+
 
 /**
  * fullTourIntentHandler
@@ -283,22 +284,22 @@ const fullTourIntentHandler = {
         let lVehicleId = lPersistentAttributes.vehicleId;
 
         console.log('...calling getResponse with %s and %s', lVehicleId, lRequestName);
-        
 
-        let lRtnJson = await utils.getResponse(lVehicleId,lRequestName);
 
-        if (lRtnJson.responseType === generalConstants.types.mp3){
-            speakOutput = generalConstants.speak.openingTag + 
-                          generalConstants.speak.audioSrcOpen +
-                        lRtnJson.responseContent +
-                        generalConstants.speak.audioSrcClose +
-                        generalConstants.speak.closingTag;
+        let lRtnJson = await utils.getResponse(lVehicleId, lRequestName);
+
+        if (lRtnJson.responseType === generalConstants.types.mp3) {
+            speakOutput = generalConstants.speak.openingTag +
+                generalConstants.speak.audioSrcOpen +
+                lRtnJson.responseContent +
+                generalConstants.speak.audioSrcClose +
+                generalConstants.speak.closingTag;
         } else {
             // Normal output using standard alexa voice
             speakOutput = lRtnJson.responseContent;
         }
 
-        console.log('..speak out will be ',speakOutput);
+        console.log('..speak out will be ', speakOutput);
 
         return handlerInput.responseBuilder
             .speak(speakOutput)
@@ -340,45 +341,52 @@ const seatMaterialIntentHandler = {
 };
 
 
-const topSpeedIntentHandler ={
-    canHandle(handlerInput){
+const generalIntentHandler = {
+    canHandle(handlerInput) {
         const request = handlerInput.requestEnvelope.request;
 
         return request.type === 'IntentRequest' &&
             (request.intent.name === 'topSpeedIntent' ||
-            request.intent.name === 'driverAssistanceIntent') &&
+                request.intent.name === 'driverAssistanceIntent' ||
+                request.intent.name === 'fuelConsumptionIntent' ||
+                request.intent.name === 'backSeatHubIntent' ||
+                request.intent.name === 'engineIntent' ||
+                request.intent.name === 'efficientDynamicsIntent' ||
+                request.intent.name === 'luggageCapacityIntent' ||
+                request.intent.name === 'depreciationIntent' ||
+                request.intent.name === 'appleCarPlayAsStandardIntent') &&
             request.dialogState !== 'COMPLETED';
     },
-    async handle(handlerInput){
+    async handle(handlerInput) {
 
         const lAttributesManager = handlerInput.attributesManager;
         const lPersistentAttributes = await lAttributesManager.getPersistentAttributes();
         let sessionAttributes = lAttributesManager.getSessionAttributes();
 
-        console.log('..IN topSpeedIntentHandler/driverAssistanceIntent');
+        console.log('..IN topSpeedIntentHandler/driverAssistanceIntent/fuelConsumptionIntent');
 
         const lRequestName = handlerInput.requestEnvelope.request.intent.name;
 
         let lVehicleId = lPersistentAttributes.vehicleId;
 
         console.log('...calling getResponse with %s and %s', lVehicleId, lRequestName);
-        
 
-        let lRtnJson = await utils.getResponse(lVehicleId,lRequestName);
 
-        if (lRtnJson.responseType === generalConstants.types.mp3){
-            speakOutput = generalConstants.speak.openingTag + 
-                          generalConstants.speak.audioSrcOpen +
-                        lRtnJson.responseContent +
-                        generalConstants.speak.audioSrcClose +
-                        generalConstants.speak.closingTag;
+        let lRtnJson = await utils.getResponse(lVehicleId, lRequestName);
+
+        if (lRtnJson.responseType === generalConstants.types.mp3) {
+            speakOutput = generalConstants.speak.openingTag +
+                generalConstants.speak.audioSrcOpen +
+                lRtnJson.responseContent +
+                generalConstants.speak.audioSrcClose +
+                generalConstants.speak.closingTag;
         } else {
             // Normal output using standard alexa voice
             speakOutput = lRtnJson.responseContent;
         }
 
-        console.log('..speak out will be ',speakOutput);
-        
+        console.log('..speak out will be ', speakOutput);
+
 
         //speakOutput = generalConstants.answers.topSpeedIntent
         return handlerInput.responseBuilder
@@ -392,15 +400,15 @@ const topSpeedIntentHandler ={
 /**
  * driverAssistanceIntent
  */
-const driverAssistanceIntentHandler ={
-    canHandle(handlerInput){
+const driverAssistanceIntentHandler = {
+    canHandle(handlerInput) {
         const request = handlerInput.requestEnvelope.request;
 
         return request.type === 'IntentRequest' &&
             request.intent.name === 'driverAssistanceIntent' &&
             request.dialogState !== 'COMPLETED';
     },
-    async handle(handlerInput){
+    async handle(handlerInput) {
 
         console.log('..IN driverAssistanceIntentHandler');
 
@@ -408,11 +416,11 @@ const driverAssistanceIntentHandler ={
         let persistentAttributes = await attributesManager.getPersistentAttributes();
 
         console.log('..persistentAttributes = ', JSON.stringify(persistentAttributes));
-        
+
         speakOutput = generalConstants.answers.driverAssistanceIntent;
 
         console.log('..speakerOutput = ', JSON.stringify(speakOutput));
-        
+
 
         speakOutput = _.replace(speakOutput, /%make/g, persistentAttributes.Make);
 
@@ -422,7 +430,7 @@ const driverAssistanceIntentHandler ={
         console.log('..speakerOutput = ', JSON.stringify(speakOutput));
 
         console.log('..output = ', JSON.stringify(speakOutput));
-        
+
 
         return handlerInput.responseBuilder
             .speak(speakOutput)
@@ -433,98 +441,19 @@ const driverAssistanceIntentHandler ={
 };
 
 
-
-/**
- * fuelConsumptionIntent
- */
-const fuelConsumptionIntentHandler ={
-    canHandle(handlerInput){
-        const request = handlerInput.requestEnvelope.request;
-
-        return request.type === 'IntentRequest' &&
-            request.intent.name === 'fuelConsumptionIntent' &&
-            request.dialogState !== 'COMPLETED';
-    },
-    async handle(handlerInput){
-
-        console.log('..IN fuelConsumptionIntentHandler');
-
-        speakOutput = generalConstants.answers.fuelConsumptionIntent;
-
-        const attributesManager = handlerInput.attributesManager;
-        let persistentAttributes = await attributesManager.persistentAttributes();
-
-        speakOutput = _.replace(speakOutput, /%make/g, persistentAttributes.Make);
-        speakOutput = _.replace(speakOutput, /%model/g, persistentAttributes.Model);
-
-        return handlerInput.responseBuilder
-            .speak(speakOutput)
-            .withShouldEndSession(false)
-            .getResponse();
-
-    },
-};
-
-
-
-//luggageCapacityIntent
-const luggageCapacityIntentHandler ={
-    canHandle(handlerInput){
-        const request = handlerInput.requestEnvelope.request;
-
-        return request.type === 'IntentRequest' &&
-            request.intent.name === 'luggageCapacityIntent' &&
-            request.dialogState !== 'COMPLETED';
-    },
-    async handle(handlerInput){
-
-        console.log('..IN luggageCapacityIntentHandler');
-
-        speakOutput = generalConstants.answers.luggageCapacityIntent;
-
-        return handlerInput.responseBuilder
-            .speak(speakOutput)
-            .withShouldEndSession(false)
-            .getResponse();
-
-    },
-};
-
-//luggageCapacityIntent
-const efficientDynamicsIntentHandler ={
-    canHandle(handlerInput){
-        const request = handlerInput.requestEnvelope.request;
-
-        return request.type === 'IntentRequest' &&
-            request.intent.name === 'efficientDynamicsIntent' &&
-            request.dialogState !== 'COMPLETED';
-    },
-    async handle(handlerInput){
-
-        console.log('..IN efficientDynamicsIntentHandler');
-
-        speakOutput = generalConstants.answers.efficientDynamicsIntent;
-
-        return handlerInput.responseBuilder
-            .speak(speakOutput)
-            .withShouldEndSession(false)
-            .getResponse();
-
-    },
-};
 
 /**
  * pricePacakageIntent
  */
-const pricePacakageIntentHandler ={
-    canHandle(handlerInput){
+const pricePacakageIntentHandler = {
+    canHandle(handlerInput) {
         const request = handlerInput.requestEnvelope.request;
 
         return request.type === 'IntentRequest' &&
             request.intent.name === 'pricePacakageIntent' &&
             request.dialogState !== 'COMPLETED';
     },
-    async handle(handlerInput){
+    async handle(handlerInput) {
 
         console.log('..IN pricePacakageIntentHandler');
 
@@ -532,7 +461,7 @@ const pricePacakageIntentHandler ={
         console.log('...slots = ', JSON.stringify(slotValues));
 
         speakOutput = _.replace(speakOutput, /%packageType/g, slotValues.packageType.value);
-        
+
         speakOutput = generalConstants.answers.pricePacakageIntent;
 
         return handlerInput.responseBuilder
@@ -622,6 +551,41 @@ const ErrorHandler = {
             .getResponse();
     }
 };
+/**
+ * Fallback Intent Handler
+ * Handles when the user has asked something that is not in the model
+ */
+const FallbackHandler = {
+    canHandle(handlerInput) {
+        const request = handlerInput.requestEnvelope.request;
+        return request.type === 'IntentRequest' &&
+            request.intent.name ===
+            'AMAZON.FallbackIntent';
+    },
+    async handle(handlerInput) {
+        
+        const responseBuilder = handlerInput.responseBuilder;
+        const attributesManager = handlerInput.attributesManager;
+        const persistentAttributes = await attributesManager.getPersistentAttributes();
+        const sessionAttributes = handlerInput.attributesManager.getSessionAttributes();
+
+        // Randomly get a fact about the car
+        let lRandomCarFacts = await utils.getRandomCarFacts(sessionAttributes);
+
+        // Get the number of the responses
+        let lResponseSize = _.size(lRandomCarFacts);
+
+        // Choose one of the random facts to speak
+        let lIndex = _.random(0, lResponseSize);
+
+        speak = lRandomCarFacts[lIndex];
+
+        return responseBuilder
+            .speak(speak)
+            .reprompt(speak)
+            .getResponse();
+    },
+};
 
 
 
@@ -630,15 +594,17 @@ const ErrorHandler = {
 // defined are included below. The order matters - they're processed top to bottom.
 exports.handler = Alexa.SkillBuilders.custom()
     .addRequestHandlers(
+        FallbackHandler,
         LaunchRequestHandler,
         completedVehicleVerificationHandler,
         inProgressVehicleVerificationHandler,
+        generalIntentHandler,
         seatMaterialIntentHandler,
-        topSpeedIntentHandler,
+        //topSpeedIntentHandler,
         //driverAssistanceIntentHandler,
-        fuelConsumptionIntentHandler,
-        efficientDynamicsIntentHandler,
-        luggageCapacityIntentHandler,
+        //fuelConsumptionIntentHandler,
+        //efficientDynamicsIntentHandler,
+        //luggageCapacityIntentHandler,
         menuOptionIntentHandlers.fullTourIntentHandler,
         menuOptionIntentHandlers.questionIntentHandler,
         fullTourIntentHandler,
@@ -657,7 +623,7 @@ exports.handler = Alexa.SkillBuilders.custom()
     //     ...require('./interceptors/response')
     // )
     .addRequestInterceptors(utils.PersistenceRequestInterceptor,
-                            utils.processNumberOfQuestions)
+        utils.processNumberOfQuestions)
     .addResponseInterceptors(utils.PersistenceResponseInterceptor)
     .withPersistenceAdapter(persistenceAdapter)
     .lambda();
