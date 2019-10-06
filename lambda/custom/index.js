@@ -147,7 +147,7 @@ const LaunchRequestHandler = {
                     confirmationStatus: 'NONE',
                     slots: {}
                 })
-                .speak("Welcome, first things first, we need to link this device to this car.")
+                .speak(speakOutput)
                 .getResponse();
 
 
@@ -523,13 +523,41 @@ const IntentReflectorHandler = {
     canHandle(handlerInput) {
         return handlerInput.requestEnvelope.request.type === 'IntentRequest';
     },
-    handle(handlerInput) {
-        const intentName = handlerInput.requestEnvelope.request.intent.name;
-        const speakOutput = `You just triggered ${intentName}`;
+    async handle(handlerInput) {
+        // const intentName = handlerInput.requestEnvelope.request.intent.name;
+        // const speakOutput = `You just triggered ${intentName}`;
 
-        return handlerInput.responseBuilder
-            .speak(speakOutput)
-            //.reprompt('add a reprompt if you want to keep the session open for the user to respond')
+        // return handlerInput.responseBuilder
+        //     .speak(speakOutput)
+        //     //.reprompt('add a reprompt if you want to keep the session open for the user to respond')
+        //     .getResponse();
+        
+        const responseBuilder = handlerInput.responseBuilder;
+        const attributesManager = handlerInput.attributesManager;
+        const persistentAttributes = await attributesManager.getPersistentAttributes();
+        const sessionAttributes = handlerInput.attributesManager.getSessionAttributes();
+
+        // Randomly get a fact about the car
+        let lRandomCarFacts = await utils.getRandomCarFacts(sessionAttributes);
+
+        // Get the number of the responses
+        let lResponseSize = _.size(lRandomCarFacts);
+
+        // Choose one of the random facts to speak
+        let lIndex = _.random(0, lResponseSize);
+
+        console.log('index = ', lIndex);
+
+        if (lIndex==0){
+            speakOutput = lRandomCarFacts[lIndex].factText;
+        } else {
+            speakOutput = lRandomCarFacts[lIndex-1].factText;
+        }
+
+        return responseBuilder
+            .speak(speak)
+            .reprompt(speak)
+            .withShouldEndSession(false)
             .getResponse();
     }
 };

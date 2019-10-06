@@ -20,6 +20,6 @@
     "lodash": "^4.17.15"
   },
   "devDependencies": {
-    "bespoken-tools": "^2.4.6"
+    "bespoken-tools": "^2.4.9"
   }
 }
