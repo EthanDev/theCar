@@ -420,11 +420,6 @@ var getResponse = (pVehicleId, pIntentName) => {
 }; // end-getResponse
 
 
-var addToProfile = {
-    
-}
-
-
 var getRandomCarFacts = pSessionAttributes => {
     console.log('- - - - - - - - - - - - - - - ');
     console.log('..IN getRandomCarFacts with SessionAttributes = %s', JSON.stringify(pSessionAttributes));

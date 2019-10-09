@@ -552,7 +552,7 @@ const IntentReflectorHandler = {
             speakOutput = lRandomCarFacts[lIndex].factText;
         } else {
             speakOutput = lRandomCarFacts[lIndex-1].factText;
-        }
+        }G
 
         return responseBuilder
             .speak(speak)
