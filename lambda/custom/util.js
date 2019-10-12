@@ -420,14 +420,11 @@ var getResponse = (pVehicleId, pIntentName) => {
 }; // end-getResponse
 
 
-var addToProfile = {
-    
-}
-
-
 var getRandomCarFacts = pSessionAttributes => {
     console.log('- - - - - - - - - - - - - - - ');
     console.log('..IN getRandomCarFacts with SessionAttributes = %s', JSON.stringify(pSessionAttributes));
+
+    let lVehicleId = pSessionAttributes.vehicleId;
 
     return new Promise(function (resolve, reject) {
 
@@ -469,8 +466,7 @@ var getRandomCarFacts = pSessionAttributes => {
             }
         });
 
-
-    });
+    }); // end-promise
 
 }; // end getRandomCarFacts
 
