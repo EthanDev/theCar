@@ -431,6 +431,44 @@ var getRandomCarFacts = pSessionAttributes => {
 
     return new Promise(function (resolve, reject) {
 
+        let lQueryParams = {
+            TableName: generalConstants.dbTableNames.vehicleInformation,
+            ProjectionExpression: "#randomFacts",
+            KeyConditionExpression: "id = :vehicleId",
+            ExpressionAttributeNames:{
+                "#randomFacts": generalConstants.randomFacts
+            },
+            ExpressionAttributeValues:{
+                ":vehicleId": pSessionAttributes.vehicleId.toString()
+            }
+        };
+
+        console.log('...Query parms = %s', JSON.stringify(lQueryParams));
+
+        docClient.query(lQueryParams, function (err, data) {
+            if (err) {
+                console.error("Unable to query. Error:", JSON.stringify(err, null, 2));
+                reject(err);
+            } else {
+                console.log("Query succeeded.", data);
+                if (data.Items.length !== 0) {
+                    data.Items.forEach(function (item) {
+                        console.log('..item = ', JSON.stringify(item));
+                        
+
+                        let randomFacts = item[randomFacts];
+                        
+                        console.log('...rtnJson = ', JSON.stringify(lRtnJson));
+
+                        resolve(randomFacts);
+                    });
+                } else {
+                    reject('No random facts exists for vehicle');
+                };
+
+            }
+        });
+
 
     });
 

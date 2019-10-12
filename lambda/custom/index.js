@@ -5,6 +5,13 @@ const Alexa = require('ask-sdk');
 var persistenceAdapter;
 var _ = require('lodash');
 
+const ALGOLIA_APP_ID = `5TTBLP003O`;
+const ALGOLIA_API_KEY = `22b9df67712d6646fa290c7f4842b0c7`;
+
+const algoliasearch = require('algoliasearch');
+const algolia = algoliasearch(ALGOLIA_APP_ID, ALGOLIA_API_KEY);
+const index = algolia.initIndex('talk-search');
+
 const utils = require('./util');
 const generalConstants = require('./constants/general');
 const helper = require('./helperFunctions');
@@ -35,6 +42,39 @@ function keyGenerator(requestEnvelope) {
 
 // Global variables
 let reprompt, speakOutput, currentIntent;
+
+
+/**
+ * Function: searchIntentHandler
+ * Search functionality that will search the algolia database for the right answer
+ */
+const searchIntentHandler = {
+    canHandle(handlerInput) {
+
+        return handlerInput.requestEnvelope.request.type === 'LaunchRequest' ||
+            handlerInput.requestEnvelope.request.intent.name === 'SearchIntent';
+
+    },
+    async handle(handlerInput) {
+
+        const query = handlerInput.requestEnvelope.request.intent.slots.query.value;
+
+        const response = await index.search({
+            query,
+            removeStopWords: true,
+            ignorePlurals: true,
+            optionalWords: query
+        });
+        const hits = response.hits;
+        const talk = hit[0];
+
+        const speechText = `I've got a video, it's titled ${talk.name} and it's by ${talk.speakers.join(',')}. Want to watch?`;
+
+    },
+
+}; // end search intent
+
+
 
 /**
  * Function: LaunchRequestHandler
@@ -563,7 +603,7 @@ const FallbackHandler = {
             'AMAZON.FallbackIntent';
     },
     async handle(handlerInput) {
-        
+
         const responseBuilder = handlerInput.responseBuilder;
         const attributesManager = handlerInput.attributesManager;
         const persistentAttributes = await attributesManager.getPersistentAttributes();
@@ -578,7 +618,7 @@ const FallbackHandler = {
         // Choose one of the random facts to speak
         let lIndex = _.random(0, lResponseSize);
 
-        speak = lRandomCarFacts[lIndex];
+        speak = lRandomCarFacts[lIndex].factText;
 
         return responseBuilder
             .speak(speak)
@@ -595,6 +635,7 @@ const FallbackHandler = {
 exports.handler = Alexa.SkillBuilders.custom()
     .addRequestHandlers(
         FallbackHandler,
+        searchIntentHandler,
         LaunchRequestHandler,
         completedVehicleVerificationHandler,
         inProgressVehicleVerificationHandler,

@@ -1,4 +1,5 @@
 module.exports = Object.freeze({
+    randomFacts: "randomFacts",
     dbTableNames:{
         vehicleInformation: "vehicleInformation",
     },
