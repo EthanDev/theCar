@@ -453,9 +453,10 @@ var getRandomCarFacts = pSessionAttributes => {
                         console.log('..item = ', JSON.stringify(item));
                         
 
-                        let randomFacts = item[randomFacts];
+                        let randomFacts = item.randomFacts;
+
+                        console.log('Random Fact = ', randomFacts);
                         
-                        console.log('...rtnJson = ', JSON.stringify(lRtnJson));
 
                         resolve(randomFacts);
                     });

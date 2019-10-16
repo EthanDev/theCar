@@ -44,43 +44,43 @@ function keyGenerator(requestEnvelope) {
 let reprompt, speakOutput, currentIntent;
 
 
+// /**
+//  * Function: searchIntentHandler
+//  * Search functionality that will search the algolia database for the right answer
+//  */
+// const searchIntentHandler = {
+//     canHandle(handlerInput) {
+
+//         return handlerInput.requestEnvelope.request.type === 'LaunchRequest' ||
+//             handlerInput.requestEnvelope.request.intent.name === 'SearchIntent';
+
+//     },
+//     async handle(handlerInput) {
+
+//         const query = handlerInput.requestEnvelope.request.intent.slots.query.value;
+
+//         const response = await index.search({
+//             query,
+//             removeStopWords: true,
+//             ignorePlurals: true,
+//             optionalWords: query
+//         });
+//         const hits = response.hits;
+//         const talk = hit[0];
+
+//         const speechText = `I've got a video, it's titled ${talk.name} and it's by ${talk.speakers.join(',')}. Want to watch?`;
+
+//     },
+
+// }; // end search intent
+
+
+
 /**
- * Function: searchIntentHandler
- * Search functionality that will search the algolia database for the right answer
- */
-const searchIntentHandler = {
-    canHandle(handlerInput) {
-
-        return handlerInput.requestEnvelope.request.type === 'LaunchRequest' ||
-            handlerInput.requestEnvelope.request.intent.name === 'SearchIntent';
-
-    },
-    async handle(handlerInput) {
-
-        const query = handlerInput.requestEnvelope.request.intent.slots.query.value;
-
-        const response = await index.search({
-            query,
-            removeStopWords: true,
-            ignorePlurals: true,
-            optionalWords: query
-        });
-        const hits = response.hits;
-        const talk = hit[0];
-
-        const speechText = `I've got a video, it's titled ${talk.name} and it's by ${talk.speakers.join(',')}. Want to watch?`;
-
-    },
-
-}; // end search intent
-
-
-
-/**
- * Function: LaunchRequestHandler
+ * Function: registerIntentHandler
  * Launch of the skill
  */
-const LaunchRequestHandler = {
+const registerIntentHandler = {
     canHandle(handlerInput) {
 
         console.log('Launch check ', handlerInput.requestEnvelope.request);
@@ -89,8 +89,8 @@ const LaunchRequestHandler = {
         // Get the number of questions asked and if 1 then go into the launch process
         //let noOfQuestions = 
 
-        return handlerInput.requestEnvelope.request.type === 'LaunchRequest' ||
-            handlerInput.requestEnvelope.request.intent.name === 'registerIntent';
+        //return handlerInput.requestEnvelope.request.type === 'LaunchRequest' ||
+        return handlerInput.requestEnvelope.request.intent.name === 'registerIntent';
 
     },
     async handle(handlerInput) {
@@ -169,7 +169,7 @@ const LaunchRequestHandler = {
             // Scenario 1.1 - The device is not registered to the car 
             currentIntent = 'vehicleVerificationIntent';
 
-            speakOutput = `Welcome, first things first, we need to link this device to this car. What's the make?`;
+            speakOutput = `Welcome, first things first, we need to link this device to this car.`;
             reprompt = `Welcome, let's get this device setup. What's the vehicle make and model?`;
             // return handlerInput.responseBuilder
             //     .addElicitSlotDirective('carMake', {
@@ -180,6 +180,10 @@ const LaunchRequestHandler = {
             //     .speak(speakOutput)
             //     .reprompt(reprompt)
             //     .getResponse();
+
+
+            console.log('..');
+
 
             return handlerInput.responseBuilder
                 .addDelegateDirective({
@@ -203,6 +207,89 @@ const LaunchRequestHandler = {
             .withShouldEndSession(false)
             .getResponse();
     }
+};
+
+/**
+ * Function: customerOnboardingIntentHandler - start the customer experience
+ * customer onboarding with introduction by alexa
+ * trigger utterance: Alexa ask the car to start the experience
+ */
+const customerOnboardingIntentHandler = {
+    canHandle(handlerInput) {
+
+        console.log('...checking customerOnboardingIntentHandler with request =', JSON.stringify(handlerInput.requestEnvelope.request));
+
+        const request = handlerInput.requestEnvelope.request;
+
+        return request.type === 'IntentRequest' &&
+               request.intent.name === 'customerOnboardingIntent' &&
+               request.dialogState == 'STARTED';
+
+    },
+    async handle(handlerInput) {
+
+        const request = handlerInput.requestEnvelope.request;
+        const responseBuilder = handlerInput.responseBuilder;
+
+        speakOutput = generalConstants.onboardingSpeechText;
+
+        return handlerInput.responseBuilder
+            .addElicitSlotDirective('customerName')
+            .speak(speakOutput)
+            .reprompt(`Sorry I didn't get that, could you tell me your name?`)
+            .getResponse();
+    },
+};
+
+/**
+ * Function: customerOnboardingIntentInProgressHandler - respond after getting the user's name
+ * Scenario 1.1: The salesman has started the experience and now the user is answering their name
+ * Sample utterance: NONE
+ */
+const customerOnboardingIntentInProgressHandler = {
+    canHandle(handlerInput) {
+
+        console.log('...checking customerOnboardingIntentInProgressHandler with request =', JSON.stringify(handlerInput.requestEnvelope.request));
+
+        const request = handlerInput.requestEnvelope.request;
+
+        return request.type === 'IntentRequest' &&
+               request.intent.name === 'customerOnboardingIntent' &&
+               request.dialogState === 'IN_PROGRESS';
+
+    },
+    async handle(handlerInput) {
+
+        const request = handlerInput.requestEnvelope.request;
+        const responseBuilder = handlerInput.responseBuilder;
+        const attributesManager = handlerInput.attributesManager;
+
+        let persistentAttributes = await attributesManager.getPersistentAttributes();
+        console.log('..persistentAttributes = ', JSON.stringify(persistentAttributes));
+
+        let slotValues = utils.getSlotValues(request.intent.slots);
+        console.log('...slots = ', JSON.stringify(slotValues));
+
+        // Get the vehcile information
+        let lDeviceId = handlerInput.requestEnvelope.context.System.device.deviceId;
+        let lRtnDeviceDetails = await utils.checkRegisteredDevice(lDeviceId);
+        let lVehicleInfo = await utils.getVehicleInformationById(lRtnDeviceDetails.vehicleId);
+        console.log('...lVehicleInfo = ', JSON.stringify(lVehicleInfo));
+
+
+        speakOutput = generalConstants.onboardingSpeechTextCompleted;
+
+        speakOutput = _.replace(speakOutput, /%name/g, slotValues.customerName.value);
+        speakOutput = _.replace(speakOutput, /%make/g, lVehicleInfo.make);
+        speakOutput = _.replace(speakOutput, /%model/g, lVehicleInfo.model);
+
+        console.log('..Now look to get the option from the user');
+
+        return responseBuilder
+            .speak(speakOutput)
+            .withShouldEndSession(false)
+            .getResponse();
+    },
 };
 
 /**
@@ -394,6 +481,7 @@ const generalIntentHandler = {
                 request.intent.name === 'efficientDynamicsIntent' ||
                 request.intent.name === 'luggageCapacityIntent' ||
                 request.intent.name === 'depreciationIntent' ||
+                request.intent.name === 'entertainmentSystemIntent' ||
                 request.intent.name === 'appleCarPlayAsStandardIntent') &&
             request.dialogState !== 'COMPLETED';
     },
@@ -538,7 +626,7 @@ const CancelAndStopIntentHandler = {
                 handlerInput.requestEnvelope.request.intent.name === 'AMAZON.StopIntent');
     },
     handle(handlerInput) {
-        const speakOutput = `Thank you for asking about the BMW X5. <break time="250ms"/> I hope that you've had a great experience`;
+        const speakOutput = `Thank you for asking about the BMW X5. <break time="250ms"/> I hope you've had a great experience.<break time="10ms"/> Goodbye, <break time="5ms"/>and have a great day`;
         return handlerInput.responseBuilder
             .speak(speakOutput)
             .getResponse();
@@ -571,7 +659,7 @@ const IntentReflectorHandler = {
         //     .speak(speakOutput)
         //     //.reprompt('add a reprompt if you want to keep the session open for the user to respond')
         //     .getResponse();
-        
+
         const responseBuilder = handlerInput.responseBuilder;
         const attributesManager = handlerInput.attributesManager;
         const persistentAttributes = await attributesManager.getPersistentAttributes();
@@ -588,15 +676,15 @@ const IntentReflectorHandler = {
 
         console.log('index = ', lIndex);
 
-        if (lIndex==0){
+        if (lIndex == 0) {
             speakOutput = lRandomCarFacts[lIndex].factText;
         } else {
-            speakOutput = lRandomCarFacts[lIndex-1].factText;
-        }G
+            speakOutput = lRandomCarFacts[lIndex - 1].factText;
+        }
 
         return responseBuilder
-            .speak(speak)
-            .reprompt(speak)
+            .speak(speakOutput)
+            .reprompt(speakOutput)
             .withShouldEndSession(false)
             .getResponse();
     }
@@ -663,8 +751,11 @@ const FallbackHandler = {
 exports.handler = Alexa.SkillBuilders.custom()
     .addRequestHandlers(
         FallbackHandler,
-        searchIntentHandler,
-        LaunchRequestHandler,
+        registerIntentHandler,
+        //LaunchRequestHandler,
+        //searchIntentHandler,
+        customerOnboardingIntentHandler,
+        customerOnboardingIntentInProgressHandler,
         completedVehicleVerificationHandler,
         inProgressVehicleVerificationHandler,
         generalIntentHandler,

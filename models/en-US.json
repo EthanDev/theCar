@@ -17,7 +17,17 @@
                 },
                 {
                     "name": "AMAZON.StopIntent",
-                    "samples": []
+                    "samples": [
+                        "Finish ",
+                        "Finish here please",
+                        "Stop",
+                        "I'm done ",
+                        "I'm finished",
+                        "Stop please",
+                        "No thanks",
+                        "That's it",
+                        "That's all thank you"
+                    ]
                 },
                 {
                     "name": "AMAZON.NavigateHomeIntent",
@@ -27,6 +37,9 @@
                     "name": "registerIntent",
                     "slots": [],
                     "samples": [
+                        "to start",
+                        "to register",
+                        "to register to a device",
                         "Setup a new device",
                         "atatch the new device",
                         "Link this device",
@@ -42,6 +55,16 @@
                     "name": "interiorGeneralIntent",
                     "slots": [],
                     "samples": [
+                        "What are the seats made from",
+                        "Are these genuine leather",
+                        "Are the leather seats included in this package",
+                        "Are the seats real leather",
+                        "how durable are the seats",
+                        "the quality of the seats",
+                        "about the seating materials",
+                        "what are the seats made of",
+                        "about the interior",
+                        "about the interior of the car",
                         "What about the car interior",
                         "tell me about the car interior",
                         "what are the materials of the interior of the car",
@@ -54,6 +77,15 @@
                     "name": "seatMaterialIntent",
                     "slots": [],
                     "samples": [
+                        "What material covers the seats",
+                        "What material is on the seat",
+                        "Whats on the seats",
+                        "what material are on the seats",
+                        "whats are the seats made of ",
+                        "what the are the seats are made from",
+                        "Tell me about the seat material used",
+                        "Describe the material of the seats here",
+                        "What material are the seats made from",
                         "Do you have any info on the seat material",
                         "Do you know about the seat material",
                         "Tell me about the material on the drivers seat",
@@ -94,9 +126,22 @@
                     "name": "fuelConsumptionIntent",
                     "slots": [],
                     "samples": [
+                        "consumption per one hundred kilometer",
+                        "how much does the car drink now",
+                        "what is the consumption per kilometer",
+                        "how much does the car drink",
+                        "how much fuel does the car use",
+                        "what is the consumption",
+                        "how much is consuming",
+                        "consumption per one hundred kilometers",
+                        "if it uses a lot of fuel",
+                        "if its any good on petrol consumption",
+                        "if its sips fuel",
+                        "if its any good on fuel economy",
+                        "about the fuel comsumption",
                         "the rate of fule consumption",
                         "Is the fuel consumption good",
-                        "Do it drink fuel quickly",
+                        "Does it drink fuel quickly",
                         "How about fuel consumption",
                         "How good is the fuel consumption on this car",
                         "How much fuel does it use",
@@ -112,6 +157,10 @@
                     "name": "efficientDynamicsIntent",
                     "slots": [],
                     "samples": [
+                        "what is the focus to reduce its carbon footprint",
+                        "to tell me all about cutting CO two emmisions",
+                        "to tell me about BMW efficient dynamics",
+                        "what is BMW efficient dynamics",
                         "what is the efficient dynamic feature",
                         "explain the efficient dynamics package",
                         "describe the efficient dynamics feature",
@@ -135,7 +184,7 @@
                     "name": "driverAssistanceIntent",
                     "slots": [],
                     "samples": [
-                        "How does the driver assistant hgelp me",
+                        "How does the driver assistant help me",
                         "How does the drievr assistant works",
                         "how the driver assistance works",
                         "What happens in the assistant for drivers",
@@ -185,12 +234,25 @@
                             ]
                         }
                     ],
-                    "samples": []
+                    "samples": [
+                        "about the special features of the {packageType} package",
+                        "why should I buy the {packageType}",
+                        "what so unique about the {packageType}",
+                        "what is so special about the {packageType} package",
+                        "What features does the {packageType} package have",
+                        "what do I get with the {packageType} package",
+                        "what do I get in the {packageType} package",
+                        "what's in the {packageType} package",
+                        "what is the {packageType} package",
+                        "about the {packageType} package"
+                    ]
                 },
                 {
                     "name": "carSizeIntent",
                     "slots": [],
                     "samples": [
+                        "about its size",
+                        "what are the dimensions",
                         "whats the height",
                         "whats the width of the car",
                         "how long in the car",
@@ -205,9 +267,12 @@
                     ]
                 },
                 {
-                    "name": "luggageCapacity",
+                    "name": "luggageCapacityIntent",
                     "slots": [],
                     "samples": [
+                        "How many suitcases can hold in the back",
+                        "How much travel suitcases can I put in the back",
+                        "How much space is in the back",
                         "The capacity of the boot",
                         "The size of the trunk",
                         "How much luggage can it hold",
@@ -229,11 +294,211 @@
                         }
                     ],
                     "samples": [
+                        "about the cost for this {packageType}",
+                        "what is the cost of the {packageType}",
                         "The cost of the {packageType}",
                         "cost options for {packageType}",
                         "what are the price options for the {packageType}",
                         "for the price for the {packageType}",
                         "price for different packages"
+                    ]
+                },
+                {
+                    "name": "vehicleVerificationIntent",
+                    "slots": [
+                        {
+                            "name": "carMake",
+                            "type": "carMakeType",
+                            "samples": [
+                                "{carMake} {carModel}",
+                                "The car is a {carMake}",
+                                "It is a {carMake}",
+                                "{carMake}",
+                                "It's a {carMake}"
+                            ]
+                        },
+                        {
+                            "name": "carModel",
+                            "type": "carModelType",
+                            "samples": [
+                                "It is a {carModel}",
+                                "{carModel}"
+                            ]
+                        }
+                    ],
+                    "samples": [
+                        "The vehicle a {carMake} {carModel}",
+                        "{carModel}",
+                        "{carMake} {carModel}",
+                        "The car is a {carMake} {carModel}",
+                        "The vehicle is a {carMake}",
+                        "{carMake}",
+                        "{carMake} is the make",
+                        "I think the make is {carMake}",
+                        "The make is the {carMake}",
+                        "Its a {carMake}",
+                        "the vehicle make is {carMake}",
+                        "The make is {carMake}",
+                        "it is {carMake}"
+                    ]
+                },
+                {
+                    "name": "fullTourIntent",
+                    "slots": [],
+                    "samples": [
+                        "to get the audiou tour",
+                        "to get the full tour",
+                        "to play the full tour",
+                        "I would like to go with the tour",
+                        "The tour sounds nice",
+                        "I want the full tour guide",
+                        "Let's do the guide",
+                        "How about the full tour",
+                        "I would like the your",
+                        "I would like the full tour",
+                        "Can I have the tour",
+                        "Can I have the full tour",
+                        "What's the tour",
+                        "Play the tour",
+                        "take me on the tour",
+                        "Full tour please",
+                        "Tour please",
+                        "The tour",
+                        "I want the full guide",
+                        "Let's do the tour",
+                        "I want the tour please",
+                        "How about the tour"
+                    ]
+                },
+                {
+                    "name": "topSpeedIntent",
+                    "slots": [],
+                    "samples": [
+                        "Whats the quickest it can go up to",
+                        "Whats the max acceleration ",
+                        "How fast can move",
+                        "what is top speed",
+                        "What is the top acceleration",
+                        "What is the acceleration",
+                        "how rapid is it",
+                        "how long it takes to get from zero to sixty",
+                        "the max kilometers per hour",
+                        "the top miles per hour",
+                        "tell me the max speed",
+                        "whats the highest speed",
+                        "How quick can it go",
+                        "Whats the quickest it can go",
+                        "the max speed",
+                        "How fast can it go up to",
+                        "how fast is it",
+                        "how fast can I drive in this car",
+                        "how fast does it go up to",
+                        "whats the top speed of the car",
+                        "hw fast can this car go",
+                        "whats the top speed",
+                        "What's the top speed it can get up to",
+                        "whats the fastest it can go",
+                        "the maximum speed",
+                        "How fast can it go",
+                        "What's the maximum speed",
+                        "How fast does it go",
+                        "What is the top speed"
+                    ]
+                },
+                {
+                    "name": "packagesIntent",
+                    "slots": [
+                        {
+                            "name": "packageName",
+                            "type": "packageName"
+                        }
+                    ],
+                    "samples": [
+                        "why is the {packageName} so good",
+                        "I'm into {packageName} and I want to know more about it",
+                        "to tell me about the P {packageName} package",
+                        "what is the {packageName} package",
+                        "how good is the {packageName}",
+                        "about the {packageName}",
+                        "what features are in the {packageName}",
+                        "what do I get with the {packageName}",
+                        "what do you get in the {packageName}",
+                        "to describe the {packageName}",
+                        "to tell me about the {packageName}",
+                        "whats in the {packageName}",
+                        "what is the {packageName}"
+                    ]
+                },
+                {
+                    "name": "faqIntent",
+                    "slots": [],
+                    "samples": [
+                        "I want to find out about something",
+                        "I need to ask a question",
+                        "I want to ask something",
+                        "I want to get answers to my questions",
+                        "I want to ask anything",
+                        "I want to ask my own questions",
+                        "I would like to ask a question please",
+                        "I want to ask a question"
+                    ]
+                },
+                {
+                    "name": "backSeatHubIntent",
+                    "slots": [],
+                    "samples": [
+                        "what is the entertainment system for passengers",
+                        "what do the screens do in the back",
+                        "the entertainment system for the back seat passengers",
+                        "about the screens on the back of the seats",
+                        "the back seat entertainment system",
+                        "about the screens at the back",
+                        "about the back seat hub"
+                    ]
+                },
+                {
+                    "name": "depreciationIntent",
+                    "slots": [],
+                    "samples": [
+                        "how much i can expect to get back ",
+                        "about its average resale value ",
+                        "how much its worth later ",
+                        "about the potential value later on",
+                        "about its resale value",
+                        "about the expected money I can get for it in ten years time",
+                        "about the rate of depreciation compared to other vehicles",
+                        "about the expected value in ten years",
+                        "about the expected value in a few years time ",
+                        "about the value in a two years",
+                        "about the rate of depreciation",
+                        "about the value in a few years",
+                        "about the decline in value ",
+                        "Whats the expected value in a few years",
+                        "how much will this car eb worth in a few years time",
+                        "about the depreciation of this vehicle",
+                        "What is the resale value in three years",
+                        "what is the resale value in a few years",
+                        "how much will the car depreciate",
+                        "How much can I expect to get for the car after a few years",
+                        "what the value will be after a few years",
+                        "about the depreciation of this car",
+                        "about the value of the vehicle in a few years time",
+                        "about how much this car is worth in three years ",
+                        "about the depreciation"
+                    ]
+                },
+                {
+                    "name": "SearchIntent",
+                    "slots": [
+                        {
+                            "name": "query",
+                            "type": "AMAZON.SearchQuery"
+                        }
+                    ],
+                    "samples": [
+                        "if {query}",
+                        "to tell me about {query}",
+                        "about the {query}"
                     ]
                 }
             ],
@@ -278,12 +543,13 @@
                     "name": "carMakeType",
                     "values": [
                         {
-                            "id": "BMW_X5",
+                            "id": "BMW",
                             "name": {
-                                "value": "BMW X5",
+                                "value": "BMW",
                                 "synonyms": [
-                                    "BMW X5",
-                                    "X5"
+                                    "Beemer",
+                                    "BMW",
+                                    "bmw"
                                 ]
                             }
                         }
@@ -292,6 +558,17 @@
                 {
                     "name": "carModelType",
                     "values": [
+                        {
+                            "id": "X5",
+                            "name": {
+                                "value": "X5",
+                                "synonyms": [
+                                    "x5",
+                                    "5X",
+                                    "X 5"
+                                ]
+                            }
+                        },
                         {
                             "id": "M50D",
                             "name": {
@@ -328,6 +605,83 @@
                             }
                         }
                     ]
+                },
+                {
+                    "name": "packageName",
+                    "values": [
+                        {
+                            "id": "VISPACKAGE",
+                            "name": {
+                                "value": "Visibility",
+                                "synonyms": [
+                                    "Vision Pack",
+                                    "Visual Package",
+                                    "VISION Package"
+                                ]
+                            }
+                        },
+                        {
+                            "id": "TECHPACKAGE",
+                            "name": {
+                                "value": "Technology package",
+                                "synonyms": [
+                                    "TECHIE ",
+                                    "TECH",
+                                    "TECH PACKAGE"
+                                ]
+                            }
+                        },
+                        {
+                            "id": "COMFORTPLUS",
+                            "name": {
+                                "value": "Comfort Plus",
+                                "synonyms": [
+                                    "plus comfort",
+                                    "Extra comfort"
+                                ]
+                            }
+                        },
+                        {
+                            "id": "COMFORT",
+                            "name": {
+                                "value": "Comfort"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "menuOptionSlotType",
+                    "values": [
+                        {
+                            "name": {
+                                "value": "faq",
+                                "synonyms": [
+                                    "questions",
+                                    "ask a question",
+                                    "qna",
+                                    "question and answer",
+                                    "faq",
+                                    "question"
+                                ]
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "fullTour",
+                                "synonyms": [
+                                    "show me around",
+                                    "guides",
+                                    "tours",
+                                    "the tour",
+                                    "complete tour",
+                                    "guide",
+                                    "audio guide",
+                                    "audio tour",
+                                    "tour"
+                                ]
+                            }
+                        }
+                    ]
                 }
             ]
         },
@@ -348,6 +702,32 @@
                             }
                         }
                     ]
+                },
+                {
+                    "name": "vehicleVerificationIntent",
+                    "delegationStrategy": "SKILL_RESPONSE",
+                    "confirmationRequired": false,
+                    "prompts": {},
+                    "slots": [
+                        {
+                            "name": "carMake",
+                            "type": "carMakeType",
+                            "confirmationRequired": false,
+                            "elicitationRequired": true,
+                            "prompts": {
+                                "elicitation": "Elicit.Slot.1177833371063.692821601097"
+                            }
+                        },
+                        {
+                            "name": "carModel",
+                            "type": "carModelType",
+                            "confirmationRequired": false,
+                            "elicitationRequired": true,
+                            "prompts": {
+                                "elicitation": "Elicit.Slot.128392959367.319349685062"
+                            }
+                        }
+                    ]
                 }
             ],
             "delegationStrategy": "ALWAYS"
@@ -363,6 +743,56 @@
                     {
                         "type": "PlainText",
                         "value": "What is the package you wanted to know about"
+                    }
+                ]
+            },
+            {
+                "id": "Elicit.Slot.1177833371063.692821601097",
+                "variations": [
+                    {
+                        "type": "PlainText",
+                        "value": "What's the make of the vehicle?"
+                    },
+                    {
+                        "type": "PlainText",
+                        "value": "Could you tell me the make ?"
+                    },
+                    {
+                        "type": "PlainText",
+                        "value": "What's the make?"
+                    },
+                    {
+                        "type": "PlainText",
+                        "value": "Do you know the make?"
+                    },
+                    {
+                        "type": "PlainText",
+                        "value": "What is the make of this vehicle?"
+                    }
+                ]
+            },
+            {
+                "id": "Elicit.Slot.128392959367.319349685062",
+                "variations": [
+                    {
+                        "type": "PlainText",
+                        "value": "What is the model of this {carMake}"
+                    },
+                    {
+                        "type": "PlainText",
+                        "value": "And the model for this {carMake} ?"
+                    },
+                    {
+                        "type": "PlainText",
+                        "value": "Do you know the model of this {carMake} ?"
+                    },
+                    {
+                        "type": "PlainText",
+                        "value": "What's the model of this beautiful {carMake} ?"
+                    },
+                    {
+                        "type": "PlainText",
+                        "value": " What is the model of this {carMake} ?"
                     }
                 ]
             }
