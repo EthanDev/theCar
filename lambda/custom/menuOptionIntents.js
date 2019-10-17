@@ -18,24 +18,31 @@ persistenceAdapter = new DynamoDbPersistenceAdapter({
 
 
 // Full Tour Intent Handler
-const fullTourIntentHandler ={
+const configureCarIntentHandler ={
     canHandle(handlerInput){
         const request = handlerInput.requestEnvelope.request;
 
         return request.type === 'IntentRequest' &&
-            request.intent.name === 'fullTourIntent' &&
+            request.intent.name === 'configureCarIntent' &&
             request.dialogState !== 'COMPLETED';
     },
     async handle(handlerInput){
 
-        console.log('..IN fullTourIntentHandler');
+        console.log('..IN configureCarIntentHandler');
+
+        const sessionAttributes = handlerInput.attributesManager.getSessionAttributes();
         
 
-        speakOutput = generalConstants.answers.fullTourIntent;
+        speakOutput = generalConstants.answers.configureCarIntent;
+
+        // Get the next topic randomly
+        let lTopic = await utils.getNextTopic(sessionAttributes);
+        speakOutput = _.replace(speakOutput, /%topic/g, lTopic);
+
         
         return handlerInput.responseBuilder
             .speak(speakOutput)
-            .withShouldEndSession(false)
+            .withShouldEndSession(false) // keep the mic open for the user response 
             .getResponse();
 
     },
@@ -67,4 +74,4 @@ const questionIntentHandler ={
 };
 
 exports.questionIntentHandler = questionIntentHandler;
-exports.fullTourIntentHandler = fullTourIntentHandler;
+exports.configureCarIntentHandler = configureCarIntentHandler;

@@ -222,8 +222,8 @@ const customerOnboardingIntentHandler = {
         const request = handlerInput.requestEnvelope.request;
 
         return request.type === 'IntentRequest' &&
-               request.intent.name === 'customerOnboardingIntent' &&
-               request.dialogState == 'STARTED';
+            request.intent.name === 'customerOnboardingIntent' &&
+            request.dialogState == 'STARTED';
 
     },
     async handle(handlerInput) {
@@ -254,8 +254,8 @@ const customerOnboardingIntentInProgressHandler = {
         const request = handlerInput.requestEnvelope.request;
 
         return request.type === 'IntentRequest' &&
-               request.intent.name === 'customerOnboardingIntent' &&
-               request.dialogState === 'IN_PROGRESS';
+            request.intent.name === 'customerOnboardingIntent' &&
+            request.dialogState === 'IN_PROGRESS';
 
     },
     async handle(handlerInput) {
@@ -396,8 +396,7 @@ const fullTourIntentHandler = {
 
         const request = handlerInput.requestEnvelope.request;
         return request.type === 'IntentRequest' &&
-            request.intent.name === 'fullTourIntent' &&
-            sessionAttributes.Make;
+            request.intent.name === 'fullTourIntent';
     },
     async handle(handlerInput) {
 
@@ -412,7 +411,6 @@ const fullTourIntentHandler = {
 
         console.log('...calling getResponse with %s and %s', lVehicleId, lRequestName);
 
-
         let lRtnJson = await utils.getResponse(lVehicleId, lRequestName);
 
         if (lRtnJson.responseType === generalConstants.types.mp3) {
@@ -424,6 +422,15 @@ const fullTourIntentHandler = {
         } else {
             // Normal output using standard alexa voice
             speakOutput = lRtnJson.responseContent;
+            // replace %make and %model
+            // Get the vehcile information
+            let lDeviceId = handlerInput.requestEnvelope.context.System.device.deviceId;
+            let lRtnDeviceDetails = await utils.checkRegisteredDevice(lDeviceId);
+            let lVehicleInfo = await utils.getVehicleInformationById(lRtnDeviceDetails.vehicleId);
+            console.log('...lVehicleInfo = ', JSON.stringify(lVehicleInfo));
+
+            speakOutput = _.replace(speakOutput, /%make/g, lVehicleInfo.make);
+            speakOutput = _.replace(speakOutput, /%model/g, lVehicleInfo.model);
         }
 
         console.log('..speak out will be ', speakOutput);
@@ -754,20 +761,20 @@ exports.handler = Alexa.SkillBuilders.custom()
         registerIntentHandler,
         //LaunchRequestHandler,
         //searchIntentHandler,
+        fullTourIntentHandler,
         customerOnboardingIntentHandler,
         customerOnboardingIntentInProgressHandler,
         completedVehicleVerificationHandler,
         inProgressVehicleVerificationHandler,
         generalIntentHandler,
         seatMaterialIntentHandler,
+        menuOptionIntentHandlers.configureCarIntentHandler,
         //topSpeedIntentHandler,
         //driverAssistanceIntentHandler,
         //fuelConsumptionIntentHandler,
         //efficientDynamicsIntentHandler,
         //luggageCapacityIntentHandler,
-        menuOptionIntentHandlers.fullTourIntentHandler,
         menuOptionIntentHandlers.questionIntentHandler,
-        fullTourIntentHandler,
         HelpIntentHandler,
         CancelAndStopIntentHandler,
         SessionEndedRequestHandler,

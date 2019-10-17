@@ -21,6 +21,11 @@ module.exports = Object.freeze({
         audioSrcOpen: `<audio src="`,
         audioSrcClose: `" />`
     },
+    topics:[
+            `fuel consumption`,
+            `engine`,
+            `interior`,
+    ],
     greetings:{
         mainMenu:[
             `<speak><audio src="https://carview.s3.amazonaws.com/CpdzOkQH-2018-bmw-x5-official-video-1.mp3"/><break time="500ms"/> You're sitting in exactly the right spot! I'm sure you can agree this %make %model is amazing! <break time="500ms"/> Nice to meet you, my name is Nikki and I'm your personal guide to this amazing %make %model. <break time="500ms"/> What would you like to do? experience a full tour? or just ask me any question you like.</speak>`,
@@ -37,7 +42,7 @@ module.exports = Object.freeze({
         luggageCapacityIntent:  `<speak><prosody rate="medium">Many people have asked me the exact same thing. <break time="250ms"/> Did you know, all X5's have a split tailgate, with the top half being electrically operated. <break time="250ms"/>With this model the boot is big, serving up an impressive space capacity of 1,250 litres. <break time="250ms"/>The rear seats split 40 20 40. <break time="250ms"/> Did you want to ask me something else?</prosody></speak>`,
         efficientDynamicsIntent: `<speak><prosody rate="medium">The new BMW EfficientDynamics strategy is BMW's focus to minimise fuel consumption and CO2 emissions. <break time="250ms"/> The goal is to achieve this while increasing dynamics and driving pleasure at the same time. <break time="500ms"/>It is a package of functions covering the drive system, energy management and vehicle concepts, <break time="250ms"/> and is a standard feature in every BMW.</prosody></speak>`,
         pricePacakageIntent: `<speak><prosody rate="medium">I think you'll find that this amazing BMW exDrive 30d %packageType is astonishingly great value starting from just 55 thousand euros. <break time="250ms"/>Did you know, that from as little as one pound per day, you can benefit today from the official BMW servicing option? Make sure you ask your sales representative for this special offer. <break time="500ms"/> Is there anything else I can help you with?</prosody></speak>`,
-        fullTourIntent:`<speak><prosody rate="medium">Setting the benchmark for pathbreaking design, the BMW X5 epitomizes your confidence and pure experience.<break time="250ms"/> The new ConnectedDrive features mean that you're more connected than ever before.<break time="250ms"/>
+        fullTourIntent:`<speak><prosody rate="medium">Great choice! <break time="20ms"/> Let me tell you all about this %make %model.<break time="150ms"/>  Setting the benchmark for pathbreaking design, the BMW X5 epitomizes your confidence and pure experience.<break time="250ms"/> The new ConnectedDrive features mean that you're more connected than ever before.<break time="250ms"/>
         Included as standard, the BMW <w role="amazon:NN">live</w> Cockpit and the Connected Package enhances the functionality of your Ultimate Driving Machine.<break time="500ms"/>
         Apple CarPlay, Concierge, and Remote Services, are all included in your new BMW X5, meaning,  you're always connected with the outside world. <break time="500ms"/>
         Your BMW has award-winning Efficient Dynamics technology, designed to reduce CO2 emissions and improve fuel economy, without compromising on performance or driving dynamics.<break time="500ms"/>
@@ -55,7 +60,9 @@ module.exports = Object.freeze({
         Coupling the optional Sky Lounge Panoramic glass sunroof with Ambient interior lighting, creates a luxurious atmosphere of light that gracefully flows throughout.
         
         </prosody></speak>`,
-        questionIntent: `<speak><prosody rate="medium">That's great, I look forward to answering your questions to help your discover everything about your new BMW X5</prosody></speak>`
+        questionIntent: `<speak><prosody rate="medium">That's great, I look forward to answering your questions to help your discover everything about your new BMW X5</prosody></speak>`,
+        configureCarIntent: `<speak>Thank you for choosing to cofigure your car. <break time="100ms"/>Unfortunately, at the moment this option is not available.<break time="100ms"/> Maybe you'd like to know about about the %topic ?</speak>`
+    
     }
 
 

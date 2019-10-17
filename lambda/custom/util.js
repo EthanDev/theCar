@@ -419,6 +419,33 @@ var getResponse = (pVehicleId, pIntentName) => {
 
 }; // end-getResponse
 
+var getNextTopic = pSessionAttributes => {
+
+    console.log('-----------------------------');
+    console.log('..IN getNextTopic ');
+
+    let lRtnTopic;
+    
+    return new Promise(function (resolve, reject){
+
+        let lRandomTopics =  generalConstants.topics;
+
+        // Get the number of the responses
+        let lResponseSize = _.size(lRandomTopics);
+
+        // Choose one of the random facts to speak
+        let lIndex = _.random(0, lResponseSize);
+
+
+        if (lIndex == 0) {
+            lRtnTopic = lRandomTopics[lIndex];
+        } else {
+            lRtnTopic = lRandomTopics[lIndex - 1];
+        }
+
+        resolve(lRtnTopic);
+    });
+};
 
 var getRandomCarFacts = pSessionAttributes => {
     console.log('- - - - - - - - - - - - - - - ');
@@ -482,3 +509,4 @@ exports.getVehicleInformation = getVehicleInformation;
 exports.registerDeviceToVehicle = registerDeviceToVehicle;
 exports.processNumberOfQuestions = processNumberOfQuestions;
 exports.getRandomCarFacts = getRandomCarFacts;
+exports.getNextTopic = getNextTopic;
