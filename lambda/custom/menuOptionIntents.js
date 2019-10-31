@@ -15,9 +15,40 @@ persistenceAdapter = new DynamoDbPersistenceAdapter({
     tableName: process.env.DYNAMO_TABLE_NAME || 'carViewUsers',
     createTable: true
 });
+/**
+ * function: askQuestionIntentHandler
+ * Scenario: When the user selects that they want to ask a question
+ * Action: Prompt the user for the question
+ */
+const askQuestionIntentHandler ={
+    canHandle(handlerInput){
+        const request = handlerInput.requestEnvelope.request;
+
+        return request.type === 'IntentRequest' &&
+            request.intent.name === 'askQuestionIntent' &&
+            request.dialogState !== 'COMPLETED';
+    },
+    async handle(handlerInput){
+
+        console.log('..IN askQuestionIntentHandler');
 
 
-// Full Tour Intent Handler
+        speakOutput = `<speak>Sure thing, what would you like to know?</speak>`;
+        
+        return handlerInput.responseBuilder
+            .speak(speakOutput)
+            .withShouldEndSession(false) // keep the mic open for the user response 
+            .getResponse();
+
+    },
+
+}; // 
+
+
+/**
+ * function: configureCarIntentHandler
+ * Handle when the user wants to configure their car
+ */
 const configureCarIntentHandler ={
     canHandle(handlerInput){
         const request = handlerInput.requestEnvelope.request;
@@ -43,6 +74,39 @@ const configureCarIntentHandler ={
         return handlerInput.responseBuilder
             .speak(speakOutput)
             .withShouldEndSession(false) // keep the mic open for the user response 
+            .getResponse();
+
+    },
+};
+
+// Rating Intent Handler
+const RatingIntentHandler ={
+    canHandle(handlerInput){
+        const request = handlerInput.requestEnvelope.request;
+
+        return request.type === 'IntentRequest' &&
+            request.intent.name === 'RatingIntent' &&
+            request.intent.confirmationStatus ==='NONE' &&
+            request.dialogState === 'COMPLETED';
+    },
+    async handle(handlerInput){
+
+        console.log('..IN RatingIntentHandler');
+
+        let lSlotValues = utils.getSlotValues(handlerInput.requestEnvelope.request.intent.slots);
+
+        let lUserRating = lSlotValues.rating.value;
+        // Check the rating and respond accordingly
+        if (lUserRating >= 3) {
+            speakOutput = `<speak>Thank you for the great feedback, have a great day</speak>`;
+        } else {
+            speakOutput = `<speak>I'm sorry that the experience could have been better.<break time="50ms"/> I'll try better next time. <break time="200ms"/>Either way, I hope you have a good day.</speak>`;
+        }
+        
+        // End the session here
+        return handlerInput.responseBuilder
+            .speak(speakOutput)
+            .withShouldEndSession(true)
             .getResponse();
 
     },
@@ -75,3 +139,5 @@ const questionIntentHandler ={
 
 exports.questionIntentHandler = questionIntentHandler;
 exports.configureCarIntentHandler = configureCarIntentHandler;
+exports.askQuestionIntentHandler = askQuestionIntentHandler;
+exports.RatingIntentHandler = RatingIntentHandler;

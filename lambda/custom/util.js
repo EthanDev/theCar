@@ -1,5 +1,10 @@
 const AWS = require('aws-sdk');
 var _ = require('lodash');
+var rp = require('request-promise');
+var dateFormat = require('dateformat');
+const accountSid = 'ACc63ae6c570ca6f01ab5a0556af7d0f03';
+const authToken = 'dd146dbdc46c26bdc22e9667ba8d951f';
+const client = require('twilio')(accountSid, authToken);
 
 // Load constants
 const generalConstants = require('./constants/general');
@@ -17,7 +22,9 @@ AWS.config.update({
 
 var docClient = new AWS.DynamoDB.DocumentClient();
 
-var ddb = new AWS.DynamoDB({apiVersion: '2012-08-10'});
+var ddb = new AWS.DynamoDB({
+    apiVersion: '2012-08-10'
+});
 
 module.exports.getS3PreSignedUrl = function getS3PreSignedUrl(s3ObjectKey) {
 
@@ -31,6 +38,77 @@ module.exports.getS3PreSignedUrl = function getS3PreSignedUrl(s3ObjectKey) {
     return s3PreSignedUrl;
 
 }
+
+
+var sendMessageToSalesTeam = async (pBody) => {
+
+    return new Promise(function (resolve, reject) {
+
+        client.messages
+            .create({
+                body: pBody,
+                from: '+16466031727',
+                to: '+40726709929'
+            })
+            .then(message => console.log(message.sid));
+
+    }); // end-promise
+
+}; // end-function
+
+/**
+ * logQuestionCategory - Log the category to elastic search analytics
+ * @param {JSON} pSession 
+ * @param {String} pCategory 
+ */
+var logQuestionCategory = async (pHandlerInput, pCategory) => {
+
+    console.log('IN logQuestionCategory with handlerInput = %s and pCategory = %s ', pHandlerInput, pCategory);
+
+    var now = new Date();
+    let lTodaysDate = dateFormat(now, "yyyy-mm-dd");
+
+    let lDeviceId = pHandlerInput.requestEnvelope.context.System.device.deviceId;
+    let lRtnDeviceDetails = await checkRegisteredDevice(lDeviceId);
+    let lVehicleInfo = await getVehicleInformationById(lRtnDeviceDetails.vehicleId);
+    console.log('...lVehicleInfo = ', JSON.stringify(lVehicleInfo));
+
+    return new Promise(function (resolve, reject) {
+
+        var lOptions = {
+            uri: 'https://1ddac3e8e8fe4234a3f1c050c1785db9.us-east-1.aws.found.io:9243/carsaydata/_doc/',
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Basic ZWxhc3RpYzpneWhCNG1tbU5pYkFaUVJWM014SzhvQ1g=",
+            },
+            body: {
+                "category": pCategory,
+                "make": lVehicleInfo.make,
+                "location": "Afi",
+                "date": lTodaysDate,
+                "model": lVehicleInfo.model,
+                "type": "Question_Category"
+            },
+            json: true // Automatically stringifies the body to JSON
+        };
+
+        rp(lOptions)
+            .then((response) => {
+
+                console.log('Record added to Elastic search response = ', response);
+
+
+                resolve();
+
+            })
+            .catch(function (err) {
+
+
+            }); // end-rp
+    }); // end-promise
+
+}; // End logQuestionCategory function
 
 /**
  * Regigster the device
@@ -47,8 +125,8 @@ var registerDeviceToVehicle = (pDeviceId, pVehicleId) => {
             "vehicleId": {
                 S: pVehicleId
             },
-            "registered":{
-                BOOL: true 
+            "registered": {
+                BOOL: true
             }
         }
     };
@@ -61,11 +139,11 @@ var registerDeviceToVehicle = (pDeviceId, pVehicleId) => {
 
         ddb.putItem(params, function (err, data) {
             if (err) {
-                console.log('..Error = ', err);               
+                console.log('..Error = ', err);
                 reject(err);
             } else {
                 console.log('..successful write of data = ', data);
-                
+
                 resolve(data);
             }
         });
@@ -311,35 +389,35 @@ var getVehicleInformationById = pVehicleId => {
 
 };
 
-var processNumberOfQuestions ={
+var processNumberOfQuestions = {
     process(handlerInput) {
         console.log('IN processNumberOfQuestions with handlerInput = ', JSON.stringify(handlerInput.requestEnvelope));
-        
+
         if (handlerInput.requestEnvelope.session['new']) {
             return new Promise((resolve, reject) => {
-                
+
                 handlerInput.attributesManager.getPersistentAttributes()
                     .then((persistentAttributes) => {
 
                         persistentAttributes = persistentAttributes || {};
 
                         if (!persistentAttributes['questionCount'])
-                        persistentAttributes['questionCount'] = 0;
+                            persistentAttributes['questionCount'] = 0;
 
                         persistentAttributes['questionCount'] += 1;
 
                         console.log('Setting session attributes = ', persistentAttributes);
-                        
+
 
                         handlerInput.attributesManager.setSessionAttributes(persistentAttributes);
                         console.log('Session attributes are now ', persistentAttributes);
-                        
+
                         resolve();
                     })
                     .catch((err) => {
                         reject(err);
                     });
-                
+
             });
         } // end session['new'] 
     }
@@ -364,16 +442,16 @@ var getResponse = (pVehicleId, pIntentName) => {
         }
 
         console.log('...');
-        
+
 
         let lQueryParams = {
             TableName: generalConstants.dbTableNames.vehicleInformation,
             ProjectionExpression: "#pIntentName",
             KeyConditionExpression: "id = :vehicleId",
-            ExpressionAttributeNames:{
+            ExpressionAttributeNames: {
                 "#pIntentName": pIntentName
             },
-            ExpressionAttributeValues:{
+            ExpressionAttributeValues: {
                 ":vehicleId": pVehicleId.toString()
             }
         };
@@ -390,10 +468,13 @@ var getResponse = (pVehicleId, pIntentName) => {
                     data.Items.forEach(function (item) {
 
                         console.log('..item = ', JSON.stringify(item));
-                        
+
 
                         lRtnJson.responseContent = item[pIntentName];
-                        if(lRtnJson.responseContent.includes("mp3")){
+                        if (lRtnJson.responseContent.includes("driverAssist") ||
+                            lRtnJson.responseContent.includes("fuelConsumption") ||
+                            lRtnJson.responseContent.includes("topSpeed")
+                        ) {
                             lRtnJson.responseType = generalConstants.types.mp3;
                         } else {
                             lRtnJson.responseType = generalConstants.types.words;
@@ -410,7 +491,7 @@ var getResponse = (pVehicleId, pIntentName) => {
             } // end-if
         }); // end-query
 
-        
+
 
 
 
@@ -425,10 +506,10 @@ var getNextTopic = pSessionAttributes => {
     console.log('..IN getNextTopic ');
 
     let lRtnTopic;
-    
-    return new Promise(function (resolve, reject){
 
-        let lRandomTopics =  generalConstants.topics;
+    return new Promise(function (resolve, reject) {
+
+        let lRandomTopics = generalConstants.topics;
 
         // Get the number of the responses
         let lResponseSize = _.size(lRandomTopics);
@@ -459,10 +540,10 @@ var getRandomCarFacts = pSessionAttributes => {
             TableName: generalConstants.dbTableNames.vehicleInformation,
             ProjectionExpression: "#randomFacts",
             KeyConditionExpression: "id = :vehicleId",
-            ExpressionAttributeNames:{
+            ExpressionAttributeNames: {
                 "#randomFacts": generalConstants.randomFacts
             },
-            ExpressionAttributeValues:{
+            ExpressionAttributeValues: {
                 ":vehicleId": pSessionAttributes.vehicleId.toString()
             }
         };
@@ -478,12 +559,12 @@ var getRandomCarFacts = pSessionAttributes => {
                 if (data.Items.length !== 0) {
                     data.Items.forEach(function (item) {
                         console.log('..item = ', JSON.stringify(item));
-                        
+
 
                         let randomFacts = item.randomFacts;
 
                         console.log('Random Fact = ', randomFacts);
-                        
+
 
                         resolve(randomFacts);
                     });
@@ -510,3 +591,5 @@ exports.registerDeviceToVehicle = registerDeviceToVehicle;
 exports.processNumberOfQuestions = processNumberOfQuestions;
 exports.getRandomCarFacts = getRandomCarFacts;
 exports.getNextTopic = getNextTopic;
+exports.logQuestionCategory = logQuestionCategory;
+exports.sendMessageToSalesTeam = sendMessageToSalesTeam;

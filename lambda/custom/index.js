@@ -522,6 +522,9 @@ const generalIntentHandler = {
 
         console.log('..speak out will be ', speakOutput);
 
+        // Log analytics 
+        utils.logQuestionCategory(handlerInput,lRequestName);
+
 
         //speakOutput = generalConstants.answers.topSpeedIntent
         return handlerInput.responseBuilder
@@ -633,10 +636,26 @@ const CancelAndStopIntentHandler = {
                 handlerInput.requestEnvelope.request.intent.name === 'AMAZON.StopIntent');
     },
     handle(handlerInput) {
-        const speakOutput = `Thank you for asking about the BMW X5. <break time="250ms"/> I hope you've had a great experience.<break time="10ms"/> Goodbye, <break time="5ms"/>and have a great day`;
+
+        // Send out a text to the sales team about the type of customer
+        // await utils.findTypeOfCustomer();
+        utils.sendMessageToSalesTeam('A customer has just exited a BMW X5 who is interested in performance');
+
+        const speakOutput = `Thank you for talking with me about this BMW X5.`;
+        // return handlerInput.responseBuilder
+        //     .speak(speakOutput)
+        //     .getResponse();
+
+
         return handlerInput.responseBuilder
-            .speak(speakOutput)
-            .getResponse();
+                .addDelegateDirective({
+                    name: 'RatingIntent',
+                    confirmationStatus: 'NONE',
+                    slots: {}
+                })
+                .speak(speakOutput)
+                .getResponse();
+    
     }
 };
 const SessionEndedRequestHandler = {
@@ -769,6 +788,8 @@ exports.handler = Alexa.SkillBuilders.custom()
         generalIntentHandler,
         seatMaterialIntentHandler,
         menuOptionIntentHandlers.configureCarIntentHandler,
+        menuOptionIntentHandlers.askQuestionIntentHandler,
+        menuOptionIntentHandlers.RatingIntentHandler,
         //topSpeedIntentHandler,
         //driverAssistanceIntentHandler,
         //fuelConsumptionIntentHandler,
