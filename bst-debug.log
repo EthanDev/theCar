@@ -1,0 +1,244 @@
+2019-11-04T09:52:37.655Z error: bst-test            Error using bst-test on Node: v10.15.3
+2019-11-04T09:52:37.754Z error: bst-test            Error: ENOENT: no such file or directory, open './config.json'
+    at Object.openSync (fs.js:438:3)
+    at Object.readFileSync (fs.js:343:35)
+    at Object.readFileSync (/Users/etrichardson/Dropbox/Snapit and Alexa/Alexa/CarAssistant/the_car/lambda/custom/node_modules/aws-sdk/lib/util.js:95:26)
+    at Config.loadFromPath (/Users/etrichardson/Dropbox/Snapit and Alexa/Alexa/CarAssistant/the_car/lambda/custom/node_modules/aws-sdk/lib/config.js:444:39)
+    at Object.<anonymous> (/Users/etrichardson/Dropbox/Snapit and Alexa/Alexa/CarAssistant/the_car/lambda/custom/util.js:13:12)
+    at Runtime._execModule (/usr/local/lib/node_modules/bespoken-tools/node_modules/jest-runtime/build/index.js:867:68)
+    at Runtime._loadModule (/usr/local/lib/node_modules/bespoken-tools/node_modules/jest-runtime/build/index.js:577:12)
+    at Runtime.requireModule (/usr/local/lib/node_modules/bespoken-tools/node_modules/jest-runtime/build/index.js:433:10)
+    at Runtime.require [as requireModuleOrMock] (/usr/local/lib/node_modules/bespoken-tools/node_modules/jest-runtime/build/index.js:598:21)
+    at Object.<anonymous> (/Users/etrichardson/Dropbox/Snapit and Alexa/Alexa/CarAssistant/the_car/lambda/custom/index.js:15:15)
+2019-11-04T09:53:00.383Z error: bst-test            Error using bst-test on Node: v10.15.3
+2019-11-04T09:53:00.450Z error: bst-test            Error: ENOENT: no such file or directory, open './config.json'
+    at Object.openSync (fs.js:438:3)
+    at Object.readFileSync (fs.js:343:35)
+    at Object.readFileSync (/Users/etrichardson/Dropbox/Snapit and Alexa/Alexa/CarAssistant/the_car/lambda/custom/node_modules/aws-sdk/lib/util.js:95:26)
+    at Config.loadFromPath (/Users/etrichardson/Dropbox/Snapit and Alexa/Alexa/CarAssistant/the_car/lambda/custom/node_modules/aws-sdk/lib/config.js:444:39)
+    at Object.<anonymous> (/Users/etrichardson/Dropbox/Snapit and Alexa/Alexa/CarAssistant/the_car/lambda/custom/util.js:13:12)
+    at Runtime._execModule (/usr/local/lib/node_modules/bespoken-tools/node_modules/jest-runtime/build/index.js:867:68)
+    at Runtime._loadModule (/usr/local/lib/node_modules/bespoken-tools/node_modules/jest-runtime/build/index.js:577:12)
+    at Runtime.requireModule (/usr/local/lib/node_modules/bespoken-tools/node_modules/jest-runtime/build/index.js:433:10)
+    at Runtime.require [as requireModuleOrMock] (/usr/local/lib/node_modules/bespoken-tools/node_modules/jest-runtime/build/index.js:598:21)
+    at Object.<anonymous> (/Users/etrichardson/Dropbox/Snapit and Alexa/Alexa/CarAssistant/the_car/lambda/custom/index.js:15:15)
+2019-11-04T09:55:24.517Z error: bst-test            Error using bst-test on Node: v10.15.3
+2019-11-04T09:55:24.593Z error: bst-test            Error: ENOENT: no such file or directory, open 'config.json'
+    at Object.openSync (fs.js:438:3)
+    at Object.readFileSync (fs.js:343:35)
+    at Object.readFileSync (/Users/etrichardson/Dropbox/Snapit and Alexa/Alexa/CarAssistant/the_car/lambda/custom/node_modules/aws-sdk/lib/util.js:95:26)
+    at Config.loadFromPath (/Users/etrichardson/Dropbox/Snapit and Alexa/Alexa/CarAssistant/the_car/lambda/custom/node_modules/aws-sdk/lib/config.js:444:39)
+    at Object.<anonymous> (/Users/etrichardson/Dropbox/Snapit and Alexa/Alexa/CarAssistant/the_car/lambda/custom/util.js:13:12)
+    at Runtime._execModule (/usr/local/lib/node_modules/bespoken-tools/node_modules/jest-runtime/build/index.js:867:68)
+    at Runtime._loadModule (/usr/local/lib/node_modules/bespoken-tools/node_modules/jest-runtime/build/index.js:577:12)
+    at Runtime.requireModule (/usr/local/lib/node_modules/bespoken-tools/node_modules/jest-runtime/build/index.js:433:10)
+    at Runtime.require [as requireModuleOrMock] (/usr/local/lib/node_modules/bespoken-tools/node_modules/jest-runtime/build/index.js:598:21)
+    at Object.<anonymous> (/Users/etrichardson/Dropbox/Snapit and Alexa/Alexa/CarAssistant/the_car/lambda/custom/index.js:15:15)
+2019-11-04T09:57:22.912Z error: bst-test            Error using bst-test on Node: v10.15.3
+2019-11-04T09:57:22.916Z error: bst-test            YAMLException: bad indentation of a sequence entry at line 6, column 38:
+     ... nchRequest: "<speak><audio src="https://carview.s3.amazonaws.com ... 
+                                         ^
+    at generateError (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:191:10)
+    at throwError (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:197:9)
+    at readBlockSequence (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:972:7)
+    at composeNode (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:1369:12)
+    at readDocument (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:1530:3)
+    at loadDocuments (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:1586:5)
+    at Object.loadAll (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:1594:19)
+    at TestParser.parse (/usr/local/lib/node_modules/bespoken-tools/node_modules/skill-testing-ml/dist/lib/test/TestParser.js:130:30)
+    at TestRunner.parseContents (/usr/local/lib/node_modules/bespoken-tools/node_modules/skill-testing-ml/dist/lib/runner/TestRunner.js:470:21)
+    at /usr/local/lib/node_modules/bespoken-tools/node_modules/skill-testing-ml/dist/lib/runner/TestRunner.js:67:39
+2019-11-04T09:58:03.525Z error: bst-test            Error using bst-test on Node: v10.15.3
+2019-11-04T09:58:03.530Z error: bst-test            YAMLException: bad indentation of a sequence entry at line 6, column 18:
+    - LaunchRequest: `<speak><audio src="https://carv ... 
+                     ^
+    at generateError (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:191:10)
+    at throwError (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:197:9)
+    at readBlockSequence (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:972:7)
+    at composeNode (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:1369:12)
+    at readDocument (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:1530:3)
+    at loadDocuments (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:1586:5)
+    at Object.loadAll (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:1594:19)
+    at TestParser.parse (/usr/local/lib/node_modules/bespoken-tools/node_modules/skill-testing-ml/dist/lib/test/TestParser.js:130:30)
+    at TestRunner.parseContents (/usr/local/lib/node_modules/bespoken-tools/node_modules/skill-testing-ml/dist/lib/runner/TestRunner.js:470:21)
+    at /usr/local/lib/node_modules/bespoken-tools/node_modules/skill-testing-ml/dist/lib/runner/TestRunner.js:67:39
+2019-11-04T09:58:52.322Z error: bst-test            Error using bst-test on Node: v10.15.3
+2019-11-04T09:58:52.327Z error: bst-test            YAMLException: bad indentation of a sequence entry at line 6, column 245:
+     ... %model is amazing! <break time="='500ms'/> Nice to meet you, my  ... 
+                                         ^
+    at generateError (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:191:10)
+    at throwError (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:197:9)
+    at readBlockSequence (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:972:7)
+    at composeNode (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:1369:12)
+    at readDocument (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:1530:3)
+    at loadDocuments (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:1586:5)
+    at Object.loadAll (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:1594:19)
+    at TestParser.parse (/usr/local/lib/node_modules/bespoken-tools/node_modules/skill-testing-ml/dist/lib/test/TestParser.js:130:30)
+    at TestRunner.parseContents (/usr/local/lib/node_modules/bespoken-tools/node_modules/skill-testing-ml/dist/lib/runner/TestRunner.js:470:21)
+    at /usr/local/lib/node_modules/bespoken-tools/node_modules/skill-testing-ml/dist/lib/runner/TestRunner.js:67:39
+2019-11-04T09:59:10.078Z error: bst-test            Error using bst-test on Node: v10.15.3
+2019-11-04T09:59:10.082Z error: bst-test            YAMLException: unexpected end of the stream within a double quoted scalar at line 7, column 1:
+    
+    ^
+    at generateError (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:191:10)
+    at throwError (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:197:9)
+    at readDoubleQuotedScalar (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:671:3)
+    at composeNode (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:1376:13)
+    at readBlockMapping (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:1099:11)
+    at composeNode (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:1370:12)
+    at readBlockSequence (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:965:5)
+    at composeNode (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:1369:12)
+    at readDocument (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:1530:3)
+    at loadDocuments (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:1586:5)
+2019-11-04T09:59:38.015Z error: bst-test            Error using bst-test on Node: v10.15.3
+2019-11-04T09:59:38.080Z error: bst-test            Error: ENOENT: no such file or directory, open './config.json'
+    at Object.openSync (fs.js:438:3)
+    at Object.readFileSync (fs.js:343:35)
+    at Object.readFileSync (/Users/etrichardson/Dropbox/Snapit and Alexa/Alexa/CarAssistant/the_car/lambda/custom/node_modules/aws-sdk/lib/util.js:95:26)
+    at Config.loadFromPath (/Users/etrichardson/Dropbox/Snapit and Alexa/Alexa/CarAssistant/the_car/lambda/custom/node_modules/aws-sdk/lib/config.js:444:39)
+    at Object.<anonymous> (/Users/etrichardson/Dropbox/Snapit and Alexa/Alexa/CarAssistant/the_car/lambda/custom/util.js:13:12)
+    at Runtime._execModule (/usr/local/lib/node_modules/bespoken-tools/node_modules/jest-runtime/build/index.js:867:68)
+    at Runtime._loadModule (/usr/local/lib/node_modules/bespoken-tools/node_modules/jest-runtime/build/index.js:577:12)
+    at Runtime.requireModule (/usr/local/lib/node_modules/bespoken-tools/node_modules/jest-runtime/build/index.js:433:10)
+    at Runtime.require [as requireModuleOrMock] (/usr/local/lib/node_modules/bespoken-tools/node_modules/jest-runtime/build/index.js:598:21)
+    at Object.<anonymous> (/Users/etrichardson/Dropbox/Snapit and Alexa/Alexa/CarAssistant/the_car/lambda/custom/index.js:15:15)
+2019-11-04T10:32:57.167Z error: bst-test            Error using bst-test on Node: v10.15.3
+2019-11-04T10:32:57.171Z error: bst-test            YAMLException: bad indentation of a sequence entry at line 7, column 19:
+      - registerIntent: "Welcome, first things first,  ... 
+                      ^
+    at generateError (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:191:10)
+    at throwError (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:197:9)
+    at readBlockSequence (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:972:7)
+    at composeNode (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:1369:12)
+    at readDocument (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:1530:3)
+    at loadDocuments (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:1586:5)
+    at Object.loadAll (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:1594:19)
+    at TestParser.parse (/usr/local/lib/node_modules/bespoken-tools/node_modules/skill-testing-ml/dist/lib/test/TestParser.js:130:30)
+    at TestRunner.parseContents (/usr/local/lib/node_modules/bespoken-tools/node_modules/skill-testing-ml/dist/lib/runner/TestRunner.js:470:21)
+    at /usr/local/lib/node_modules/bespoken-tools/node_modules/skill-testing-ml/dist/lib/runner/TestRunner.js:67:39
+2019-11-04T10:33:18.335Z error: bst-test            Error using bst-test on Node: v10.15.3
+2019-11-04T10:33:18.339Z error: bst-test            YAMLException: bad indentation of a sequence entry at line 7, column 91:
+     ...  link this device to this car." goto Get Make and model
+                                         ^
+    at generateError (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:191:10)
+    at throwError (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:197:9)
+    at readBlockSequence (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:972:7)
+    at composeNode (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:1369:12)
+    at readDocument (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:1530:3)
+    at loadDocuments (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:1586:5)
+    at Object.loadAll (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:1594:19)
+    at TestParser.parse (/usr/local/lib/node_modules/bespoken-tools/node_modules/skill-testing-ml/dist/lib/test/TestParser.js:130:30)
+    at TestRunner.parseContents (/usr/local/lib/node_modules/bespoken-tools/node_modules/skill-testing-ml/dist/lib/runner/TestRunner.js:470:21)
+    at /usr/local/lib/node_modules/bespoken-tools/node_modules/skill-testing-ml/dist/lib/runner/TestRunner.js:67:39
+2019-11-04T10:40:26.465Z error: bst-test            Error using bst-test on Node: v10.15.3
+2019-11-04T10:40:26.470Z error: bst-test            YAMLException: bad indentation of a sequence entry at line 14, column 3:
+      - response.requestEnvelope.reque ... 
+      ^
+    at generateError (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:191:10)
+    at throwError (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:197:9)
+    at readBlockSequence (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:972:7)
+    at composeNode (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:1369:12)
+    at readDocument (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:1530:3)
+    at loadDocuments (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:1586:5)
+    at Object.loadAll (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:1594:19)
+    at TestParser.parse (/usr/local/lib/node_modules/bespoken-tools/node_modules/skill-testing-ml/dist/lib/test/TestParser.js:130:30)
+    at TestRunner.parseContents (/usr/local/lib/node_modules/bespoken-tools/node_modules/skill-testing-ml/dist/lib/runner/TestRunner.js:470:21)
+    at /usr/local/lib/node_modules/bespoken-tools/node_modules/skill-testing-ml/dist/lib/runner/TestRunner.js:67:39
+2019-11-04T10:46:32.624Z error: bst-test            Error using bst-test on Node: v10.15.3
+2019-11-04T10:46:32.629Z error: bst-test            YAMLException: bad indentation of a sequence entry at line 14, column 3:
+      - response.requestEnvelope.reque ... 
+      ^
+    at generateError (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:191:10)
+    at throwError (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:197:9)
+    at readBlockSequence (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:972:7)
+    at composeNode (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:1369:12)
+    at readDocument (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:1530:3)
+    at loadDocuments (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:1586:5)
+    at Object.loadAll (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:1594:19)
+    at TestParser.parse (/usr/local/lib/node_modules/bespoken-tools/node_modules/skill-testing-ml/dist/lib/test/TestParser.js:130:30)
+    at TestRunner.parseContents (/usr/local/lib/node_modules/bespoken-tools/node_modules/skill-testing-ml/dist/lib/runner/TestRunner.js:470:21)
+    at /usr/local/lib/node_modules/bespoken-tools/node_modules/skill-testing-ml/dist/lib/runner/TestRunner.js:67:39
+2019-11-04T10:46:46.737Z error: bst-test            Error using bst-test on Node: v10.15.3
+2019-11-04T10:46:46.742Z error: bst-test            YAMLException: bad indentation of a mapping entry at line 14, column 5:
+        - response.requestEnvelope.reque ... 
+        ^
+    at generateError (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:191:10)
+    at throwError (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:197:9)
+    at readBlockMapping (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:1118:7)
+    at composeNode (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:1370:12)
+    at readBlockSequence (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:965:5)
+    at composeNode (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:1369:12)
+    at readDocument (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:1530:3)
+    at loadDocuments (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:1586:5)
+    at Object.loadAll (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:1594:19)
+    at TestParser.parse (/usr/local/lib/node_modules/bespoken-tools/node_modules/skill-testing-ml/dist/lib/test/TestParser.js:130:30)
+2019-11-04T10:47:11.737Z error: bst-test            Error using bst-test on Node: v10.15.3
+2019-11-04T10:47:11.741Z error: bst-test            YAMLException: bad indentation of a mapping entry at line 14, column 5:
+        - requrest.requestEnvelope.reque ... 
+        ^
+    at generateError (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:191:10)
+    at throwError (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:197:9)
+    at readBlockMapping (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:1118:7)
+    at composeNode (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:1370:12)
+    at readBlockSequence (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:965:5)
+    at composeNode (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:1369:12)
+    at readDocument (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:1530:3)
+    at loadDocuments (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:1586:5)
+    at Object.loadAll (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:1594:19)
+    at TestParser.parse (/usr/local/lib/node_modules/bespoken-tools/node_modules/skill-testing-ml/dist/lib/test/TestParser.js:130:30)
+2019-11-04T10:47:23.584Z error: bst-test            Error using bst-test on Node: v10.15.3
+2019-11-04T10:47:23.589Z error: bst-test            YAMLException: bad indentation of a sequence entry at line 14, column 3:
+      - requrest.requestEnvelope.reque ... 
+      ^
+    at generateError (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:191:10)
+    at throwError (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:197:9)
+    at readBlockSequence (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:972:7)
+    at composeNode (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:1369:12)
+    at readDocument (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:1530:3)
+    at loadDocuments (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:1586:5)
+    at Object.loadAll (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:1594:19)
+    at TestParser.parse (/usr/local/lib/node_modules/bespoken-tools/node_modules/skill-testing-ml/dist/lib/test/TestParser.js:130:30)
+    at TestRunner.parseContents (/usr/local/lib/node_modules/bespoken-tools/node_modules/skill-testing-ml/dist/lib/runner/TestRunner.js:470:21)
+    at /usr/local/lib/node_modules/bespoken-tools/node_modules/skill-testing-ml/dist/lib/runner/TestRunner.js:67:39
+2019-11-04T10:47:41.274Z error: bst-test            Error using bst-test on Node: v10.15.3
+2019-11-04T10:47:41.279Z error: bst-test            YAMLException: bad indentation of a sequence entry at line 14, column 3:
+      - request.requestEnvelope.reques ... 
+      ^
+    at generateError (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:191:10)
+    at throwError (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:197:9)
+    at readBlockSequence (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:972:7)
+    at composeNode (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:1369:12)
+    at readDocument (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:1530:3)
+    at loadDocuments (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:1586:5)
+    at Object.loadAll (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:1594:19)
+    at TestParser.parse (/usr/local/lib/node_modules/bespoken-tools/node_modules/skill-testing-ml/dist/lib/test/TestParser.js:130:30)
+    at TestRunner.parseContents (/usr/local/lib/node_modules/bespoken-tools/node_modules/skill-testing-ml/dist/lib/runner/TestRunner.js:470:21)
+    at /usr/local/lib/node_modules/bespoken-tools/node_modules/skill-testing-ml/dist/lib/runner/TestRunner.js:67:39
+2019-11-04T10:48:54.419Z error: bst-test            Error using bst-test on Node: v10.15.3
+2019-11-04T10:48:54.424Z error: bst-test            YAMLException: bad indentation of a sequence entry at line 14, column 3:
+      - request.requestEnvelope.reques ... 
+      ^
+    at generateError (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:191:10)
+    at throwError (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:197:9)
+    at readBlockSequence (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:972:7)
+    at composeNode (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:1369:12)
+    at readDocument (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:1530:3)
+    at loadDocuments (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:1586:5)
+    at Object.loadAll (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:1594:19)
+    at TestParser.parse (/usr/local/lib/node_modules/bespoken-tools/node_modules/skill-testing-ml/dist/lib/test/TestParser.js:130:30)
+    at TestRunner.parseContents (/usr/local/lib/node_modules/bespoken-tools/node_modules/skill-testing-ml/dist/lib/runner/TestRunner.js:470:21)
+    at /usr/local/lib/node_modules/bespoken-tools/node_modules/skill-testing-ml/dist/lib/runner/TestRunner.js:67:39
+2019-11-05T11:48:51.311Z error: bst-test            Error using bst-test on Node: v10.15.3
+2019-11-05T11:48:51.316Z error: bst-test            YAMLException: bad indentation of a sequence entry at line 14, column 3:
+      - request.requestEnvelope.reques ... 
+      ^
+    at generateError (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:191:10)
+    at throwError (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:197:9)
+    at readBlockSequence (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:972:7)
+    at composeNode (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:1369:12)
+    at readDocument (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:1530:3)
+    at loadDocuments (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:1586:5)
+    at Object.loadAll (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:1594:19)
+    at TestParser.parse (/usr/local/lib/node_modules/bespoken-tools/node_modules/skill-testing-ml/dist/lib/test/TestParser.js:130:30)
+    at TestRunner.parseContents (/usr/local/lib/node_modules/bespoken-tools/node_modules/skill-testing-ml/dist/lib/runner/TestRunner.js:470:21)
+    at /usr/local/lib/node_modules/bespoken-tools/node_modules/skill-testing-ml/dist/lib/runner/TestRunner.js:67:39

@@ -1,12 +1,16 @@
 module.exports = Object.freeze({
+    Location:`location`,
+    NotSet: 'NOT_SET',
+    Mode:{
+        followOn: "followOn",
+        followOnOff: "StopFollowOn"
+    },
     randomFacts: "randomFacts",
     onboardingSpeechText: `<speak><audio src="soundbank://soundlibrary/doors/doors_cars/cars_04"/><audio src="soundbank://soundlibrary/doors/doors_cars/cars_10"/><audio src="soundbank://soundlibrary/vehicles/cars/cars_07"/><audio src="https://carview.s3.amazonaws.com/CpdzOkQH-2018-bmw-x5-official-video-1.mp3"/>Welcome and glad to meet you, <break time="10ms"/> my name's Nikki <break time="50ms"/>and I'm your in-car personal assistant. <break time="30ms"/>what's your name?</speak>`,
     onboardingSpeechTextCompleted: `<speak><prosody rate="medium">Hi Ethan, nice to meet you.<break time="100ms"/>  Let me start off by telling you a few things about the BMW x5 <break time="20ms"/>and also how I can help you.
     <break time="200ms"/> You're sitting in a brandnew <break time="5ms"/>2019 x5 that was only released 2 months ago.
     The BMW x5 stands for confidence, functionality and pure experience. 
     Boldly combining powerful elegance with poised dynamics, the BMW x5 introduces a new interpretation of the letter X. 
-    Now in its fourth generation, this model reasserts itself as the leader of its segment through its striking front headlights and slender tail lights.
-    <break time="100ms"/>I'm sure you can agree, this is a beautiful piece of engineering
     <break time="200ms"/>As your in-car assistant<break time="5ms"/>  I can help you find out more about this amazing x5. <break time="10ms"/> What would you like to do? ask me a question?<break time="5ms"/> let me guide you through a full tour? or<break time="5ms"/> maybe you'd like to have a chat to configure your perfect x5.</prosody></speak>`,
     dbTableNames:{
         vehicleInformation: "vehicleInformation",

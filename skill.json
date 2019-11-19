@@ -3,11 +3,11 @@
     "publishingInformation": {
       "locales": {
         "en-US": {
-          "summary": "Sample Short Description",
+          "summary": "In-Car Assistant for Car Dealership showrooms",
           "examplePhrases": [
-            "Alexa open hello world",
-            "hello",
-            "help"
+            "Alexa ask the car what the top speed is",
+            "Alexa ask the car about fuel economy",
+            "Alexa, ask the car about the entertainment system"
           ],
           "name": "the car",
           "description": "Sample Full Description"
@@ -23,7 +23,10 @@
         "endpoint": {
           "sourceDir": "lambda/custom",
           "uri": "ask-custom-the_car-default"
-        }
+        },
+        "interfaces": [{
+          "type": "CAN_FULFILL_INTENT_REQUEST"
+        }]
       }
     },
     "manifestVersion": "1.0"

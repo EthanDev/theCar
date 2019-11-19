@@ -1,6 +1,6 @@
 const AWS = require('aws-sdk');
-var _ = require('lodash');
-var rp = require('request-promise');
+const _ = require('lodash');
+const rp = require('request-promise');
 var dateFormat = require('dateformat');
 const accountSid = 'ACc63ae6c570ca6f01ab5a0556af7d0f03';
 const authToken = 'dd146dbdc46c26bdc22e9667ba8d951f';
@@ -10,7 +10,7 @@ const client = require('twilio')(accountSid, authToken);
 const generalConstants = require('./constants/general');
 
 // Load credentials and set region from JSON file
-AWS.config.loadFromPath('./config.json');
+//AWS.config.loadFromPath('./config.json');
 
 const s3SigV4Client = new AWS.S3({
     signatureVersion: 'v4'
@@ -57,21 +57,16 @@ var sendMessageToSalesTeam = async (pBody) => {
 }; // end-function
 
 /**
- * logQuestionCategory - Log the category to elastic search analytics
+ * logAnalytics - Log the category to elastic search analytics
  * @param {JSON} pSession 
  * @param {String} pCategory 
  */
-var logQuestionCategory = async (pHandlerInput, pCategory) => {
+var logAnalytics = (pHandlerInput, pIntent, pCategory, pSessionAttributes) => {
 
-    console.log('IN logQuestionCategory with handlerInput = %s and pCategory = %s ', pHandlerInput, pCategory);
+    console.log('IN logAnalytics with handlerInput = %s and pIntent = %s, and pCategory = %s ', pHandlerInput, pIntent, pCategory);
 
     var now = new Date();
     let lTodaysDate = dateFormat(now, "yyyy-mm-dd");
-
-    let lDeviceId = pHandlerInput.requestEnvelope.context.System.device.deviceId;
-    let lRtnDeviceDetails = await checkRegisteredDevice(lDeviceId);
-    let lVehicleInfo = await getVehicleInformationById(lRtnDeviceDetails.vehicleId);
-    console.log('...lVehicleInfo = ', JSON.stringify(lVehicleInfo));
 
     return new Promise(function (resolve, reject) {
 
@@ -83,21 +78,25 @@ var logQuestionCategory = async (pHandlerInput, pCategory) => {
                 "Authorization": "Basic ZWxhc3RpYzpneWhCNG1tbU5pYkFaUVJWM014SzhvQ1g=",
             },
             body: {
+                "Intent": pIntent,
                 "category": pCategory,
-                "make": lVehicleInfo.make,
-                "location": "Afi",
+                "make": pSessionAttributes.vehicleInformation.make,
+                "location": pSessionAttributes.vehicleInformation.location,
                 "date": lTodaysDate,
-                "model": lVehicleInfo.model,
+                "model": pSessionAttributes.vehicleInformation.model,
                 "type": "Question_Category"
             },
             json: true // Automatically stringifies the body to JSON
         };
 
+
+        console.log('lOptions =', lOptions);
+        
+
         rp(lOptions)
             .then((response) => {
 
                 console.log('Record added to Elastic search response = ', response);
-
 
                 resolve();
 
@@ -108,7 +107,7 @@ var logQuestionCategory = async (pHandlerInput, pCategory) => {
             }); // end-rp
     }); // end-promise
 
-}; // End logQuestionCategory function
+}; // End logAnalytics function
 
 /**
  * Regigster the device
@@ -309,14 +308,15 @@ const getVehicleInformation = (pMake, pModel) => {
             ExpressionAttributeNames: {
                 "#make": "make",
                 "#model": "model",
-                "#id": "id"
+                "#id": "id",
+                "#location": "location"
             },
             ExpressionAttributeValues: {
                 ":make": pMake,
                 ":model": pModel
             },
             FilterExpression: "#make = :make AND #model = :model",
-            ProjectionExpression: "#make, #model, #id",
+            ProjectionExpression: "#make, #model, #id, #location",
             TableName: "vehicleInformation"
         };
 
@@ -372,6 +372,7 @@ var getVehicleInformationById = pVehicleId => {
         docClient.scan(queryParams, function (err, data) {
             if (err) {
                 console.error("Unable to query. Error:", JSON.stringify(err, null, 2));
+                let rtnJson = err.toString();
                 resolve(rtnJson);
             } else {
                 console.log("Query succeeded.", data);
@@ -425,8 +426,8 @@ var processNumberOfQuestions = {
 
 /**
  * Get resposne from database file vehicleInformation
- * @param {*} pVehicleId 
- * @param {*} pIntentName 
+ * @param {String} pVehicleId 
+ * @param {String} pIntentName 
  */
 var getResponse = (pVehicleId, pIntentName) => {
 
@@ -446,7 +447,7 @@ var getResponse = (pVehicleId, pIntentName) => {
 
         let lQueryParams = {
             TableName: generalConstants.dbTableNames.vehicleInformation,
-            ProjectionExpression: "#pIntentName",
+            ProjectionExpression: "#pIntentName[0].responseText, #pIntentName[1].nextIntent, #pIntentName[1].nextIntentSpeech, #pIntentName[2].category",
             KeyConditionExpression: "id = :vehicleId",
             ExpressionAttributeNames: {
                 "#pIntentName": pIntentName
@@ -471,10 +472,7 @@ var getResponse = (pVehicleId, pIntentName) => {
 
 
                         lRtnJson.responseContent = item[pIntentName];
-                        if (lRtnJson.responseContent.includes("driverAssist") ||
-                            lRtnJson.responseContent.includes("fuelConsumption") ||
-                            lRtnJson.responseContent.includes("topSpeed")
-                        ) {
+                        if (item[pIntentName][0].responseText.includes("cloudfront.net")){
                             lRtnJson.responseType = generalConstants.types.mp3;
                         } else {
                             lRtnJson.responseType = generalConstants.types.words;
@@ -485,7 +483,7 @@ var getResponse = (pVehicleId, pIntentName) => {
                         resolve(lRtnJson);
                     }); // for each
                 } else {
-                    reject('No dataa exists for vehicle');
+                    reject('No data exists for vehicle');
                 };
 
             } // end-if
@@ -579,7 +577,105 @@ var getRandomCarFacts = pSessionAttributes => {
 
 }; // end getRandomCarFacts
 
+/**
+* Speak out alexa speech and then return to the calling function
+* @param {*} handlerInput 
+* @param {*} directiveMsg 
+*/
+var callDirectiveService = (handlerInput, directiveMsg) => {
+    // Call Alexa Directive service
+    const requestEnvelope = handlerInput.requestEnvelope;
+    const directiveServiceClient = handlerInput.serviceClientFactory.getDirectiveServiceClient();
 
+    const requestId = requestEnvelope.request.requestId;
+    const endPoint = requestEnvelope.context.System.apiEndPoint;
+    const token = requestEnvelope.context.System.apiAccessToken;
+
+    // build the progressive response directive
+    const directive = {
+        header: {
+            requestId
+        },
+        directive: {
+            type: 'VoicePlayer.Speak',
+            speech: directiveMsg
+        },
+    };
+
+    // send directive
+    return directiveServiceClient.enqueue(directive, endPoint, token);
+
+}
+
+
+/**
+ * setLocation - Set the location of the vehicle top the 
+ *               persistent storage
+ * @param {*} pVehicleId 
+ * @param {*} pHandlerInput 
+ */
+var setLocation = async (pVehicleId, pHandlerInput)=> {
+
+
+    const lAttributesManager = handlerInput.attributesManager;
+    const lPersistentAttributes = await lAttributesManager.getPersistentAttributes();
+    let lSessionAttributes = lAttributesManager.getSessionAttributes();
+
+    return new Promise(function (resolve, reject) {
+    
+        let lQueryParams = {
+            TableName: generalConstants.dbTableNames.vehicleInformation,
+            ProjectionExpression: "#Location",
+            KeyConditionExpression: "id = :vehicleId",
+            ExpressionAttributeNames: {
+                "#Location": generalConstants.location
+            },
+            ExpressionAttributeValues: {
+                ":vehicleId": pVehicleId.toString()
+            }
+        };
+
+        console.log('...Query parms = %s', JSON.stringify(lQueryParams));
+
+        docClient.query(lQueryParams, function (err, data) {
+            if (err) {
+                console.error("Unable to query. Error:", JSON.stringify(err, null, 2));
+                reject(err);
+            } else {
+                console.log("Query succeeded.", data);
+                if (data.Items.length !== 0) {
+                    data.Items.forEach(function (item) {
+                        console.log('..item = ', JSON.stringify(item));
+
+                        let lLocation = item.location;
+
+                        console.log('The loaction is %s', lLocation);
+
+                        lPersistentAttributes.location = lLocation;
+                        lSessionAttributes.location = lLocation;
+
+                        // Save the session variables
+                        lAttributesManager.setSessionAttributes(lSessionAttributes);
+
+                        // Save session variables to persistent storage
+                        lAttributesManager.setPersistentAttributes(lPersistentAttributes);
+                        lAttributesManager.savePersistentAttributes();
+
+                        resolve();
+                    });
+                } else {
+                    reject('No random facts exists for vehicle');
+                };
+
+            }
+        });
+
+
+    }); // end-promise
+
+}; // End-Func
+
+exports.callDirectiveService = callDirectiveService;
 exports.getResponse = getResponse;
 exports.getVehicleInformationById = getVehicleInformationById;
 exports.checkRegisteredDevice = checkRegisteredDevice;
@@ -591,5 +687,7 @@ exports.registerDeviceToVehicle = registerDeviceToVehicle;
 exports.processNumberOfQuestions = processNumberOfQuestions;
 exports.getRandomCarFacts = getRandomCarFacts;
 exports.getNextTopic = getNextTopic;
-exports.logQuestionCategory = logQuestionCategory;
+exports.logAnalytics = logAnalytics;
 exports.sendMessageToSalesTeam = sendMessageToSalesTeam;
+exports.setLocation = setLocation;
+//exports.addToUserProfile = addToUserProfile;

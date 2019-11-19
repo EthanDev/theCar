@@ -9,7 +9,16 @@
                 },
                 {
                     "name": "AMAZON.CancelIntent",
-                    "samples": []
+                    "samples": [
+                        "Hault",
+                        "Get out",
+                        "Exit",
+                        "Halt",
+                        "End here",
+                        "Cancel the skill",
+                        "Cancel the skill here",
+                        "Cancel"
+                    ]
                 },
                 {
                     "name": "AMAZON.HelpIntent",
@@ -18,13 +27,16 @@
                 {
                     "name": "AMAZON.StopIntent",
                     "samples": [
+                        "Finish here",
+                        "Stop right now",
+                        "That's all",
+                        "Stop here",
                         "Finish ",
                         "Finish here please",
                         "Stop",
                         "I'm done ",
                         "I'm finished",
                         "Stop please",
-                        "No thanks",
                         "That's it",
                         "That's all thank you"
                     ]
@@ -37,6 +49,12 @@
                     "name": "registerIntent",
                     "slots": [],
                     "samples": [
+                        "setup the device for the car",
+                        "place the device in the vehicle",
+                        "install the alexa in the car",
+                        "Put the device into the car",
+                        "Match the device to car",
+                        "link the device to car",
                         "to start",
                         "to register",
                         "to register to a device",
@@ -45,9 +63,9 @@
                         "Link this device",
                         "Attach this device to a new car",
                         "Assign this new car",
-                        "Setu this new car",
+                        "Setup this new car",
                         "register this car",
-                        "Setu this car",
+                        "Setup this car",
                         "I want to register this car"
                     ]
                 },
@@ -55,14 +73,12 @@
                     "name": "interiorGeneralIntent",
                     "slots": [],
                     "samples": [
-                        "What are the seats made from",
+                        "Tell me about interior",
+                        "Tell me about the interior",
+                        "the quality of the interior",
+                        "the interior",
                         "Are these genuine leather",
                         "Are the leather seats included in this package",
-                        "Are the seats real leather",
-                        "how durable are the seats",
-                        "the quality of the seats",
-                        "about the seating materials",
-                        "what are the seats made of",
                         "about the interior",
                         "about the interior of the car",
                         "What about the car interior",
@@ -117,6 +133,10 @@
                     "name": "aerodynamicsIntent",
                     "slots": [],
                     "samples": [
+                        "describe the aerodynamics",
+                        "if it has good aerodynamics",
+                        "what about aerodynamics",
+                        "aerodynamics",
                         "how good are the aerodynamics",
                         "how it performs with aerodynamics",
                         "How does the car produce less drag"
@@ -126,6 +146,14 @@
                     "name": "fuelConsumptionIntent",
                     "slots": [],
                     "samples": [
+                        "how many kilometers on a full tank",
+                        "How much range it has on a full tank",
+                        "how many kilometers per gallon this has",
+                        "if the vehicle drinks a ot of fuel",
+                        "if it has a good fuel consumption rating",
+                        "is this car any good with fuel",
+                        "I was wondering how good this car is on fuel",
+                        "I was wondering how good this car is on petrol",
                         "consumption per one hundred kilometer",
                         "how much does the car drink now",
                         "what is the consumption per kilometer",
@@ -346,7 +374,11 @@
                     "name": "fullTourIntent",
                     "slots": [],
                     "samples": [
-                        "to get the audiou tour",
+                        "The tour please",
+                        "I want the tour",
+                        "Guide me",
+                        "Play me the tour",
+                        "to get the audio tour",
                         "to get the full tour",
                         "to play the full tour",
                         "I would like to go with the tour",
@@ -374,6 +406,11 @@
                     "name": "topSpeedIntent",
                     "slots": [],
                     "samples": [
+                        "max speed",
+                        "speed",
+                        "horsepower",
+                        "Whats the top acceleration  ",
+                        "Whats the horsepower",
                         "Whats the quickest it can go up to",
                         "Whats the max acceleration ",
                         "How fast can move",
@@ -430,20 +467,6 @@
                     ]
                 },
                 {
-                    "name": "faqIntent",
-                    "slots": [],
-                    "samples": [
-                        "I want to find out about something",
-                        "I need to ask a question",
-                        "I want to ask something",
-                        "I want to get answers to my questions",
-                        "I want to ask anything",
-                        "I want to ask my own questions",
-                        "I would like to ask a question please",
-                        "I want to ask a question"
-                    ]
-                },
-                {
                     "name": "backSeatHubIntent",
                     "slots": [],
                     "samples": [
@@ -460,6 +483,11 @@
                     "name": "depreciationIntent",
                     "slots": [],
                     "samples": [
+                        "What will the car be worth in a few years time",
+                        "if the car has a good resale value",
+                        "if the car holds its value well",
+                        "How much does this car depreciate",
+                        "What will the car be worth next year",
                         "how much i can expect to get back ",
                         "about its average resale value ",
                         "how much its worth later ",
@@ -488,17 +516,172 @@
                     ]
                 },
                 {
-                    "name": "SearchIntent",
+                    "name": "appleCarPlayAsStandardIntent",
+                    "slots": [],
+                    "samples": [
+                        "Can i play my phone in this car",
+                        "if I can use my phone ",
+                        "if it plays music from my phone",
+                        " have an iphone will it play muy songs ",
+                        "if it will play music from my iphone",
+                        "Does it have apple maps",
+                        "Can i play songs from my iphone",
+                        "Can i stream music from my iphone",
+                        "can it play songs from my iphone",
+                        "does it play itunnes",
+                        "can i connect my iphone to the car",
+                        "does it support apple ",
+                        "can I connect my iphone ",
+                        "Does it come with apple car play",
+                        "Do i get apple car play in this make",
+                        "is there apple carplay",
+                        "is there apple car play",
+                        "does it have apple car play",
+                        "how about apple car",
+                        "does the car have apple car play"
+                    ]
+                },
+                {
+                    "name": "entertainmentSystemIntent",
+                    "slots": [],
+                    "samples": [
+                        "can the car play good music",
+                        "What the sound is like in the car",
+                        "How many speakers are there",
+                        "how loud are the speakers",
+                        "can I play mp thee music on the stereo",
+                        "if the stereo is loud",
+                        "what are the spakers sounding",
+                        "how do the speaker sound",
+                        "what the speakers are like",
+                        "how good are the speakers",
+                        "if the stereo is good",
+                        "how good the entertainment system is"
+                    ]
+                },
+                {
+                    "name": "customerOnboardingIntent",
                     "slots": [
                         {
-                            "name": "query",
-                            "type": "AMAZON.SearchQuery"
+                            "name": "customerName",
+                            "type": "AMAZON.FirstName"
                         }
                     ],
                     "samples": [
-                        "if {query}",
-                        "to tell me about {query}",
-                        "about the {query}"
+                        "I'm {customerName}",
+                        "the name is {customerName}",
+                        "my name is {customerName}",
+                        "{customerName}",
+                        "run the experience",
+                        "begin the experience",
+                        "where's Nikki",
+                        "talk with Nikki",
+                        "start the experience"
+                    ]
+                },
+                {
+                    "name": "configureCarIntent",
+                    "slots": [],
+                    "samples": [
+                        "configure this car",
+                        "Configure",
+                        "How about configuring my car",
+                        "I want to customise my own car",
+                        "customise the car",
+                        "Configure the vehicle",
+                        "design my car",
+                        "Tailor my car",
+                        "Setup my car",
+                        "Make the car",
+                        "Configure the car",
+                        "I want to configure my car",
+                        "I want to make my own car"
+                    ]
+                },
+                {
+                    "name": "askQuestionIntent",
+                    "slots": [],
+                    "samples": [
+                        "I want to start as a question to you",
+                        "asking a question",
+                        "Lets start with one of my questions",
+                        "Can I ask you something",
+                        "I want to give you a question",
+                        "I want to ask you a question please",
+                        "I want to ask something",
+                        "I want to make a question",
+                        "can I ask a question",
+                        "I want to ask a question",
+                        "ask a question"
+                    ]
+                },
+                {
+                    "name": "RatingIntent",
+                    "slots": [
+                        {
+                            "name": "rating",
+                            "type": "AMAZON.NUMBER"
+                        }
+                    ],
+                    "samples": [
+                        "I think {rating} out of five is right",
+                        "I feel {rating} is about right",
+                        "I want to give {rating}",
+                        "I think {rating}",
+                        "I think {rating} is about right",
+                        "I loved it so {rating}",
+                        "I like the experience so {rating}",
+                        "It was ok so {rating}",
+                        "It was a good experience so {rating}",
+                        "I would say {rating} is right",
+                        "I would give {rating}",
+                        "I would say {rating} is about right",
+                        "Maybe {rating}",
+                        "{rating}",
+                        "{rating} out of five",
+                        "I give {rating}",
+                        "I would say {rating}",
+                        "I give this {rating} out of five",
+                        "I rate this {rating} out of five"
+                    ]
+                },
+                {
+                    "name": "AMAZON.YesIntent",
+                    "samples": [
+                        "Let's",
+                        "Lets",
+                        "Sure",
+                        "Sure thing",
+                        "Go",
+                        "Ok",
+                        "I want",
+                        "yes please I want that",
+                        "let's do that",
+                        "do that",
+                        "Please",
+                        "Yup",
+                        "Yep",
+                        "Yes",
+                        "For sure",
+                        "Yes please",
+                        "Why not"
+                    ]
+                },
+                {
+                    "name": "AMAZON.NoIntent",
+                    "samples": [
+                        "I think thats it for now",
+                        "Thats it for now",
+                        "Thats all for ow",
+                        "Nothing at the moment",
+                        "Not at the moment",
+                        "Nothing right now",
+                        "Nothing for now",
+                        "Not right now",
+                        "Nope",
+                        "No",
+                        "Not now",
+                        "No thanks"
                     ]
                 }
             ],
@@ -728,6 +911,51 @@
                             }
                         }
                     ]
+                },
+                {
+                    "name": "customerOnboardingIntent",
+                    "delegationStrategy": "SKILL_RESPONSE",
+                    "confirmationRequired": false,
+                    "prompts": {},
+                    "slots": [
+                        {
+                            "name": "customerName",
+                            "type": "AMAZON.FirstName",
+                            "confirmationRequired": false,
+                            "elicitationRequired": false,
+                            "prompts": {}
+                        }
+                    ]
+                },
+                {
+                    "name": "RatingIntent",
+                    "confirmationRequired": false,
+                    "prompts": {},
+                    "slots": [
+                        {
+                            "name": "rating",
+                            "type": "AMAZON.NUMBER",
+                            "confirmationRequired": false,
+                            "elicitationRequired": true,
+                            "prompts": {
+                                "elicitation": "Elicit.Slot.249054850391.1388318045697"
+                            },
+                            "validations": [
+                                {
+                                    "type": "isInSet",
+                                    "prompt": "Slot.Validation.1304745343027.183470343922.918645232849",
+                                    "values": [
+                                        "0",
+                                        "1",
+                                        "2",
+                                        "3",
+                                        "4",
+                                        "5"
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
                 }
             ],
             "delegationStrategy": "ALWAYS"
@@ -793,6 +1021,40 @@
                     {
                         "type": "PlainText",
                         "value": " What is the model of this {carMake} ?"
+                    }
+                ]
+            },
+            {
+                "id": "Elicit.Slot.249054850391.1388318045697",
+                "variations": [
+                    {
+                        "type": "PlainText",
+                        "value": "I'm glad we had a chance to talk. Just one quick thing, how would you rate our conversation out of five, with five being the best."
+                    },
+                    {
+                        "type": "PlainText",
+                        "value": "Before you go, would you mind giving your experience a score out of five, with five being the best."
+                    },
+                    {
+                        "type": "PlainText",
+                        "value": "Just a quick thing before you go, how would you rate our conversation out of five with five being the best."
+                    }
+                ]
+            },
+            {
+                "id": "Slot.Validation.1304745343027.183470343922.918645232849",
+                "variations": [
+                    {
+                        "type": "PlainText",
+                        "value": "Thanks for that. I hope you have a great day"
+                    },
+                    {
+                        "type": "PlainText",
+                        "value": "Thank you for that, really appreciate it. I hope you have a great day"
+                    },
+                    {
+                        "type": "PlainText",
+                        "value": "Thank you so much for your feedback. I hope you have a great rest of your day."
                     }
                 ]
             }

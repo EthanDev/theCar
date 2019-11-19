@@ -90,7 +90,9 @@ const registerIntentHandler = {
         //let noOfQuestions = 
 
         //return handlerInput.requestEnvelope.request.type === 'LaunchRequest' ||
-        return handlerInput.requestEnvelope.request.intent.name === 'registerIntent';
+        return handlerInput.requestEnvelope.request.intent.name === 'registerIntent' ||
+            (handlerInput.requestEnvelope.request.type === 'LaunchRequest' ||
+            handlerInput.requestEnvelope.request.type ==='CanFulfillIntentRequest');
 
     },
     async handle(handlerInput) {
@@ -125,18 +127,19 @@ const registerIntentHandler = {
 
             sessionAttributes.Make = lVehicleInfo.make;
             sessionAttributes.Model = lVehicleInfo.model;
+            sessionAttributes.location = lVehicleInfo.location;
+            sessionAttributes.vehicleInformation = lVehicleInfo;
 
             persistentAttributes.Make = lVehicleInfo.make;
             persistentAttributes.Model = lVehicleInfo.model;
+            persistentAttributes.location = lVehicleInfo.location;
 
             console.log('...');
 
             // Now we can speak the main menu
             let arraySize = _.size(generalConstants.greetings.mainMenu);
-            console.log('...');
             let pos = helper.randomIntFromInterval(1, arraySize - 1);
-            console.log('...');
-            console.log('Pos = ', pos);
+         
 
             speakOutput = generalConstants.greetings.mainMenu[0];
 
@@ -270,7 +273,7 @@ const customerOnboardingIntentInProgressHandler = {
         let slotValues = utils.getSlotValues(request.intent.slots);
         console.log('...slots = ', JSON.stringify(slotValues));
 
-        // Get the vehcile information
+        // Get the vehicle information
         let lDeviceId = handlerInput.requestEnvelope.context.System.device.deviceId;
         let lRtnDeviceDetails = await utils.checkRegisteredDevice(lDeviceId);
         let lVehicleInfo = await utils.getVehicleInformationById(lRtnDeviceDetails.vehicleId);
@@ -278,6 +281,9 @@ const customerOnboardingIntentInProgressHandler = {
 
 
         speakOutput = generalConstants.onboardingSpeechTextCompleted;
+
+        // Set the location of the vehicle
+        utils.setLocation(lVehicleInfo.vehicleId, handlerInput);
 
         speakOutput = _.replace(speakOutput, /%name/g, slotValues.customerName.value);
         speakOutput = _.replace(speakOutput, /%make/g, lVehicleInfo.make);
@@ -334,16 +340,21 @@ const completedVehicleVerificationHandler = {
     },
     async handle(handlerInput) {
 
+        const lAttributesManager = handlerInput.attributesManager;
+        const lPersistentAttributes = await lAttributesManager.getPersistentAttributes();
+        let lSessionAttributes = lAttributesManager.getSessionAttributes();
+
         console.log('..IN completedVehicleVerificationHandler');
 
         const request = handlerInput.requestEnvelope.request;
         const responseBuilder = handlerInput.responseBuilder;
 
+        // Get the device id
         let lDeviceId = handlerInput.requestEnvelope.context.System.device.deviceId;
 
+        // Get the slot values
         let slotValues = utils.getSlotValues(request.intent.slots);
         console.log('...slots = ', JSON.stringify(slotValues));
-
 
         // Get the vehicle ID from the vehicleDetails table
         let lVehicleInfo = await utils.getVehicleInformation(slotValues.carMake.value,
@@ -351,21 +362,17 @@ const completedVehicleVerificationHandler = {
 
         console.log('...lVehicleInfo = ', JSON.stringify(lVehicleInfo));
 
-        console.log('..Saving persistent attributes...');
-
-        let attributes = handlerInput.attributesManager.getPersistentAttributes();
-
         // Register the vehcile to the device ID
         await utils.registerDeviceToVehicle(lDeviceId, lVehicleInfo.id);
 
         // Set the device id and the registered flag in the session persistent data
-        attributes.deviceId = lDeviceId;
-        attributes.vehicleId = lVehicleInfo.id;
-        attributes.registered = true;
+        lSessionAttributes.deviceId = lDeviceId;
+        lSessionAttributes.vehicleId = lVehicleInfo.id;
+        lSessionAttributes.registered = true;
+        lSessionAttributes.vehicleInformation = lVehicleInfo;
 
-        console.log('..Setting and saving attributes to session attributes = ', JSON.stringify(attributes));
-
-        handlerInput.attributesManager.setSessionAttributes(attributes);
+        console.log('..Setting and saving attributes to session attributes = ', JSON.stringify(lSessionAttributes));
+        lAttributesManager.setSessionAttributes(lSessionAttributes);
 
         console.log('..Now get the completion message');
 
@@ -395,7 +402,7 @@ const fullTourIntentHandler = {
         let sessionAttributes = handlerInput.attributesManager.getSessionAttributes();
 
         const request = handlerInput.requestEnvelope.request;
-        return request.type === 'IntentRequest' &&
+        return (request.type === 'IntentRequest' || request.type === 'CanFulfillIntentRequest') &&
             request.intent.name === 'fullTourIntent';
     },
     async handle(handlerInput) {
@@ -423,7 +430,7 @@ const fullTourIntentHandler = {
             // Normal output using standard alexa voice
             speakOutput = lRtnJson.responseContent;
             // replace %make and %model
-            // Get the vehcile information
+            // Get the vehicle information
             let lDeviceId = handlerInput.requestEnvelope.context.System.device.deviceId;
             let lRtnDeviceDetails = await utils.checkRegisteredDevice(lDeviceId);
             let lVehicleInfo = await utils.getVehicleInformationById(lRtnDeviceDetails.vehicleId);
@@ -479,7 +486,8 @@ const generalIntentHandler = {
     canHandle(handlerInput) {
         const request = handlerInput.requestEnvelope.request;
 
-        return request.type === 'IntentRequest' &&
+        return (request.type === 'IntentRequest' || request.type === 'CanFulfillIntentRequest')
+            &&
             (request.intent.name === 'topSpeedIntent' ||
                 request.intent.name === 'driverAssistanceIntent' ||
                 request.intent.name === 'fuelConsumptionIntent' ||
@@ -489,6 +497,7 @@ const generalIntentHandler = {
                 request.intent.name === 'luggageCapacityIntent' ||
                 request.intent.name === 'depreciationIntent' ||
                 request.intent.name === 'entertainmentSystemIntent' ||
+                request.intent.name === 'aerodynamicsIntent' ||
                 request.intent.name === 'appleCarPlayAsStandardIntent') &&
             request.dialogState !== 'COMPLETED';
     },
@@ -509,22 +518,51 @@ const generalIntentHandler = {
 
         let lRtnJson = await utils.getResponse(lVehicleId, lRequestName);
 
+        // Get the category from the JSON response 
+        let lCategory;
+        try {
+            lCategory = lRtnJson.responseContent[2].category;
+        } catch (error) {
+            lCategory = generalConstants.NotSet;
+        }
+
         if (lRtnJson.responseType === generalConstants.types.mp3) {
             speakOutput = generalConstants.speak.openingTag +
                 generalConstants.speak.audioSrcOpen +
-                lRtnJson.responseContent +
+                lRtnJson.responseContent[0].responseText +
                 generalConstants.speak.audioSrcClose +
+                lRtnJson.responseContent[1].nextIntentSpeech +
                 generalConstants.speak.closingTag;
         } else {
-            // Normal output using standard alexa voice
-            speakOutput = lRtnJson.responseContent;
+            if (lRtnJson.responseContent[1].nextIntentSpeech === '_') {
+                speakOutput = generalConstants.speak.openingTag +
+                    lRtnJson.responseContent[0].responseText +
+                    'What else can I tell you about?' +
+                    generalConstants.speak.closingTag;
+            } else {
+                // Normal output using standard alexa voice
+                speakOutput = generalConstants.speak.openingTag +
+                    lRtnJson.responseContent[0].responseText +
+                    lRtnJson.responseContent[1].nextIntentSpeech +
+                    generalConstants.speak.closingTag;
+            }
         }
+
+        // Set the next intent in the ses
+        sessionAttributes.nextIntent = lRtnJson.responseContent[1].nextIntent;
+
+        // Set the mode to be followOn
+        sessionAttributes.mode = generalConstants.Mode.followOn;
+
+        // Save the session variables
+        lAttributesManager.setSessionAttributes(sessionAttributes);
 
         console.log('..speak out will be ', speakOutput);
 
         // Log analytics 
-        utils.logQuestionCategory(handlerInput,lRequestName);
+        utils.logAnalytics(handlerInput, sessionAttributes.nextIntent, lCategory, sessionAttributes);
 
+        //utils.addToUserProfile(handlerInput, lCategory, sessionAttributes);
 
         //speakOutput = generalConstants.answers.topSpeedIntent
         return handlerInput.responseBuilder
@@ -587,7 +625,8 @@ const pricePacakageIntentHandler = {
     canHandle(handlerInput) {
         const request = handlerInput.requestEnvelope.request;
 
-        return request.type === 'IntentRequest' &&
+        return (request.type === 'IntentRequest' || request.type ==='CanFulfillIntentRequest') 
+            &&
             request.intent.name === 'pricePacakageIntent' &&
             request.dialogState !== 'COMPLETED';
     },
@@ -629,6 +668,159 @@ const HelpIntentHandler = {
             .getResponse();
     }
 };
+
+// Handle the follow on to either accept or reject the 
+const followOnHandler = {
+    canHandle(handlerInput) {
+
+        const attributesManager = handlerInput.attributesManager;
+        let sessionAttributes = attributesManager.getSessionAttributes();
+        let lMode = "";
+
+        try {
+            lMode = sessionAttributes.mode;
+        } catch (error) {
+            // continue
+        }
+
+        return lMode === generalConstants.Mode.followOn &&
+            (handlerInput.requestEnvelope.request.intent.name === 'AMAZON.YesIntent' ||
+                handlerInput.requestEnvelope.request.intent.name === 'AMAZON.NoIntent');
+
+    },
+    async handle(handlerInput) {
+
+        const lAttributesManager = handlerInput.attributesManager;
+        const lPersistentAttributes = await lAttributesManager.getPersistentAttributes();
+        let lSessionAttributes = lAttributesManager.getSessionAttributes();
+        let lVehicleId = lPersistentAttributes.vehicleId;
+
+        let lNextIntent = lSessionAttributes.nextIntent;
+
+        // if the user accepted the suggestion intent go for it
+        if (handlerInput.requestEnvelope.request.intent.name === 'AMAZON.YesIntent') {
+
+            // Get the response information
+            let lRtnJson = await utils.getResponse(lVehicleId, lNextIntent);
+
+            // Get the category from the JSON response 
+            let lCategory;
+            try {
+                lCategory = lRtnJson.responseContent[2].category;
+            } catch (error) {
+                lCategory = generalConstants.NotSet;
+            }
+
+            if (lRtnJson.responseType === generalConstants.types.mp3) {
+                speakOutput = generalConstants.speak.openingTag +
+                    generalConstants.speak.audioSrcOpen +
+                    lRtnJson.responseContent[0].responseText +
+                    generalConstants.speak.audioSrcClose +
+                    lRtnJson.responseContent[1].nextIntentSpeech +
+                    generalConstants.speak.closingTag;
+            } else {
+
+                if (lRtnJson.responseContent[1].nextIntentSpeech === '_') {
+                    speakOutput = generalConstants.speak.openingTag +
+                    lRtnJson.responseContent[0].responseText +
+                        'What else can I tell you about?' +
+                        generalConstants.speak.closingTag;
+                } else {
+                    // Normal output using standard alexa voice
+                    speakOutput = generalConstants.speak.openingTag +
+                        lRtnJson.responseContent[0].responseText +
+                        lRtnJson.responseContent[1].nextIntentSpeech +
+                        generalConstants.speak.closingTag;
+                }
+            }
+
+            // Set the next intent in the ses
+            lSessionAttributes.nextIntent = lRtnJson.responseContent[1].nextIntent;
+
+            // Set the mode to be followOn
+            lSessionAttributes.mode = generalConstants.Mode.followOn;
+
+
+            console.log('..speak out will be ', speakOutput);
+
+            // Log analytics 
+            utils.logAnalytics(handlerInput, lNextIntent, lCategory, lSessionAttributes);
+
+
+        } else {
+            // ask the user what they want instead
+            speakOutput = `<speak>Ok, no problem, what else can I tell you about?</speak>`;
+
+            // Clear the modes session variable
+            lSessionAttributes.mode = generalConstants.Mode.followOnOff;
+
+
+        }
+
+        // Save the session variables
+        lAttributesManager.setSessionAttributes(lSessionAttributes);
+
+        //speakOutput = generalConstants.answers.topSpeedIntent
+        return handlerInput.responseBuilder
+            .speak(speakOutput)
+            .withShouldEndSession(false)
+            .getResponse();
+
+
+    }
+};
+
+
+/**
+ * Function: followOnOffHandler
+ * Description: When the user says no after saying no to the follow on sugesstion
+ * Changes:
+ */
+const followOnOffHandler ={
+    canHandle(handlerInput) {
+
+        const attributesManager = handlerInput.attributesManager;
+        let sessionAttributes = attributesManager.getSessionAttributes();
+        let lMode = "";
+
+        try {
+            lMode = sessionAttributes.mode;
+        } catch (error) {
+            // continue
+        }
+
+        return lMode === generalConstants.Mode.followOnOff &&
+               (handlerInput.requestEnvelope.request.intent.name === 'AMAZON.NoIntent' ||
+                handlerInput.requestEnvelope.request.intent.name === 'AMAZON.CancelIntent' ||
+                handlerInput.requestEnvelope.request.intent.name === 'AMAZON.StopIntent');
+
+    },
+    async handle(handlerInput) {
+    
+        console.log('...IN followOnOffHandler...ask for a rating');
+        
+        // Send out a text to the sales team about the type of customer
+        // await utils.findTypeOfCustomer();
+        utils.sendMessageToSalesTeam('A customer has just exited a BMW X5 who is interested in performance');
+
+        const speakOutput = `Thank you for talking with me about this BMW X5.`;
+        // return handlerInput.responseBuilder
+        //     .speak(speakOutput)
+        //     .getResponse();
+
+
+        return handlerInput.responseBuilder
+            .addDelegateDirective({
+                name: 'RatingIntent',
+                confirmationStatus: 'NONE',
+                slots: {}
+            })
+            .speak(speakOutput)
+            .getResponse();
+
+    }
+}
+
 const CancelAndStopIntentHandler = {
     canHandle(handlerInput) {
         return handlerInput.requestEnvelope.request.type === 'IntentRequest' &&
@@ -648,16 +840,17 @@ const CancelAndStopIntentHandler = {
 
 
         return handlerInput.responseBuilder
-                .addDelegateDirective({
-                    name: 'RatingIntent',
-                    confirmationStatus: 'NONE',
-                    slots: {}
-                })
-                .speak(speakOutput)
-                .getResponse();
-    
+            .addDelegateDirective({
+                name: 'RatingIntent',
+                confirmationStatus: 'NONE',
+                slots: {}
+            })
+            .speak(speakOutput)
+            .getResponse();
+
     }
 };
+
 const SessionEndedRequestHandler = {
     canHandle(handlerInput) {
         return handlerInput.requestEnvelope.request.type === 'SessionEndedRequest';
@@ -776,16 +969,16 @@ const FallbackHandler = {
 // defined are included below. The order matters - they're processed top to bottom.
 exports.handler = Alexa.SkillBuilders.custom()
     .addRequestHandlers(
-        FallbackHandler,
         registerIntentHandler,
+        FallbackHandler,
         //LaunchRequestHandler,
         //searchIntentHandler,
+        generalIntentHandler,
         fullTourIntentHandler,
         customerOnboardingIntentHandler,
         customerOnboardingIntentInProgressHandler,
         completedVehicleVerificationHandler,
         inProgressVehicleVerificationHandler,
-        generalIntentHandler,
         seatMaterialIntentHandler,
         menuOptionIntentHandlers.configureCarIntentHandler,
         menuOptionIntentHandlers.askQuestionIntentHandler,
@@ -799,6 +992,8 @@ exports.handler = Alexa.SkillBuilders.custom()
         HelpIntentHandler,
         CancelAndStopIntentHandler,
         SessionEndedRequestHandler,
+        followOnHandler,
+        followOnOffHandler,
         IntentReflectorHandler, // make sure IntentReflectorHandler is last so it doesn't override your custom intent handlers
     )
     .addErrorHandlers(

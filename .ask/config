@@ -6,11 +6,11 @@
       "merge": {},
       "resources": {
         "manifest": {
-          "eTag": "993f5e760006d1b0d5be008352ae5ff0"
+          "eTag": "e8134e7bd1aedb5450cf2ed49e006012"
         },
         "interactionModel": {
           "en-US": {
-            "eTag": "d58d61007d1c10127df9605c4860859e"
+            "eTag": "a27529ef6a2aa65b8abf5798fb3290e4"
           }
         },
         "lambda": [
@@ -23,7 +23,7 @@
             "codeUri": "lambda/custom",
             "functionName": "ask-custom-the_car-default",
             "handler": "index.handler",
-            "revisionId": "7c5ed6e6-47a4-44f8-bb39-d650874995d6",
+            "revisionId": "009d0697-ce5f-4b80-98a4-2d8d7d2381e6",
             "runtime": "nodejs8.10"
           }
         ]
