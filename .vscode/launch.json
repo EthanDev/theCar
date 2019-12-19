@@ -6,11 +6,8 @@
             "request": "launch",
             "name": "Launch Proxy",
             "program": "/Users/etrichardson/Dropbox/Snapit and Alexa/Alexa/CarAssistant/the_car/lambda/custom/node_modules/bespoken-tools/bin/bst-proxy.js",
-            "args": [
-                "lambda",
-                "index.js"
-            ],
-            "cwd": "/Users/etrichardson/Dropbox/Snapit and Alexa/Alexa/CarAssistant/the_car/lambda/custom"
+            "args": ["lambda", "/Users/etrichardson/Dropbox/Snapit and Alexa/Alexa/CarAssistant/the_car/lambda/custom/index.js"],
+            "cwd": "${workspaceRoot}"
         }
     ]
 }
