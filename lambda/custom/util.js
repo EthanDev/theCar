@@ -71,11 +71,11 @@ var logAnalytics = (pHandlerInput, pIntent, pCategory, pSessionAttributes) => {
     return new Promise(function (resolve, reject) {
 
         var lOptions = {
-            uri: 'https://1ddac3e8e8fe4234a3f1c050c1785db9.us-east-1.aws.found.io:9243/carsaydata/_doc/',
+            uri: 'https://a885c98eca654cde8e07d54c9147961b.us-west-2.aws.found.io:9243/carsay/_doc/', 
             method: 'POST',
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": "Basic ZWxhc3RpYzpneWhCNG1tbU5pYkFaUVJWM014SzhvQ1g=",
+                "Authorization": "Basic ZWxhc3RpYzpGbWlhREhsQ1A1cUhsYlFMTVRObmFXajM=",
             },
             body: {
                 "Intent": pIntent,
@@ -91,7 +91,7 @@ var logAnalytics = (pHandlerInput, pIntent, pCategory, pSessionAttributes) => {
 
 
         console.log('lOptions =', lOptions);
-        
+
 
         rp(lOptions)
             .then((response) => {
@@ -108,6 +108,8 @@ var logAnalytics = (pHandlerInput, pIntent, pCategory, pSessionAttributes) => {
     }); // end-promise
 
 }; // End logAnalytics function
+
+
 
 /**
  * Regigster the device
@@ -200,6 +202,41 @@ var checkRegisteredDevice = pDeviceId => {
     }); // return
 
 }; // checkRegisteredDevice
+
+
+/**
+ * removeRegisteredDevice
+ * Check that the device is registered or not
+ */
+var removeRegisteredDevice = pDeviceId => {
+    console.log('..IN removeRegisteredDevice with device id = %s', pDeviceId);
+
+    // Set query parameters for db query
+    var params = {
+        TableName: "theCarRegisteredDevices",
+        Key: {
+            "deviceId": pDeviceId
+        }
+    };
+
+    console.log('..removeRegisteredDevice query = ', params);
+
+    return new Promise(function (resolve, reject) {
+
+        docClient.delete(params, function (err, data) {
+            if (err) {
+                console.error("Unable to query. Error:", JSON.stringify(err, null, 2));
+                reject();
+            } else {
+                console.log("****** Delete succeeded. *******");
+                console.log('Data = ', data);
+                resolve();
+            }
+        });
+
+    }); // return
+
+}; // removeRegisteredDevice
 
 
 function getSlotValues(filledSlots) {
@@ -298,8 +335,19 @@ const PersistenceRequestInterceptor = {
     }
 };
 
-const getVehicleInformation = (pMake, pModel) => {
+/**
+ * getVehicleInformation - Get the vehicle information using the make and model as a search
+ * @param {string} pMake 
+ * @param {string} pModel 
+ */
+const getVehicleInformation = (pMake, pModel, pCountry) => {
     console.log('..IN getVehicleInformation with make = %s and model = %s', pMake, pModel);
+
+
+    let lRtnJson = {
+        item: "",
+        found: false
+    }
 
     return new Promise(function (resolve, reject) {
 
@@ -309,13 +357,15 @@ const getVehicleInformation = (pMake, pModel) => {
                 "#make": "make",
                 "#model": "model",
                 "#id": "id",
-                "#location": "location"
+                "#location": "location",
+                "#country": "country"
             },
             ExpressionAttributeValues: {
                 ":make": pMake,
-                ":model": pModel
+                ":model": pModel,
+                ":country": pCountry
             },
-            FilterExpression: "#make = :make AND #model = :model",
+            FilterExpression: "#make = :make AND #model = :model AND #country = :country",
             ProjectionExpression: "#make, #model, #id, #location",
             TableName: "vehicleInformation"
         };
@@ -326,15 +376,19 @@ const getVehicleInformation = (pMake, pModel) => {
         docClient.scan(queryParams, function (err, data) {
             if (err) {
                 console.error("Unable to query. Error:", JSON.stringify(err, null, 2));
-                resolve(rtnJson);
+                const reason = new Error(JSON.stringify(err, null, 2));
+                resolve(reason);
             } else {
                 console.log("Query succeeded.", data);
                 if (data.Items.length !== 0) {
                     data.Items.forEach(function (item) {
-                        resolve(item);
+
+                        lRtnJson.item = item;
+                        lRtnJson.found = true;
+                        resolve(lRtnJson);
                     }); // for each
                 } else {
-                    resolve();
+                    resolve(lRtnJson);
                 }
             } // end-if
         }); // query
@@ -356,13 +410,14 @@ var getVehicleInformationById = pVehicleId => {
             ExpressionAttributeNames: {
                 "#make": "make",
                 "#model": "model",
-                "#id": "id"
+                "#id": "id",
+                "#country": "country"
             },
             ExpressionAttributeValues: {
                 ":id": pVehicleId
             },
             FilterExpression: "#id = :id",
-            ProjectionExpression: "#make, #model, #id",
+            ProjectionExpression: "#make, #model, #id, #country",
             TableName: "vehicleInformation"
         };
 
@@ -392,7 +447,7 @@ var getVehicleInformationById = pVehicleId => {
 
 var processNumberOfQuestions = {
     process(handlerInput) {
-        console.log('IN processNumberOfQuestions with handlerInput = ', JSON.stringify(handlerInput.requestEnvelope));
+        //x console.log('IN processNumberOfQuestions with handlerInput = ', JSON.stringify(handlerInput.requestEnvelope));
 
         if (handlerInput.requestEnvelope.session['new']) {
             return new Promise((resolve, reject) => {
@@ -472,7 +527,7 @@ var getResponse = (pVehicleId, pIntentName) => {
 
 
                         lRtnJson.responseContent = item[pIntentName];
-                        if (item[pIntentName][0].responseText.includes("cloudfront.net")){
+                        if (item[pIntentName][0].responseText.includes("cloudfront.net")) {
                             lRtnJson.responseType = generalConstants.types.mp3;
                         } else {
                             lRtnJson.responseType = generalConstants.types.words;
@@ -489,12 +544,7 @@ var getResponse = (pVehicleId, pIntentName) => {
             } // end-if
         }); // end-query
 
-
-
-
-
     }); // end-promise
-
 
 }; // end-getResponse
 
@@ -578,10 +628,10 @@ var getRandomCarFacts = pSessionAttributes => {
 }; // end getRandomCarFacts
 
 /**
-* Speak out alexa speech and then return to the calling function
-* @param {*} handlerInput 
-* @param {*} directiveMsg 
-*/
+ * Speak out alexa speech and then return to the calling function
+ * @param {*} handlerInput 
+ * @param {*} directiveMsg 
+ */
 var callDirectiveService = (handlerInput, directiveMsg) => {
     // Call Alexa Directive service
     const requestEnvelope = handlerInput.requestEnvelope;
@@ -614,15 +664,14 @@ var callDirectiveService = (handlerInput, directiveMsg) => {
  * @param {*} pVehicleId 
  * @param {*} pHandlerInput 
  */
-var setLocation = async (pVehicleId, pHandlerInput)=> {
+var setLocation = async (pVehicleId, pHandlerInput) => {
 
-
-    const lAttributesManager = handlerInput.attributesManager;
+    const lAttributesManager = pHandlerInput.attributesManager;
     const lPersistentAttributes = await lAttributesManager.getPersistentAttributes();
     let lSessionAttributes = lAttributesManager.getSessionAttributes();
 
     return new Promise(function (resolve, reject) {
-    
+
         let lQueryParams = {
             TableName: generalConstants.dbTableNames.vehicleInformation,
             ProjectionExpression: "#Location",
@@ -631,7 +680,7 @@ var setLocation = async (pVehicleId, pHandlerInput)=> {
                 "#Location": generalConstants.location
             },
             ExpressionAttributeValues: {
-                ":vehicleId": pVehicleId.toString()
+                ":vehicleId": pVehicleId
             }
         };
 
@@ -690,4 +739,5 @@ exports.getNextTopic = getNextTopic;
 exports.logAnalytics = logAnalytics;
 exports.sendMessageToSalesTeam = sendMessageToSalesTeam;
 exports.setLocation = setLocation;
+exports.removeRegisteredDevice = removeRegisteredDevice;
 //exports.addToUserProfile = addToUserProfile;

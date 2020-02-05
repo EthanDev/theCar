@@ -12,7 +12,7 @@ const {
 } = require('ask-sdk-dynamodb-persistence-adapter');
 
 persistenceAdapter = new DynamoDbPersistenceAdapter({
-    tableName: process.env.DYNAMO_TABLE_NAME || 'carViewUsers',
+    tableName: 'carViewUsers',
     createTable: true
 });
 /**

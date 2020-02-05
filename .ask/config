@@ -23,7 +23,7 @@
             "codeUri": "lambda/custom",
             "functionName": "ask-custom-the_car-default",
             "handler": "index.handler",
-            "revisionId": "009d0697-ce5f-4b80-98a4-2d8d7d2381e6",
+            "revisionId": "9f5f7ebe-b209-4be9-b02f-cc1ae456201c",
             "runtime": "nodejs8.10"
           }
         ]

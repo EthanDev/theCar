@@ -6,12 +6,11 @@ module.exports = Object.freeze({
         followOnOff: "StopFollowOn"
     },
     randomFacts: "randomFacts",
-    onboardingSpeechText: `<speak><audio src="soundbank://soundlibrary/doors/doors_cars/cars_04"/><audio src="soundbank://soundlibrary/doors/doors_cars/cars_10"/><audio src="soundbank://soundlibrary/vehicles/cars/cars_07"/><audio src="https://carview.s3.amazonaws.com/CpdzOkQH-2018-bmw-x5-official-video-1.mp3"/>Welcome and glad to meet you, <break time="10ms"/> my name's Nikki <break time="50ms"/>and I'm your in-car personal assistant. <break time="30ms"/>what's your name?</speak>`,
-    onboardingSpeechTextCompleted: `<speak><prosody rate="medium">Hi Ethan, nice to meet you.<break time="100ms"/>  Let me start off by telling you a few things about the BMW x5 <break time="20ms"/>and also how I can help you.
-    <break time="200ms"/> You're sitting in a brandnew <break time="5ms"/>2019 x5 that was only released 2 months ago.
-    The BMW x5 stands for confidence, functionality and pure experience. 
-    Boldly combining powerful elegance with poised dynamics, the BMW x5 introduces a new interpretation of the letter X. 
-    <break time="200ms"/>As your in-car assistant<break time="5ms"/>  I can help you find out more about this amazing x5. <break time="10ms"/> What would you like to do? ask me a question?<break time="5ms"/> let me guide you through a full tour? or<break time="5ms"/> maybe you'd like to have a chat to configure your perfect x5.</prosody></speak>`,
+    onboardingSpeechText: `<speak><audio src="soundbank://soundlibrary/doors/doors_cars/cars_04"/><audio src="soundbank://soundlibrary/doors/doors_cars/cars_10"/><audio src="soundbank://soundlibrary/vehicles/cars/cars_07"/>Welcome and glad to meet you, <break time="10ms"/> my name's Nikki <break time="50ms"/>and I'm your in-car personal assistant. <break time="30ms"/>what's your name?</speak>`,
+    onboardingSpeechTextCompleted: `<speak><prosody rate="medium">Hi {slotValues.customerName.value}, nice to meet you.<break time="100ms"/>  Let me start off by telling you a few things about the this vehicle <break time="20ms"/>and also how I can help you.
+    <break time="200ms"/> You're sitting in a brandnew <break time="5ms"/>2019 model that was only released 2 months ago.
+    This model stands for confidence, functionality and pure experience. 
+    <break time="200ms"/>As your in-car assistant<break time="5ms"/>  I can help you find out more about this amazing vehicle <break time="10ms"/> What would you like to do? ask me a question?<break time="5ms"/> let me guide you through a full tour? </prosody></speak>`,
     dbTableNames:{
         vehicleInformation: "vehicleInformation",
     },
@@ -32,12 +31,12 @@ module.exports = Object.freeze({
     ],
     greetings:{
         mainMenu:[
-            `<speak><audio src="https://carview.s3.amazonaws.com/CpdzOkQH-2018-bmw-x5-official-video-1.mp3"/><break time="500ms"/> You're sitting in exactly the right spot! I'm sure you can agree this %make %model is amazing! <break time="500ms"/> Nice to meet you, my name is Nikki and I'm your personal guide to this amazing %make %model. <break time="500ms"/> What would you like to do? experience a full tour? or just ask me any question you like.</speak>`,
+            `<speak><break time="500ms"/> You're sitting in exactly the right spot! I'm sure you can agree this %make %model is amazing! <break time="500ms"/> Nice to meet you, my name is Nikki and I'm your personal guide to this amazing %make %model. <break time="500ms"/> What would you like to do? experience a full tour? or just ask me any question you like.</speak>`,
         ]
     },
     confirmations:{
         postVehicleRegistration: `<speak><audio src="soundbank://soundlibrary/doors/doors_cars/cars_04"/><audio src="soundbank://soundlibrary/doors/doors_cars/cars_10"/><audio src="soundbank://soundlibrary/vehicles/cars/cars_07"/>Great news! You have successfully registered this %make %model to the device. <break time="500ms"/> It's now ready for a buyer to use.<break time="500ms"/> Just tell the buyer to start the experience by saying <break time="250ms"/> "Alexa ask the car, and then their question.<break time="250ms"/> Happy exploring this beautiful %model.</speak>`,
-        completeVehicleRegistration: `<speak><audio src="soundbank://soundlibrary/doors/doors_cars/cars_04"/><audio src="soundbank://soundlibrary/doors/doors_cars/cars_10"/><audio src="soundbank://soundlibrary/vehicles/cars/cars_07"/><audio src="https://carview.s3.amazonaws.com/CpdzOkQH-2018-bmw-x5-official-video-1.mp3"/>Great news! You've successfully registered the device to the %make %model. <break time="500ms"/> It's now ready for a buyer to use.<break time="500ms"/> Start off by telling buyers to start their experience by saying <break time="250ms"/> "Alexa ask the car, and then their question.<break time="250ms"/> Happy exploring this beautiful %model.</speak>`
+        completeVehicleRegistration: `<speak><audio src="soundbank://soundlibrary/doors/doors_cars/cars_04"/><audio src="soundbank://soundlibrary/doors/doors_cars/cars_10"/><audio src="soundbank://soundlibrary/vehicles/cars/cars_07"/>Great news! You've successfully registered the device to the %make %model. <break time="500ms"/> It's now ready for a buyer to use.<break time="500ms"/> Start off by telling buyers to start their experience by saying <break time="250ms"/> "Alexa ask the car, and then their question.<break time="250ms"/> Happy exploring this beautiful %model.</speak>`
     },
     answers:{
         topSpeedIntent: `<speak><prosody rate="medium">Speaking of speed, you're flying through questions! <break time="250ms"/> It's ok, I don't mind at all. <break time="250ms"/>Getting back, this xDrive 30d M Sport, V-8 model can hit the same 100 kilmeters per hour sprint in 6.2 seconds using the power of 265 horse power. <break time="250ms"/>Wow! <break time="250ms"/>Now that's what I call quick!<break time="250ms"/> What else can I tell you about?</prosody></speak>`,
@@ -64,7 +63,7 @@ module.exports = Object.freeze({
         Coupling the optional Sky Lounge Panoramic glass sunroof with Ambient interior lighting, creates a luxurious atmosphere of light that gracefully flows throughout.
         
         </prosody></speak>`,
-        questionIntent: `<speak><prosody rate="medium">That's great, I look forward to answering your questions to help your discover everything about your new BMW X5</prosody></speak>`,
+        questionIntent: `<speak><prosody rate="medium">That's great, I look forward to answering your questions to help your discover everything about your new vehicle</prosody></speak>`,
         configureCarIntent: `<speak>Thank you for choosing to cofigure your car. <break time="100ms"/>Unfortunately, at the moment this option is not available.<break time="100ms"/> Maybe you'd like to know about about the %topic ?</speak>`
     
     }
