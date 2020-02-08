@@ -27,6 +27,10 @@
                 {
                     "name": "AMAZON.StopIntent",
                     "samples": [
+                        "No more questions",
+                        "That's it for now",
+                        "Nothing else",
+                        "Nothing ",
                         "Finish here",
                         "Stop right now",
                         "That's all",
@@ -338,7 +342,6 @@
                             "name": "carMake",
                             "type": "carMakeType",
                             "samples": [
-                                "{carMake} {carModel}",
                                 "The car is a {carMake}",
                                 "It is a {carMake}",
                                 "{carMake}",
@@ -347,20 +350,29 @@
                         },
                         {
                             "name": "carModel",
-                            "type": "carModelType",
+                            "type": "AMAZON.SearchQuery",
                             "samples": [
                                 "It is a {carModel}",
                                 "{carModel}"
                             ]
+                        },
+                        {
+                            "name": "country",
+                            "type": "AMAZON.Country",
+                            "samples": [
+                                "Accept {country}",
+                                "We are in {country}",
+                                "I'm in {country}",
+                                "I live in {country}",
+                                "The country is {country}",
+                                "I am in {country}",
+                                "{country}"
+                            ]
                         }
                     ],
                     "samples": [
-                        "The vehicle a {carMake} {carModel}",
-                        "{carModel}",
-                        "{carMake} {carModel}",
-                        "The car is a {carMake} {carModel}",
+                        "The vehicle a {carMake}",
                         "The vehicle is a {carMake}",
-                        "{carMake}",
                         "{carMake} is the make",
                         "I think the make is {carMake}",
                         "The make is the {carMake}",
@@ -374,6 +386,11 @@
                     "name": "fullTourIntent",
                     "slots": [],
                     "samples": [
+                        "the full tour",
+                        "for the full tour",
+                        "Full Tour",
+                        "ful tor",
+                        "Full tor",
                         "The tour please",
                         "I want the tour",
                         "Guide me",
@@ -545,6 +562,14 @@
                     "name": "entertainmentSystemIntent",
                     "slots": [],
                     "samples": [
+                        "Tell me about the infotainment",
+                        "about the infotainment system",
+                        "What is the infotainment system",
+                        "Tell me about the infotainment system",
+                        "What are the speakers like",
+                        "how loud does the stereo go",
+                        "What is the stereo like",
+                        "Is the stereo loud",
                         "can the car play good music",
                         "What the sound is like in the car",
                         "How many speakers are there",
@@ -620,7 +645,27 @@
                     "slots": [
                         {
                             "name": "rating",
-                            "type": "AMAZON.NUMBER"
+                            "type": "AMAZON.NUMBER",
+                            "samples": [
+                                "I give this {rating} out of five",
+                                "I would say {rating}",
+                                "I give {rating}",
+                                "Maybe {rating}",
+                                "I would say {rating} is about right",
+                                "I would give {rating}",
+                                "I would say {rating} is right",
+                                "It was a good experience so {rating}",
+                                "It was ok so {rating}",
+                                "I like the experience so {rating}",
+                                "I loved it so {rating}",
+                                "I think {rating} is about right",
+                                "I think {rating} is right",
+                                "I want to give {rating}",
+                                "I feel {rating} is about right",
+                                "I think {rating} out of five is right",
+                                "I think {rating}",
+                                "{rating}"
+                            ]
                         }
                     ],
                     "samples": [
@@ -670,6 +715,23 @@
                 {
                     "name": "AMAZON.NoIntent",
                     "samples": [
+                        "I want to quit here",
+                        "No more questions",
+                        "Not for me right now",
+                        "I want to stop",
+                        "No more please",
+                        "That's it for now",
+                        "That's all for now",
+                        "No thankyou",
+                        "Not for me",
+                        "Not now please",
+                        "No more",
+                        "Nothing",
+                        "That's it",
+                        "Nah",
+                        "No thank you",
+                        "That is all",
+                        "That's all",
                         "I think thats it for now",
                         "Thats it for now",
                         "Thats all for ow",
@@ -682,6 +744,26 @@
                         "No",
                         "Not now",
                         "No thanks"
+                    ]
+                },
+                {
+                    "name": "acceptDemoCar",
+                    "slots": [],
+                    "samples": [
+                        "I would like the demo car",
+                        "I would like the demo vehicle",
+                        "how about the demo vehicle",
+                        "I'll go for the demo vehicle",
+                        "Use the demo",
+                        "Do the demo",
+                        "Ok i'll take the demo car",
+                        "Let's go for tge demo vehicle",
+                        "I'll have the demo please",
+                        "setup the demo instead",
+                        "I want the demo",
+                        "I want the demo car",
+                        "Give me the demo car",
+                        "I'll have the demo car"
                     ]
                 }
             ],
@@ -726,14 +808,358 @@
                     "name": "carMakeType",
                     "values": [
                         {
-                            "id": "BMW",
                             "name": {
-                                "value": "BMW",
+                                "value": "DEMO",
                                 "synonyms": [
-                                    "Beemer",
-                                    "BMW",
-                                    "bmw"
+                                    "presentation",
+                                    "show",
+                                    "fake",
+                                    "dummy",
+                                    "demo",
+                                    "demo make",
+                                    "test make",
+                                    "test"
                                 ]
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Alfa Romeo"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Aston Martin"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Audi"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Bentley"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Benz"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "BMW"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Bugatti"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Cadillac"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Chevrolet"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Chrysler"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Citroen"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Corvette"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "DAF"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Dacia"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Daewoo"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Daihatsu"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Datsun"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "De Lorean"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Dino"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Dodge"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Farboud"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Ferrari"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Fiat"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Ford"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Honda"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Hummer"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Hyundai"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Jaguar"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Jeep"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "KIA"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Koenigsegg"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Lada"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Lamborghini"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Lancia"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Land Rover"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Lexus"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Ligier"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Lincoln"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Lotus"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Martini"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Maserati"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Maybach"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Mazda"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "McLaren"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Mercedes"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Mercedes-Benz"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Mini"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Mitsubishi"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Nissan"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Noble"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Opel"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Peugeot"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Pontiac"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Porsche"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Renault"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Rolls-Royce"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Rover"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Saab"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Seat"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Skoda"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Smart"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Spyker"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Subaru"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Suzuki"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Toyota"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Vauxhall"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Volkswagen"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Volvo"
                             }
                         }
                     ]
@@ -903,11 +1329,20 @@
                         },
                         {
                             "name": "carModel",
-                            "type": "carModelType",
+                            "type": "AMAZON.SearchQuery",
                             "confirmationRequired": false,
                             "elicitationRequired": true,
                             "prompts": {
                                 "elicitation": "Elicit.Slot.128392959367.319349685062"
+                            }
+                        },
+                        {
+                            "name": "country",
+                            "type": "AMAZON.Country",
+                            "confirmationRequired": false,
+                            "elicitationRequired": true,
+                            "prompts": {
+                                "elicitation": "Elicit.Slot.1171568304557.1126680911875"
                             }
                         }
                     ]
@@ -1055,6 +1490,31 @@
                     {
                         "type": "PlainText",
                         "value": "Thank you so much for your feedback. I hope you have a great rest of your day."
+                    }
+                ]
+            },
+            {
+                "id": "Elicit.Slot.1171568304557.1126680911875",
+                "variations": [
+                    {
+                        "type": "PlainText",
+                        "value": "Could you tell me what country you're from"
+                    },
+                    {
+                        "type": "PlainText",
+                        "value": "What is your country ?"
+                    },
+                    {
+                        "type": "PlainText",
+                        "value": "What country are you in ?"
+                    },
+                    {
+                        "type": "PlainText",
+                        "value": "What is your country?"
+                    },
+                    {
+                        "type": "PlainText",
+                        "value": "Just one final thing, what country are you in?"
                     }
                 ]
             }

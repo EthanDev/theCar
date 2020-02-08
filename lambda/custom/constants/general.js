@@ -14,6 +14,40 @@ module.exports = Object.freeze({
     dbTableNames:{
         vehicleInformation: "vehicleInformation",
     },
+    suggestedIntentState: 'SUGGESTED_INTENT',
+    randomFactsIntents:[
+        "driverAssistanceIntent",
+        "fuelConsumptionIntent",
+        "backSeatHubIntent",
+        "efficientDynamicsIntent",
+        "luggageCapacityIntent",
+        "appleCarPlayAsStandardIntent",
+        "entertainmentSystemIntent",
+        "depreciationIntent",
+        "aerodynamicsIntent",
+        "engineIntent",
+        "topSpeedIntent",
+    ],
+    suggestedIntents:{
+        topSpeedIntent: `Would you like to know more about this car's top speed?</prosody></speak>`,
+        driverAssistanceIntent: `Would you like to know more about this car's driver assistance features?</prosody></speak>`,
+        fuelConsumptionIntent :`Would you like to know more about this car's fuel consumption?</prosody></speak>`,
+        backSeatHubIntent :`Would you like to know more about this car's back seat entertainment system?</prosody></speak>`,
+        efficientDynamicsIntent :`Would you like to know more about this car's efficient dynamic system?</prosody></speak>`,
+        luggageCapacityIntent :`Would you like to know more about this car's luggage compartment?</prosody></speak>`,
+        appleCarPlayAsStandardIntent:`Would you like to know more about this car's apple car integration?</prosody></speak>`,
+        entertainmentSystemIntent:`Would you like to know more about this car's entertainment system?</prosody></speak>`,
+        depreciationIntent:`Would you like to know more about this car's depreciation?</prosody></speak>`,
+        aerodynamicsIntent:`Would you like to know more about this car's areodynamic rating?</prosody></speak>`,
+        engineIntent:`Would you like to know more about this car's engine?</prosody></speak>`
+    },
+    errors:{
+        alreadyRegistered: `<speak>Unfortunately, this car's device has not been setup. Please link the device to a vehicle make and model. Good Bye.</speak>`
+    },
+    demo:{
+        make: "DEMO",
+        model: "DEMO"
+    },
     types:{
         mp3: "mp3",
         words: "words"
@@ -35,8 +69,8 @@ module.exports = Object.freeze({
         ]
     },
     confirmations:{
-        postVehicleRegistration: `<speak><audio src="soundbank://soundlibrary/doors/doors_cars/cars_04"/><audio src="soundbank://soundlibrary/doors/doors_cars/cars_10"/><audio src="soundbank://soundlibrary/vehicles/cars/cars_07"/>Great news! You have successfully registered this %make %model to the device. <break time="500ms"/> It's now ready for a buyer to use.<break time="500ms"/> Just tell the buyer to start the experience by saying <break time="250ms"/> "Alexa ask the car, and then their question.<break time="250ms"/> Happy exploring this beautiful %model.</speak>`,
-        completeVehicleRegistration: `<speak><audio src="soundbank://soundlibrary/doors/doors_cars/cars_04"/><audio src="soundbank://soundlibrary/doors/doors_cars/cars_10"/><audio src="soundbank://soundlibrary/vehicles/cars/cars_07"/>Great news! You've successfully registered the device to the %make %model. <break time="500ms"/> It's now ready for a buyer to use.<break time="500ms"/> Start off by telling buyers to start their experience by saying <break time="250ms"/> "Alexa ask the car, and then their question.<break time="250ms"/> Happy exploring this beautiful %model.</speak>`
+        postVehicleRegistration: `<speak><audio src="soundbank://soundlibrary/doors/doors_cars/cars_04"/><audio src="soundbank://soundlibrary/doors/doors_cars/cars_10"/><audio src="soundbank://soundlibrary/vehicles/cars/cars_07"/>Great news! You have successfully registered this %make %model to the device. <break time="500ms"/> It's now ready for a buyer to use.<break time="500ms"/> Just tell the buyer to start the experience by saying <break time="250ms"/> "ask the car, and then their question.<break time="250ms"/> Happy exploring this beautiful %model.</speak>`,
+        completeVehicleRegistration: `<speak><audio src="soundbank://soundlibrary/doors/doors_cars/cars_04"/><audio src="soundbank://soundlibrary/doors/doors_cars/cars_10"/><audio src="soundbank://soundlibrary/vehicles/cars/cars_07"/>Great news! You've successfully registered the device to the %make %model. <break time="500ms"/> It's now ready for a buyer to use.<break time="500ms"/> Start off by telling buyers to start their experience by saying <break time="250ms"/> "ask the car, and then their question.<break time="250ms"/> Happy exploring this beautiful %model.</speak>`
     },
     answers:{
         topSpeedIntent: `<speak><prosody rate="medium">Speaking of speed, you're flying through questions! <break time="250ms"/> It's ok, I don't mind at all. <break time="250ms"/>Getting back, this xDrive 30d M Sport, V-8 model can hit the same 100 kilmeters per hour sprint in 6.2 seconds using the power of 265 horse power. <break time="250ms"/>Wow! <break time="250ms"/>Now that's what I call quick!<break time="250ms"/> What else can I tell you about?</prosody></speak>`,
@@ -64,7 +98,7 @@ module.exports = Object.freeze({
         
         </prosody></speak>`,
         questionIntent: `<speak><prosody rate="medium">That's great, I look forward to answering your questions to help your discover everything about your new vehicle</prosody></speak>`,
-        configureCarIntent: `<speak>Thank you for choosing to cofigure your car. <break time="100ms"/>Unfortunately, at the moment this option is not available.<break time="100ms"/> Maybe you'd like to know about about the %topic ?</speak>`
+        configureCarIntent: `<speak>Thank you for choosing to configure your car. <break time="100ms"/>Unfortunately, at the moment this option is not available.<break time="100ms"/> Maybe you'd like to know about the %topic ?</speak>`
     
     }
 

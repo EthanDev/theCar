@@ -1,9 +1,9 @@
 
 /**
-* Speak out alexa speech and then return to the calling function
-* @param {*} handlerInput 
-* @param {*} directiveMsg 
-*/
+ * Speak out alexa speech and then return to the calling function
+ * @param {*} handlerInput 
+ * @param {*} directiveMsg 
+ */
 var callDirectiveService = (handlerInput, directiveMsg) => {
     // Call Alexa Directive service
     const requestEnvelope = handlerInput.requestEnvelope;

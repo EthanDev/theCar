@@ -138,6 +138,6 @@ const questionIntentHandler ={
 };
 
 exports.questionIntentHandler = questionIntentHandler;
-exports.configureCarIntentHandler = configureCarIntentHandler;
+//exports.configureCarIntentHandler = configureCarIntentHandler;
 exports.askQuestionIntentHandler = askQuestionIntentHandler;
 exports.RatingIntentHandler = RatingIntentHandler;

@@ -5,6 +5,10 @@ var dateFormat = require('dateformat');
 const accountSid = 'ACc63ae6c570ca6f01ab5a0556af7d0f03';
 const authToken = 'dd146dbdc46c26bdc22e9667ba8d951f';
 const client = require('twilio')(accountSid, authToken);
+const moment = require('moment-timezone');
+moment().tz("Europe/London").utc().format();
+
+var randomstring = require("randomstring");
 
 // Load constants
 const generalConstants = require('./constants/general');
@@ -67,6 +71,7 @@ var logAnalytics = (pHandlerInput, pIntent, pCategory, pSessionAttributes) => {
 
     var now = new Date();
     let lTodaysDate = dateFormat(now, "yyyy-mm-dd");
+    let lDateTime = moment().utc().format();
 
     return new Promise(function (resolve, reject) {
 
@@ -78,13 +83,17 @@ var logAnalytics = (pHandlerInput, pIntent, pCategory, pSessionAttributes) => {
                 "Authorization": "Basic ZWxhc3RpYzpGbWlhREhsQ1A1cUhsYlFMTVRObmFXajM=",
             },
             body: {
+                "sessionId": pSessionAttributes.sessionId,
+                "deviceId": pSessionAttributes.deviceId,
+                "vehicleId": pSessionAttributes.vehicleInformation.vehicleId,
                 "Intent": pIntent,
                 "category": pCategory,
                 "make": pSessionAttributes.vehicleInformation.make,
                 "location": pSessionAttributes.vehicleInformation.location,
                 "date": lTodaysDate,
                 "model": pSessionAttributes.vehicleInformation.model,
-                "type": "Question_Category"
+                "type": "Question_Category",
+                "dateTime": lDateTime
             },
             json: true // Automatically stringifies the body to JSON
         };
@@ -143,9 +152,8 @@ var registerDeviceToVehicle = (pDeviceId, pVehicleId) => {
                 console.log('..Error = ', err);
                 reject(err);
             } else {
-                console.log('..successful write of data = ', data);
 
-                resolve(data);
+                resolve();
             }
         });
 
@@ -194,6 +202,8 @@ var checkRegisteredDevice = pDeviceId => {
                         resolve(item);
                     });
                 } else {
+                    console.log('...resolving  with registered = false ');
+                    
                     resolve(rtnJsonBlank);
                 }
             }
@@ -450,6 +460,8 @@ var processNumberOfQuestions = {
         //x console.log('IN processNumberOfQuestions with handlerInput = ', JSON.stringify(handlerInput.requestEnvelope));
 
         if (handlerInput.requestEnvelope.session['new']) {
+
+
             return new Promise((resolve, reject) => {
 
                 handlerInput.attributesManager.getPersistentAttributes()
@@ -464,6 +476,8 @@ var processNumberOfQuestions = {
 
                         console.log('Setting session attributes = ', persistentAttributes);
 
+                         // Generate new id for the session
+                        persistentAttributes['sessionId'] = randomstring.generate();
 
                         handlerInput.attributesManager.setSessionAttributes(persistentAttributes);
                         console.log('Session attributes are now ', persistentAttributes);
@@ -560,7 +574,7 @@ var getNextTopic = pSessionAttributes => {
         let lRandomTopics = generalConstants.topics;
 
         // Get the number of the responses
-        let lResponseSize = _.size(lRandomTopics);
+        let lResponseSize = _.size(lRandomTopics) - 1;
 
         // Choose one of the random facts to speak
         let lIndex = _.random(0, lResponseSize);
@@ -723,6 +737,8 @@ var setLocation = async (pVehicleId, pHandlerInput) => {
     }); // end-promise
 
 }; // End-Func
+
+
 
 exports.callDirectiveService = callDirectiveService;
 exports.getResponse = getResponse;
