@@ -1,5 +1,7 @@
+
 <!doctype html>
 <html lang="en">
+
 <head>
     <title>Code coverage report for custom/helperFunctions.js</title>
     <meta charset="utf-8" />
@@ -12,40 +14,48 @@
         }
     </style>
 </head>
+    
 <body>
 <div class='wrapper'>
-  <div class='pad1'>
-    <h1>
-      <a href="../index.html">All files</a> / <a href="index.html">custom</a> helperFunctions.js
-    </h1>
-    <div class='clearfix'>
-      <div class='fl pad1y space-right2'>
-        <span class="strong">0% </span>
-        <span class="quiet">Statements</span>
-        <span class='fraction'>0/12</span>
-      </div>
-      <div class='fl pad1y space-right2'>
-        <span class="strong">100% </span>
-        <span class="quiet">Branches</span>
-        <span class='fraction'>0/0</span>
-      </div>
-      <div class='fl pad1y space-right2'>
-        <span class="strong">0% </span>
-        <span class="quiet">Functions</span>
-        <span class='fraction'>0/2</span>
-      </div>
-      <div class='fl pad1y space-right2'>
-        <span class="strong">0% </span>
-        <span class="quiet">Lines</span>
-        <span class='fraction'>0/12</span>
-      </div>
+    <div class='pad1'>
+        <h1><a href="../index.html">All files</a> / <a href="index.html">custom</a> helperFunctions.js</h1>
+        <div class='clearfix'>
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">33.33% </span>
+                <span class="quiet">Statements</span>
+                <span class='fraction'>4/12</span>
+            </div>
+        
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">100% </span>
+                <span class="quiet">Branches</span>
+                <span class='fraction'>0/0</span>
+            </div>
+        
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">0% </span>
+                <span class="quiet">Functions</span>
+                <span class='fraction'>0/2</span>
+            </div>
+        
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">33.33% </span>
+                <span class="quiet">Lines</span>
+                <span class='fraction'>4/12</span>
+            </div>
+        
+            
+        </div>
+        <p class="quiet">
+            Press <em>n</em> or <em>j</em> to go to the next uncovered block, <em>b</em>, <em>p</em> or <em>k</em> for the previous block.
+        </p>
     </div>
-    <p class="quiet">
-      Press <em>n</em> or <em>j</em> to go to the next uncovered block, <em>b</em>, <em>p</em> or <em>k</em> for the previous block.
-    </p>
-  </div>
-  <div class='status-line low'></div>
-<pre><table class="coverage">
+    <div class='status-line low'></div>
+    <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
 <a name='L3'></a><a href='#L3'>3</a>
@@ -111,7 +121,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -142,16 +152,16 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -166,11 +176,11 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">&nbsp;
 /**
-* Speak out alexa speech and then return to the calling function
-* @param {*} handlerInput 
-* @param {*} directiveMsg 
-*/
-var callDirectiveService = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >(h</span>andlerInput, directiveMsg) =&gt; {</span>
+ * Speak out alexa speech and then return to the calling function
+ * @param {*} handlerInput 
+ * @param {*} directiveMsg 
+ */
+var callDirectiveService = <span class="fstat-no" title="function not covered" >(h</span>andlerInput, directiveMsg) =&gt; {
     // Call Alexa Directive service
     const requestEnvelope = <span class="cstat-no" title="statement not covered" >handlerInput.requestEnvelope;</span>
     const directiveServiceClient = <span class="cstat-no" title="statement not covered" >handlerInput.serviceClientFactory.getDirectiveServiceClient();</span>
@@ -201,7 +211,7 @@ var callDirectiveService = <span class="cstat-no" title="statement not covered" 
  * @param {number} min 
  * @param {number} max 
  */
-var randomIntFromInterval = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >(m</span>in, max) =&gt; { // min and max included </span>
+var randomIntFromInterval = <span class="fstat-no" title="function not covered" >(m</span>in, max) =&gt; { // min and max included 
 <span class="cstat-no" title="statement not covered" >    return Math.floor(Math.random() * (max - min + 1) + min);</span>
 };
 &nbsp;
@@ -209,8 +219,8 @@ var randomIntFromInterval = <span class="cstat-no" title="statement not covered"
 &nbsp;
 &nbsp;
 &nbsp;
-<span class="cstat-no" title="statement not covered" >exports.callDirectiveService = callDirectiveService;</span>
-<span class="cstat-no" title="statement not covered" >exports.randomIntFromInterval = randomIntFromInterval;</span>
+exports.callDirectiveService = callDirectiveService;
+exports.randomIntFromInterval = randomIntFromInterval;
 &nbsp;
 /*
 &nbsp;
@@ -223,24 +233,24 @@ Object.assign(sessionAttributes, {
     score: currentScore,
     correctAnswerText: translatedQuestion[Object.keys(translatedQuestion)[0]][0]
   });
-*/</pre></td></tr>
-</table></pre>
-<div class='push'></div><!-- for sticky footer -->
-</div><!-- /wrapper -->
-<div class='footer quiet pad2 space-top1 center small'>
-  Code coverage
-  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Tue Nov 05 2019 13:49:03 GMT+0200 (Eastern European Standard Time)
-</div>
-</div>
-<script src="../prettify.js"></script>
-<script>
-window.onload = function () {
-        if (typeof prettyPrint === 'function') {
-            prettyPrint();
-        }
-};
-</script>
-<script src="../sorter.js"></script>
-<script src="../block-navigation.js"></script>
-</body>
+*/</pre></td></tr></table></pre>
+
+                <div class='push'></div><!-- for sticky footer -->
+            </div><!-- /wrapper -->
+            <div class='footer quiet pad2 space-top1 center small'>
+                Code coverage generated by
+                <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
+                at Sat Feb 15 2020 22:53:51 GMT+0200 (Eastern European Standard Time)
+            </div>
+        </div>
+        <script src="../prettify.js"></script>
+        <script>
+            window.onload = function () {
+                prettyPrint();
+            };
+        </script>
+        <script src="../sorter.js"></script>
+        <script src="../block-navigation.js"></script>
+    </body>
 </html>
+    

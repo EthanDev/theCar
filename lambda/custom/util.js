@@ -13,8 +13,6 @@ var randomstring = require("randomstring");
 // Load constants
 const generalConstants = require('./constants/general');
 
-// Load credentials and set region from JSON file
-//AWS.config.loadFromPath('./config.json');
 
 const s3SigV4Client = new AWS.S3({
     signatureVersion: 'v4'
@@ -30,7 +28,7 @@ var ddb = new AWS.DynamoDB({
     apiVersion: '2012-08-10'
 });
 
-module.exports.getS3PreSignedUrl = function getS3PreSignedUrl(s3ObjectKey) {
+var getS3PreSignedUrl = (s3ObjectKey) => {
 
     const bucketName = process.env.S3_PERSISTENCE_BUCKET;
     const s3PreSignedUrl = s3SigV4Client.getSignedUrl('getObject', {
@@ -38,7 +36,6 @@ module.exports.getS3PreSignedUrl = function getS3PreSignedUrl(s3ObjectKey) {
         Key: s3ObjectKey,
         Expires: 60 * 1 // the Expires is capped for 1 minute
     });
-    console.log(`Util.s3PreSignedUrl: ${s3ObjectKey} URL ${s3PreSignedUrl}`);
     return s3PreSignedUrl;
 
 }
@@ -66,9 +63,6 @@ var sendMessageToSalesTeam = async (pBody) => {
  * @param {String} pCategory 
  */
 var logAnalytics = (pHandlerInput, pIntent, pCategory, pSessionAttributes) => {
-
-    console.log('IN logAnalytics with handlerInput = %s and pIntent = %s, and pCategory = %s ', pHandlerInput, pIntent, pCategory);
-
     var now = new Date();
     let lTodaysDate = dateFormat(now, "yyyy-mm-dd");
     let lDateTime = moment().utc().format();
@@ -76,7 +70,7 @@ var logAnalytics = (pHandlerInput, pIntent, pCategory, pSessionAttributes) => {
     return new Promise(function (resolve, reject) {
 
         var lOptions = {
-            uri: 'https://a885c98eca654cde8e07d54c9147961b.us-west-2.aws.found.io:9243/carsay/_doc/', 
+            uri: 'https://a885c98eca654cde8e07d54c9147961b.us-west-2.aws.found.io:9243/carsay/_doc/',
             method: 'POST',
             headers: {
                 "Content-Type": "application/json",
@@ -99,13 +93,9 @@ var logAnalytics = (pHandlerInput, pIntent, pCategory, pSessionAttributes) => {
         };
 
 
-        console.log('lOptions =', lOptions);
-
-
         rp(lOptions)
             .then((response) => {
 
-                console.log('Record added to Elastic search response = ', response);
 
                 resolve();
 
@@ -141,15 +131,10 @@ var registerDeviceToVehicle = (pDeviceId, pVehicleId) => {
         }
     };
 
-    console.log('..IN registerDeviceToVehicle with pDeviceId = %s and pVehicleId = %s', pDeviceId, pVehicleId);
-    console.log('...params = %s', JSON.stringify(params));
-
-
     return new Promise(function (resolve, reject) {
 
         ddb.putItem(params, function (err, data) {
             if (err) {
-                console.log('..Error = ', err);
                 reject(err);
             } else {
 
@@ -166,7 +151,6 @@ var registerDeviceToVehicle = (pDeviceId, pVehicleId) => {
  * Check that the device is registered or not
  */
 var checkRegisteredDevice = pDeviceId => {
-    console.log('..IN checkRegisteredDevice with device id = %s', pDeviceId);
 
     let rtnJsonBlank = {
         registered: false
@@ -184,7 +168,6 @@ var checkRegisteredDevice = pDeviceId => {
         }
     };
 
-    console.log('..checkRegisteredDevice query = ', params);
 
     return new Promise(function (resolve, reject) {
 
@@ -193,17 +176,13 @@ var checkRegisteredDevice = pDeviceId => {
                 console.error("Unable to query. Error:", JSON.stringify(err, null, 2));
                 resolve(rtnJsonBlank);
             } else {
-                console.log("Query succeeded.");
-                console.log('Data = ', data);
 
                 if (data.Count > 0) {
                     data.Items.forEach(function (item) {
-                        console.log('Itenm = ', item);
                         resolve(item);
                     });
                 } else {
-                    console.log('...resolving  with registered = false ');
-                    
+
                     resolve(rtnJsonBlank);
                 }
             }
@@ -219,7 +198,7 @@ var checkRegisteredDevice = pDeviceId => {
  * Check that the device is registered or not
  */
 var removeRegisteredDevice = pDeviceId => {
-    console.log('..IN removeRegisteredDevice with device id = %s', pDeviceId);
+
 
     // Set query parameters for db query
     var params = {
@@ -229,7 +208,6 @@ var removeRegisteredDevice = pDeviceId => {
         }
     };
 
-    console.log('..removeRegisteredDevice query = ', params);
 
     return new Promise(function (resolve, reject) {
 
@@ -238,8 +216,6 @@ var removeRegisteredDevice = pDeviceId => {
                 console.error("Unable to query. Error:", JSON.stringify(err, null, 2));
                 reject();
             } else {
-                console.log("****** Delete succeeded. *******");
-                console.log('Data = ', data);
                 resolve();
             }
         });
@@ -252,7 +228,6 @@ var removeRegisteredDevice = pDeviceId => {
 function getSlotValues(filledSlots) {
     const slotValues = {};
 
-    console.log(`The filled slots: ${JSON.stringify(filledSlots)}`);
     Object.keys(filledSlots).forEach((item) => {
         const name = filledSlots[item].name;
 
@@ -298,6 +273,84 @@ function getSlotValues(filledSlots) {
     }, this);
     return slotValues;
 }; // getSlotValues
+
+/**
+ * getSessionState - Get the current session state
+ * @param {*} handlerInput 
+ */
+var getSessionState = (handlerInput) => {
+
+    let attributesManager = handlerInput.attributesManager;
+    let sessionAttributes = attributesManager.getSessionAttributes();
+    return sessionAttributes.STATE;
+};
+
+/**
+ * setSessionState - Set the session state
+ * @param {object} handlerInput 
+ * @param {string} pStateValue
+ */
+var setSessionState = (handlerInput, pStateValue) => {
+
+    return new Promise(function (resolve, reject) {
+
+        let attributesManager = handlerInput.attributesManager;
+        let sessionAttributes = attributesManager.getSessionAttributes();
+
+        sessionAttributes.STATE = pStateValue;
+
+        attributesManager.setSessionAttributes(sessionAttributes);
+
+        resolve;
+    });
+
+}
+
+/**
+ * clearSessionState - clear the session state 
+ * @param {*} handlerInput 
+ */
+var clearSessionState = (handlerInput) => {
+
+    let attributesManager = handlerInput.attributesManager;
+    let sessionAttributes = attributesManager.getSessionAttributes();
+
+    sessionAttributes.STATE = " ";
+
+    attributesManager.setSessionAttributes(sessionAttributes);
+    return;
+
+};
+
+/**
+ * getSessionAttributes - Get the session attributes object
+ * @param {*} handlerInput 
+ */
+var getSessionAttributes = handlerInput => {
+
+    return new Promise(function (resolve, reject) {
+        let attributesManager = handlerInput.attributesManager;
+        resolve(attributesManager.getSessionAttributes());
+    });
+
+};
+
+/**
+ * setSessionAttributes
+ * @param {*} handlerInput 
+ * @param {*} sessionAttributes 
+ */
+var setSessionAttributes = (handlerInput, sessionAttributes) => {
+
+    return new Promise(function (resolve, reject) {
+        let attributesManager = handlerInput.attributesManager;
+        attributesManager.setSessionAttributes(sessionAttributes);
+        resolve();
+    });
+
+}
+
+
 
 
 // This response interceptor stores all session attributes into global persistent attributes
@@ -351,8 +404,6 @@ const PersistenceRequestInterceptor = {
  * @param {string} pModel 
  */
 const getVehicleInformation = (pMake, pModel, pCountry) => {
-    console.log('..IN getVehicleInformation with make = %s and model = %s', pMake, pModel);
-
 
     let lRtnJson = {
         item: "",
@@ -380,8 +431,6 @@ const getVehicleInformation = (pMake, pModel, pCountry) => {
             TableName: "vehicleInformation"
         };
 
-        console.log('..getVehicleInformation query = ', queryParams);
-
 
         docClient.scan(queryParams, function (err, data) {
             if (err) {
@@ -389,7 +438,6 @@ const getVehicleInformation = (pMake, pModel, pCountry) => {
                 const reason = new Error(JSON.stringify(err, null, 2));
                 resolve(reason);
             } else {
-                console.log("Query succeeded.", data);
                 if (data.Items.length !== 0) {
                     data.Items.forEach(function (item) {
 
@@ -411,7 +459,6 @@ const getVehicleInformation = (pMake, pModel, pCountry) => {
  * @param {String} pVehicleId 
  */
 var getVehicleInformationById = pVehicleId => {
-    console.log('..IN getVehicleInformationById with id = %s', pVehicleId);
 
     return new Promise(function (resolve, reject) {
 
@@ -431,7 +478,6 @@ var getVehicleInformationById = pVehicleId => {
             TableName: "vehicleInformation"
         };
 
-        console.log('..getVehicleInformationById query = ', queryParams);
 
 
         docClient.scan(queryParams, function (err, data) {
@@ -440,7 +486,7 @@ var getVehicleInformationById = pVehicleId => {
                 let rtnJson = err.toString();
                 resolve(rtnJson);
             } else {
-                console.log("Query succeeded.", data);
+
                 if (data.Items.length !== 0) {
                     data.Items.forEach(function (item) {
                         resolve(item);
@@ -457,7 +503,6 @@ var getVehicleInformationById = pVehicleId => {
 
 var processNumberOfQuestions = {
     process(handlerInput) {
-        //x console.log('IN processNumberOfQuestions with handlerInput = ', JSON.stringify(handlerInput.requestEnvelope));
 
         if (handlerInput.requestEnvelope.session['new']) {
 
@@ -474,13 +519,10 @@ var processNumberOfQuestions = {
 
                         persistentAttributes['questionCount'] += 1;
 
-                        console.log('Setting session attributes = ', persistentAttributes);
-
-                         // Generate new id for the session
+                        // Generate new id for the session
                         persistentAttributes['sessionId'] = randomstring.generate();
 
                         handlerInput.attributesManager.setSessionAttributes(persistentAttributes);
-                        console.log('Session attributes are now ', persistentAttributes);
 
                         resolve();
                     })
@@ -500,9 +542,6 @@ var processNumberOfQuestions = {
  */
 var getResponse = (pVehicleId, pIntentName) => {
 
-    console.log('- - - - - - - - - - - - - - - ');
-    console.log('..IN getResponse with intent = %s', pIntentName);
-
     return new Promise(function (resolve, reject) {
 
         // query the database - vehicleInformation for content
@@ -510,8 +549,6 @@ var getResponse = (pVehicleId, pIntentName) => {
             responseContent: "",
             responseType: ""
         }
-
-        console.log('...');
 
 
         let lQueryParams = {
@@ -526,18 +563,15 @@ var getResponse = (pVehicleId, pIntentName) => {
             }
         };
 
-        console.log('...Query parms = %s', JSON.stringify(lQueryParams));
 
         docClient.query(lQueryParams, function (err, data) {
             if (err) {
                 console.error("Unable to query. Error:", JSON.stringify(err, null, 2));
                 reject(err);
             } else {
-                console.log("Query succeeded.", data);
+
                 if (data.Items.length !== 0) {
                     data.Items.forEach(function (item) {
-
-                        console.log('..item = ', JSON.stringify(item));
 
 
                         lRtnJson.responseContent = item[pIntentName];
@@ -547,7 +581,6 @@ var getResponse = (pVehicleId, pIntentName) => {
                             lRtnJson.responseType = generalConstants.types.words;
                         }
 
-                        console.log('...rtnJson = ', JSON.stringify(lRtnJson));
 
                         resolve(lRtnJson);
                     }); // for each
@@ -564,8 +597,6 @@ var getResponse = (pVehicleId, pIntentName) => {
 
 var getNextTopic = pSessionAttributes => {
 
-    console.log('-----------------------------');
-    console.log('..IN getNextTopic ');
 
     let lRtnTopic;
 
@@ -591,9 +622,6 @@ var getNextTopic = pSessionAttributes => {
 };
 
 var getRandomCarFacts = pSessionAttributes => {
-    console.log('- - - - - - - - - - - - - - - ');
-    console.log('..IN getRandomCarFacts with SessionAttributes = %s', JSON.stringify(pSessionAttributes));
-
     let lVehicleId = pSessionAttributes.vehicleId;
 
     return new Promise(function (resolve, reject) {
@@ -610,23 +638,16 @@ var getRandomCarFacts = pSessionAttributes => {
             }
         };
 
-        console.log('...Query parms = %s', JSON.stringify(lQueryParams));
 
         docClient.query(lQueryParams, function (err, data) {
             if (err) {
                 console.error("Unable to query. Error:", JSON.stringify(err, null, 2));
                 reject(err);
             } else {
-                console.log("Query succeeded.", data);
                 if (data.Items.length !== 0) {
                     data.Items.forEach(function (item) {
-                        console.log('..item = ', JSON.stringify(item));
-
 
                         let randomFacts = item.randomFacts;
-
-                        console.log('Random Fact = ', randomFacts);
-
 
                         resolve(randomFacts);
                     });
@@ -698,21 +719,16 @@ var setLocation = async (pVehicleId, pHandlerInput) => {
             }
         };
 
-        console.log('...Query parms = %s', JSON.stringify(lQueryParams));
-
         docClient.query(lQueryParams, function (err, data) {
             if (err) {
                 console.error("Unable to query. Error:", JSON.stringify(err, null, 2));
                 reject(err);
             } else {
-                console.log("Query succeeded.", data);
+
                 if (data.Items.length !== 0) {
                     data.Items.forEach(function (item) {
-                        console.log('..item = ', JSON.stringify(item));
 
                         let lLocation = item.location;
-
-                        console.log('The loaction is %s', lLocation);
 
                         lPersistentAttributes.location = lLocation;
                         lSessionAttributes.location = lLocation;
@@ -739,21 +755,87 @@ var setLocation = async (pVehicleId, pHandlerInput) => {
 }; // End-Func
 
 
+/**
+ * Get resposne from database file vehicleInformation
+ * @param {String} pVehicleId 
+ * @param {String} pIntentName 
+ */
+var getFullTour = (pVehicleId) => {
 
-exports.callDirectiveService = callDirectiveService;
-exports.getResponse = getResponse;
-exports.getVehicleInformationById = getVehicleInformationById;
-exports.checkRegisteredDevice = checkRegisteredDevice;
-exports.getSlotValues = getSlotValues;
-exports.PersistenceResponseInterceptor = PersistenceResponseInterceptor;
-exports.PersistenceRequestInterceptor = PersistenceRequestInterceptor;
-exports.getVehicleInformation = getVehicleInformation;
-exports.registerDeviceToVehicle = registerDeviceToVehicle;
-exports.processNumberOfQuestions = processNumberOfQuestions;
-exports.getRandomCarFacts = getRandomCarFacts;
-exports.getNextTopic = getNextTopic;
-exports.logAnalytics = logAnalytics;
-exports.sendMessageToSalesTeam = sendMessageToSalesTeam;
-exports.setLocation = setLocation;
-exports.removeRegisteredDevice = removeRegisteredDevice;
+
+    return new Promise(function (resolve, reject) {
+
+        // query the database - vehicleInformation for content
+        let lRtnJson = {
+            responseContent: "",
+            responseType: ""
+        }
+
+
+        let lQueryParams = {
+            TableName: generalConstants.dbTableNames.vehicleInformation,
+            ProjectionExpression: "fullTourIntent",
+            KeyConditionExpression: "id = :vehicleId",
+            ExpressionAttributeValues: {
+                ":vehicleId": pVehicleId.toString()
+            }
+        };
+
+
+        docClient.query(lQueryParams, function (err, data) {
+            if (err) {
+                console.error("Unable to query. Error:", JSON.stringify(err, null, 2));
+                reject(err);
+            } else {
+
+                if (data.Items.length !== 0) {
+                    data.Items.forEach(function (item) {
+
+
+                        lRtnJson.responseContent = item['fullTourIntent'];
+                        if (item['fullTourIntent'][0].responseText.includes("cloudfront.net")) {
+                            lRtnJson.responseType = generalConstants.types.mp3;
+                        } else {
+                            lRtnJson.responseType = generalConstants.types.words;
+                        }
+
+                        resolve(lRtnJson);
+                    }); // for each
+                } else {
+                    reject('No data exists for vehicle');
+                };
+
+            } // end-if
+        }); // end-query
+
+    }); // end-promise
+
+}; // end-getFullTour
+
+
+module.exports = {
+    getFullTour,
+    callDirectiveService,
+    getResponse,
+    getVehicleInformationById,
+    checkRegisteredDevice,
+    getSlotValues,
+    PersistenceResponseInterceptor,
+    PersistenceRequestInterceptor,
+    getVehicleInformation,
+    registerDeviceToVehicle,
+    processNumberOfQuestions,
+    getRandomCarFacts,
+    getNextTopic,
+    logAnalytics,
+    sendMessageToSalesTeam,
+    setLocation,
+    removeRegisteredDevice,
+    getS3PreSignedUrl,
+    getSessionState,
+    setSessionState,
+    clearSessionState,
+    getSessionAttributes,
+    setSessionAttributes
+}
 //exports.addToUserProfile = addToUserProfile;

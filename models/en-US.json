@@ -10,6 +10,7 @@
                 {
                     "name": "AMAZON.CancelIntent",
                     "samples": [
+                        "Nothing",
                         "Hault",
                         "Get out",
                         "Exit",
@@ -27,22 +28,13 @@
                 {
                     "name": "AMAZON.StopIntent",
                     "samples": [
-                        "No more questions",
-                        "That's it for now",
-                        "Nothing else",
-                        "Nothing ",
                         "Finish here",
                         "Stop right now",
-                        "That's all",
                         "Stop here",
                         "Finish ",
                         "Finish here please",
                         "Stop",
-                        "I'm done ",
-                        "I'm finished",
-                        "Stop please",
-                        "That's it",
-                        "That's all thank you"
+                        "Stop please"
                     ]
                 },
                 {
@@ -350,7 +342,7 @@
                         },
                         {
                             "name": "carModel",
-                            "type": "AMAZON.SearchQuery",
+                            "type": "carModelType",
                             "samples": [
                                 "It is a {carModel}",
                                 "{carModel}"
@@ -358,7 +350,7 @@
                         },
                         {
                             "name": "country",
-                            "type": "AMAZON.Country",
+                            "type": "countryList",
                             "samples": [
                                 "Accept {country}",
                                 "We are in {country}",
@@ -641,56 +633,6 @@
                     ]
                 },
                 {
-                    "name": "RatingIntent",
-                    "slots": [
-                        {
-                            "name": "rating",
-                            "type": "AMAZON.NUMBER",
-                            "samples": [
-                                "I give this {rating} out of five",
-                                "I would say {rating}",
-                                "I give {rating}",
-                                "Maybe {rating}",
-                                "I would say {rating} is about right",
-                                "I would give {rating}",
-                                "I would say {rating} is right",
-                                "It was a good experience so {rating}",
-                                "It was ok so {rating}",
-                                "I like the experience so {rating}",
-                                "I loved it so {rating}",
-                                "I think {rating} is about right",
-                                "I think {rating} is right",
-                                "I want to give {rating}",
-                                "I feel {rating} is about right",
-                                "I think {rating} out of five is right",
-                                "I think {rating}",
-                                "{rating}"
-                            ]
-                        }
-                    ],
-                    "samples": [
-                        "I think {rating} out of five is right",
-                        "I feel {rating} is about right",
-                        "I want to give {rating}",
-                        "I think {rating}",
-                        "I think {rating} is about right",
-                        "I loved it so {rating}",
-                        "I like the experience so {rating}",
-                        "It was ok so {rating}",
-                        "It was a good experience so {rating}",
-                        "I would say {rating} is right",
-                        "I would give {rating}",
-                        "I would say {rating} is about right",
-                        "Maybe {rating}",
-                        "{rating}",
-                        "{rating} out of five",
-                        "I give {rating}",
-                        "I would say {rating}",
-                        "I give this {rating} out of five",
-                        "I rate this {rating} out of five"
-                    ]
-                },
-                {
                     "name": "AMAZON.YesIntent",
                     "samples": [
                         "Let's",
@@ -715,26 +657,21 @@
                 {
                     "name": "AMAZON.NoIntent",
                     "samples": [
+                        "No now",
                         "I want to quit here",
                         "No more questions",
                         "Not for me right now",
                         "I want to stop",
                         "No more please",
                         "That's it for now",
-                        "That's all for now",
                         "No thankyou",
                         "Not for me",
                         "Not now please",
                         "No more",
-                        "Nothing",
-                        "That's it",
                         "Nah",
                         "No thank you",
-                        "That is all",
-                        "That's all",
                         "I think thats it for now",
                         "Thats it for now",
-                        "Thats all for ow",
                         "Nothing at the moment",
                         "Not at the moment",
                         "Nothing right now",
@@ -750,6 +687,11 @@
                     "name": "acceptDemoCar",
                     "slots": [],
                     "samples": [
+                        "I want the demo vehicle",
+                        "I would like to setup the demo ",
+                        "I would like the demo ",
+                        "do the demo car",
+                        "configure the demo",
                         "I would like the demo car",
                         "I would like the demo vehicle",
                         "how about the demo vehicle",
@@ -764,6 +706,28 @@
                         "I want the demo car",
                         "Give me the demo car",
                         "I'll have the demo car"
+                    ]
+                },
+                {
+                    "name": "RE_REGISTER_INTENT",
+                    "slots": [],
+                    "samples": [
+                        "reset this echo device",
+                        "reset this device",
+                        "change the vehicle",
+                        "change the the car",
+                        "change the make and model",
+                        "relink this device",
+                        "relink this echo ",
+                        "reassign this device",
+                        "reassign this echo device",
+                        "unlink this echo",
+                        "unlink this device",
+                        "put this device inside another car",
+                        "link this echo to another car",
+                        "assign this device to another make and model",
+                        "swap this device",
+                        "to reassign this device"
                     ]
                 }
             ],
@@ -1168,6 +1132,16 @@
                     "name": "carModelType",
                     "values": [
                         {
+                            "id": "Demo",
+                            "name": {
+                                "value": "Demo",
+                                "synonyms": [
+                                    "Demmo",
+                                    "Damo"
+                                ]
+                            }
+                        },
+                        {
                             "id": "X5",
                             "name": {
                                 "value": "X5",
@@ -1291,6 +1265,1036 @@
                             }
                         }
                     ]
+                },
+                {
+                    "name": "AMAZON.Country",
+                    "values": [
+                        {
+                            "id": "NZ",
+                            "name": {
+                                "value": "New Zealand",
+                                "synonyms": [
+                                    "NewZealand"
+                                ]
+                            }
+                        },
+                        {
+                            "id": "UK",
+                            "name": {
+                                "value": "UK",
+                                "synonyms": [
+                                    "the U.K",
+                                    "the UK",
+                                    "The UK",
+                                    "England",
+                                    "Britain",
+                                    "Great Britain",
+                                    "United Kingdom"
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "countryList",
+                    "values": [
+                        {
+                            "name": {
+                                "value": "Afghanistan"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Albania"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Algeria"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Andorra"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Angola"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Antigua & Deps"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Argentina"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Armenia"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Australia"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Austria"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Azerbaijan"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Bahamas"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Bahrain"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Bangladesh"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Barbados"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Belarus"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Belgium"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Belize"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Benin"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Bhutan"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Bolivia"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Bosnia Herzegovina"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Botswana"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Brazil"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Brunei"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Bulgaria"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Burkina"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Burundi"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Cambodia"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Cameroon"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Canada"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Cape Verde"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Central African Rep"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Chad"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Chile"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "China"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Colombia"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Comoros"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Congo"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Congo {Democratic Rep}"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Costa Rica"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Croatia"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Cuba"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Cyprus"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Czech Republic"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Denmark"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Djibouti"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Dominica"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Dominican Republic"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "East Timor"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Ecuador"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Egypt"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "El Salvador"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Equatorial Guinea"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Eritrea"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Estonia"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Ethiopia"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Fiji"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Finland"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "France"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Gabon"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Gambia"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Georgia"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Germany"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Ghana"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Greece"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Grenada"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Guatemala"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Guinea"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Guinea-Bissau"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Guyana"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Haiti"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Honduras"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Hungary"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Iceland"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "India"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Indonesia"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Iran"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Iraq"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Ireland {Republic}"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Israel"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Italy"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Ivory Coast"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Jamaica"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Japan"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Jordan"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Kazakhstan"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Kenya"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Kiribati"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Korea North"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Korea South"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Kosovo"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Kuwait"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Kyrgyzstan"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Laos"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Latvia"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Lebanon"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Lesotho"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Liberia"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Libya"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Liechtenstein"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Lithuania"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Luxembourg"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Macedonia"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Madagascar"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Malawi"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Malaysia"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Maldives"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Mali"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Malta"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Marshall Islands"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Mauritania"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Mauritius"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Mexico"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Micronesia"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Moldova"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Monaco"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Mongolia"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Montenegro"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Morocco"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Mozambique"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Myanmar",
+                                "synonyms": [
+                                    "Burma"
+                                ]
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Namibia"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Nauru"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Nepal"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Netherlands"
+                            }
+                        },
+                        {
+                            "id": "NZ",
+                            "name": {
+                                "value": "New Zealand"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Nicaragua"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Niger"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Nigeria"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Norway"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Oman"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Pakistan"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Palau"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Panama"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Papua New Guinea"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Paraguay"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Peru"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Philippines"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Poland"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Portugal"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Qatar"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Romania"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Russian Federation"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Rwanda"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "St Kitts & Nevis"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "St Lucia"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Saint Vincent & the Grenadines"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Samoa"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "San Marino"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Sao Tome & Principe"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Saudi Arabia"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Senegal"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Serbia"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Seychelles"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Sierra Leone"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Singapore"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Slovakia"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Slovenia"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Solomon Islands"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Somalia"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "South Africa"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "South Sudan"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Spain"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Sri Lanka"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Sudan"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Suriname"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Swaziland"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Sweden"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Switzerland"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Syria"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Taiwan"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Tajikistan"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Tanzania"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Thailand"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Togo"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Tonga"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Trinidad & Tobago"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Tunisia"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Turkey"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Turkmenistan"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Tuvalu"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Uganda"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Ukraine"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "United Arab Emirates"
+                            }
+                        },
+                        {
+                            "id": "UK",
+                            "name": {
+                                "value": "United Kingdom",
+                                "synonyms": [
+                                    "UK",
+                                    "England",
+                                    "Great Britain"
+                                ]
+                            }
+                        },
+                        {
+                            "id": "US",
+                            "name": {
+                                "value": "United States",
+                                "synonyms": [
+                                    "North America",
+                                    "States",
+                                    "USA"
+                                ]
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Uruguay"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Uzbekistan"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Vanuatu"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Vatican City"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Venezuela"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Vietnam"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Yemen"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Zambia"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Zimbabwe"
+                            }
+                        }
+                    ]
                 }
             ]
         },
@@ -1329,21 +2333,33 @@
                         },
                         {
                             "name": "carModel",
-                            "type": "AMAZON.SearchQuery",
+                            "type": "carModelType",
                             "confirmationRequired": false,
                             "elicitationRequired": true,
                             "prompts": {
                                 "elicitation": "Elicit.Slot.128392959367.319349685062"
-                            }
+                            },
+                            "validations": [
+                                {
+                                    "type": "hasEntityResolutionMatch",
+                                    "prompt": "Slot.Validation.921440898284.1086405227864.725072495852"
+                                }
+                            ]
                         },
                         {
                             "name": "country",
-                            "type": "AMAZON.Country",
+                            "type": "countryList",
                             "confirmationRequired": false,
                             "elicitationRequired": true,
                             "prompts": {
                                 "elicitation": "Elicit.Slot.1171568304557.1126680911875"
-                            }
+                            },
+                            "validations": [
+                                {
+                                    "type": "hasEntityResolutionMatch",
+                                    "prompt": "Slot.Validation.921440898284.1560476096872.850369411924"
+                                }
+                            ]
                         }
                     ]
                 },
@@ -1363,34 +2379,12 @@
                     ]
                 },
                 {
-                    "name": "RatingIntent",
-                    "confirmationRequired": false,
-                    "prompts": {},
-                    "slots": [
-                        {
-                            "name": "rating",
-                            "type": "AMAZON.NUMBER",
-                            "confirmationRequired": false,
-                            "elicitationRequired": true,
-                            "prompts": {
-                                "elicitation": "Elicit.Slot.249054850391.1388318045697"
-                            },
-                            "validations": [
-                                {
-                                    "type": "isInSet",
-                                    "prompt": "Slot.Validation.1304745343027.183470343922.918645232849",
-                                    "values": [
-                                        "0",
-                                        "1",
-                                        "2",
-                                        "3",
-                                        "4",
-                                        "5"
-                                    ]
-                                }
-                            ]
-                        }
-                    ]
+                    "name": "RE_REGISTER_INTENT",
+                    "confirmationRequired": true,
+                    "prompts": {
+                        "confirmation": "Confirm.Intent.147870041106"
+                    },
+                    "slots": []
                 }
             ],
             "delegationStrategy": "ALWAYS"
@@ -1515,6 +2509,65 @@
                     {
                         "type": "PlainText",
                         "value": "Just one final thing, what country are you in?"
+                    }
+                ]
+            },
+            {
+                "id": "Confirm.Intent.147870041106",
+                "variations": [
+                    {
+                        "type": "PlainText",
+                        "value": "Am I right in saying that you want to put this device inside another vehicle?"
+                    },
+                    {
+                        "type": "PlainText",
+                        "value": "So you want to put this echo device inside another car?"
+                    },
+                    {
+                        "type": "PlainText",
+                        "value": "So you want me to link this echo device to another make and model?"
+                    },
+                    {
+                        "type": "PlainText",
+                        "value": "I heard that you want to put this echo device inside another vehicle, did I get that right?"
+                    },
+                    {
+                        "type": "PlainText",
+                        "value": "I heard that you want to put this echo device inside another vehicle, is that correct?"
+                    }
+                ]
+            },
+            {
+                "id": "Slot.Validation.921440898284.1086405227864.725072495852",
+                "variations": [
+                    {
+                        "type": "PlainText",
+                        "value": "Looks like the {carModel} is not available. Please choose another model."
+                    },
+                    {
+                        "type": "PlainText",
+                        "value": "The {carModel} has not been setup. Please choose another vehicle model"
+                    },
+                    {
+                        "type": "PlainText",
+                        "value": "I'm sorry but the {carModel} is not available. Please choose another model."
+                    },
+                    {
+                        "type": "PlainText",
+                        "value": "I'm sorry but that make is not supported yet. Please choose another model."
+                    }
+                ]
+            },
+            {
+                "id": "Slot.Validation.921440898284.1560476096872.850369411924",
+                "variations": [
+                    {
+                        "type": "PlainText",
+                        "value": "Sorry, maybe I did'nt get that. I'm not sure if {country} is a country, do you mind telling me again."
+                    },
+                    {
+                        "type": "PlainText",
+                        "value": "Sorry but {country} doesn't sound like a country. Maybe I didn't get that right, could you tell me again."
                     }
                 ]
             }

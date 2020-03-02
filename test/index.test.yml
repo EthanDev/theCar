@@ -2,13 +2,11 @@
 configuration:
     locales: en-US
 ---
-- test: Launch and register the device
-- LaunchRequest
+- test: Launch and ask to regsiter the device
 - registerIntent: "Welcome, first things first, we need to link this device to this car."
----
-- test: Set the make and model of the car
-- vehicleVerificationIntent carMake=BMW carModel=X5
----
-- test: The next step after the entry odf make and model
-- vehicleVerificationIntent: "<speak><audio src='soundbank://soundlibrary/doors/doors_cars/cars_04'/><audio src='soundbank://soundlibrary/doors/doors_cars/cars_10'/><audio src='soundbank://soundlibrary/vehicles/cars/cars_07'/><audio src='https://carview.s3.amazonaws.com/CpdzOkQH-2018-bmw-x5-official-video-1.mp3'/>Great news! You've successfully registered the device to the BMW X5. <break time='500ms'/> It's now ready for a buyer to use.<break time='500ms'/> Start off by telling buyers to start their experience by saying <break time='250ms'/> 'Alexa ask the car, and then their question.<break time='250ms'/> Happy exploring this beautiful X5.</speak>"
-  - request.requestEnvelope.request.dialogState: COMPLETED
+- prompt:
+  - "Whats the make of the vehicle?"
+  - "Could you tell me the make ?"
+  - "Whats the make?"
+  - "Do you know the make?"
+  - "What is the make of this vehicle?"

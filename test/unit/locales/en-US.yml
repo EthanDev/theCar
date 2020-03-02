@@ -1,0 +1,16 @@
+# This is the localization file for en-US. Please, modify the values so that they align
+# with your voice app responses for this locale
+
+registerCommand: Alexa, ask the car to register the deice
+registerFirstResponse: Welcome, first things first, we need to link this device to this car.
+carMakeUtterance: BMW
+carModelUtterance: X5
+countryResponseUK: United Kingdom
+countryResponseNewZealand: New Zealand
+carMake&Model: BMW X5
+testSuiteDescription: My first unit test suite
+firstTestName: Launch and ask for help
+launchPrompt: Welcome to carsay
+helpPrompt: What can I help you with?
+helpCardContent: What can I help you with?
+helpCardTitle: carsay

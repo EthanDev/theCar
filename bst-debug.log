@@ -242,3 +242,171 @@
     at TestParser.parse (/usr/local/lib/node_modules/bespoken-tools/node_modules/skill-testing-ml/dist/lib/test/TestParser.js:130:30)
     at TestRunner.parseContents (/usr/local/lib/node_modules/bespoken-tools/node_modules/skill-testing-ml/dist/lib/runner/TestRunner.js:470:21)
     at /usr/local/lib/node_modules/bespoken-tools/node_modules/skill-testing-ml/dist/lib/runner/TestRunner.js:67:39
+2020-02-14T08:55:25.418Z error: bst-test            Error using bst-test on Node: v10.15.3
+2020-02-14T08:55:25.422Z error: bst-test            YAMLException: bad indentation of a sequence entry at line 11, column 41:
+     ... eVerificationIntent: carMake=BMW: BMW
+                                         ^
+    at generateError (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:191:10)
+    at throwError (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:197:9)
+    at readBlockSequence (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:980:7)
+    at composeNode (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:1377:12)
+    at readDocument (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:1538:3)
+    at loadDocuments (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:1594:5)
+    at Object.loadAll (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:1602:19)
+    at TestParser.parse (/usr/local/lib/node_modules/bespoken-tools/node_modules/skill-testing-ml/dist/lib/test/TestParser.js:138:30)
+    at TestRunner.parseContents (/usr/local/lib/node_modules/bespoken-tools/node_modules/skill-testing-ml/dist/lib/runner/TestRunner.js:575:21)
+    at /usr/local/lib/node_modules/bespoken-tools/node_modules/skill-testing-ml/dist/lib/runner/TestRunner.js:78:39
+2020-02-14T08:57:47.084Z error: bst-test            Error using bst-test on Node: v10.15.3
+2020-02-14T08:57:47.088Z error: bst-test            YAMLException: bad indentation of a sequence entry at line 11, column 41:
+     ... eVerificationIntent: carMake=BMW: BMW
+                                         ^
+    at generateError (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:191:10)
+    at throwError (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:197:9)
+    at readBlockSequence (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:980:7)
+    at composeNode (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:1377:12)
+    at readDocument (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:1538:3)
+    at loadDocuments (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:1594:5)
+    at Object.loadAll (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:1602:19)
+    at TestParser.parse (/usr/local/lib/node_modules/bespoken-tools/node_modules/skill-testing-ml/dist/lib/test/TestParser.js:138:30)
+    at TestRunner.parseContents (/usr/local/lib/node_modules/bespoken-tools/node_modules/skill-testing-ml/dist/lib/runner/TestRunner.js:575:21)
+    at /usr/local/lib/node_modules/bespoken-tools/node_modules/skill-testing-ml/dist/lib/runner/TestRunner.js:78:39
+2020-02-14T09:06:49.346Z error: bst-test            Error using bst-test on Node: v10.15.3
+2020-02-14T09:06:49.350Z error: bst-test            Test Syntax Error: Test Syntax Error:
+	Invalid operator: is
+at /Users/etrichardson/Dropbox/Snapit and Alexa/Alexa/CarAssistant/the_car/test/index.test.yml:9:0
+    at Function.error (/usr/local/lib/node_modules/bespoken-tools/node_modules/skill-testing-ml/dist/lib/test/ParserError.js:65:19)
+    at Function.interactionError (/usr/local/lib/node_modules/bespoken-tools/node_modules/skill-testing-ml/dist/lib/test/ParserError.js:32:31)
+    at Assertions.validate (/usr/local/lib/node_modules/bespoken-tools/node_modules/skill-testing-ml/dist/lib/test/Assertion.js:84:27)
+    at TestParser.parseStringAssertion (/usr/local/lib/node_modules/bespoken-tools/node_modules/skill-testing-ml/dist/lib/test/TestParser.js:462:19)
+    at TestParser.parseInteraction (/usr/local/lib/node_modules/bespoken-tools/node_modules/skill-testing-ml/dist/lib/test/TestParser.js:301:24)
+    at TestParser.parseTest (/usr/local/lib/node_modules/bespoken-tools/node_modules/skill-testing-ml/dist/lib/test/TestParser.js:262:37)
+    at TestParser.parseTests (/usr/local/lib/node_modules/bespoken-tools/node_modules/skill-testing-ml/dist/lib/test/TestParser.js:177:31)
+    at TestParser.parse (/usr/local/lib/node_modules/bespoken-tools/node_modules/skill-testing-ml/dist/lib/test/TestParser.js:154:28)
+    at TestRunner.parseContents (/usr/local/lib/node_modules/bespoken-tools/node_modules/skill-testing-ml/dist/lib/runner/TestRunner.js:575:21)
+    at /usr/local/lib/node_modules/bespoken-tools/node_modules/skill-testing-ml/dist/lib/runner/TestRunner.js:78:39
+2020-02-15T20:11:14.253Z error: bst-test            Error using bst-test on Node: v10.15.3
+2020-02-15T20:11:14.256Z error: bst-test            Test Syntax Error: Test Syntax Error:
+	Invalid operator: is
+at /Users/etrichardson/Dropbox/Snapit and Alexa/Alexa/CarAssistant/the_car/test/index.test.yml:9:0
+    at Function.error (/usr/local/lib/node_modules/bespoken-tools/node_modules/skill-testing-ml/dist/lib/test/ParserError.js:65:19)
+    at Function.interactionError (/usr/local/lib/node_modules/bespoken-tools/node_modules/skill-testing-ml/dist/lib/test/ParserError.js:32:31)
+    at Assertions.validate (/usr/local/lib/node_modules/bespoken-tools/node_modules/skill-testing-ml/dist/lib/test/Assertion.js:84:27)
+    at TestParser.parseStringAssertion (/usr/local/lib/node_modules/bespoken-tools/node_modules/skill-testing-ml/dist/lib/test/TestParser.js:462:19)
+    at TestParser.parseInteraction (/usr/local/lib/node_modules/bespoken-tools/node_modules/skill-testing-ml/dist/lib/test/TestParser.js:301:24)
+    at TestParser.parseTest (/usr/local/lib/node_modules/bespoken-tools/node_modules/skill-testing-ml/dist/lib/test/TestParser.js:262:37)
+    at TestParser.parseTests (/usr/local/lib/node_modules/bespoken-tools/node_modules/skill-testing-ml/dist/lib/test/TestParser.js:177:31)
+    at TestParser.parse (/usr/local/lib/node_modules/bespoken-tools/node_modules/skill-testing-ml/dist/lib/test/TestParser.js:154:28)
+    at TestRunner.parseContents (/usr/local/lib/node_modules/bespoken-tools/node_modules/skill-testing-ml/dist/lib/runner/TestRunner.js:575:21)
+    at /usr/local/lib/node_modules/bespoken-tools/node_modules/skill-testing-ml/dist/lib/runner/TestRunner.js:78:39
+2020-02-15T20:32:34.157Z error: bst-test            Error using bst-test on Node: v10.15.3
+2020-02-15T20:32:34.160Z error: bst-test            YAMLException: bad indentation of a mapping entry at line 7, column 13:
+        - prompt: 
+                ^
+    at generateError (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:191:10)
+    at throwError (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:197:9)
+    at readBlockMapping (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:1126:7)
+    at composeNode (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:1378:12)
+    at readBlockSequence (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:973:5)
+    at composeNode (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:1377:12)
+    at readDocument (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:1538:3)
+    at loadDocuments (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:1594:5)
+    at Object.loadAll (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:1602:19)
+    at TestParser.parse (/usr/local/lib/node_modules/bespoken-tools/node_modules/skill-testing-ml/dist/lib/test/TestParser.js:138:30)
+2020-02-15T20:41:31.053Z error: bst-test            Error using bst-test on Node: v10.15.3
+2020-02-15T20:41:31.056Z error: bst-test            YAMLException: bad indentation of a mapping entry at line 7, column 13:
+        - prompt:
+                ^
+    at generateError (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:191:10)
+    at throwError (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:197:9)
+    at readBlockMapping (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:1126:7)
+    at composeNode (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:1378:12)
+    at readBlockSequence (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:973:5)
+    at composeNode (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:1377:12)
+    at readDocument (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:1538:3)
+    at loadDocuments (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:1594:5)
+    at Object.loadAll (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:1602:19)
+    at TestParser.parse (/usr/local/lib/node_modules/bespoken-tools/node_modules/skill-testing-ml/dist/lib/test/TestParser.js:138:30)
+2020-02-15T20:42:59.023Z error: bst-test            Error using bst-test on Node: v10.15.3
+2020-02-15T20:42:59.027Z error: bst-test            YAMLException: bad indentation of a sequence entry at line 7, column 3:
+      - prompt:
+      ^
+    at generateError (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:191:10)
+    at throwError (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:197:9)
+    at readBlockSequence (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:980:7)
+    at composeNode (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:1377:12)
+    at readDocument (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:1538:3)
+    at loadDocuments (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:1594:5)
+    at Object.loadAll (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:1602:19)
+    at TestParser.parse (/usr/local/lib/node_modules/bespoken-tools/node_modules/skill-testing-ml/dist/lib/test/TestParser.js:138:30)
+    at TestRunner.parseContents (/usr/local/lib/node_modules/bespoken-tools/node_modules/skill-testing-ml/dist/lib/runner/TestRunner.js:575:21)
+    at /usr/local/lib/node_modules/bespoken-tools/node_modules/skill-testing-ml/dist/lib/runner/TestRunner.js:78:39
+2020-02-15T20:49:58.118Z error: bst-test            Error using bst-test on Node: v10.15.3
+2020-02-15T20:49:58.122Z error: bst-test            YAMLException: bad indentation of a sequence entry at line 7, column 3:
+      - prompt:
+      ^
+    at generateError (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:191:10)
+    at throwError (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:197:9)
+    at readBlockSequence (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:980:7)
+    at composeNode (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:1377:12)
+    at readDocument (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:1538:3)
+    at loadDocuments (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:1594:5)
+    at Object.loadAll (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:1602:19)
+    at TestParser.parse (/usr/local/lib/node_modules/bespoken-tools/node_modules/skill-testing-ml/dist/lib/test/TestParser.js:138:30)
+    at TestRunner.parseContents (/usr/local/lib/node_modules/bespoken-tools/node_modules/skill-testing-ml/dist/lib/runner/TestRunner.js:575:21)
+    at /usr/local/lib/node_modules/bespoken-tools/node_modules/skill-testing-ml/dist/lib/runner/TestRunner.js:78:39
+2020-02-15T20:51:50.018Z error: bst-test            Error using bst-test on Node: v10.15.3
+2020-02-15T20:51:50.020Z error: bst-test            YAMLException: bad indentation of a sequence entry at line 7, column 3:
+      - prompt:
+      ^
+    at generateError (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:191:10)
+    at throwError (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:197:9)
+    at readBlockSequence (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:980:7)
+    at composeNode (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:1377:12)
+    at readDocument (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:1538:3)
+    at loadDocuments (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:1594:5)
+    at Object.loadAll (/usr/local/lib/node_modules/bespoken-tools/node_modules/js-yaml-bespoken/lib/js-yaml/loader.js:1602:19)
+    at TestParser.parse (/usr/local/lib/node_modules/bespoken-tools/node_modules/skill-testing-ml/dist/lib/test/TestParser.js:138:30)
+    at TestRunner.parseContents (/usr/local/lib/node_modules/bespoken-tools/node_modules/skill-testing-ml/dist/lib/runner/TestRunner.js:575:21)
+    at /usr/local/lib/node_modules/bespoken-tools/node_modules/skill-testing-ml/dist/lib/runner/TestRunner.js:78:39
+2020-02-15T20:52:23.584Z error: bst-test            Error using bst-test on Node: v10.15.3
+2020-02-15T20:52:23.588Z error: bst-test            Error: Lexical error on line 1. Unrecognized text.
+What's
+----^
+    at Parser.parseError (/usr/local/lib/node_modules/bespoken-tools/node_modules/jsonpath-bespoken/generated/parser.js:166:15)
+    at Parser.parser.yy.parseError (/usr/local/lib/node_modules/bespoken-tools/node_modules/jsonpath-bespoken/lib/parser.js:13:17)
+    at Object.parseError (/usr/local/lib/node_modules/bespoken-tools/node_modules/jsonpath-bespoken/generated/parser.js:341:28)
+    at Object.next (/usr/local/lib/node_modules/bespoken-tools/node_modules/jsonpath-bespoken/generated/parser.js:595:25)
+    at Object.lex (/usr/local/lib/node_modules/bespoken-tools/node_modules/jsonpath-bespoken/generated/parser.js:605:22)
+    at lex (/usr/local/lib/node_modules/bespoken-tools/node_modules/jsonpath-bespoken/generated/parser.js:194:28)
+    at Parser.parse (/usr/local/lib/node_modules/bespoken-tools/node_modules/jsonpath-bespoken/generated/parser.js:207:26)
+    at JSONPath.Object.<anonymous>.JSONPath.parse (/usr/local/lib/node_modules/bespoken-tools/node_modules/jsonpath-bespoken/lib/index.js:17:22)
+    at Assertions.validate (/usr/local/lib/node_modules/bespoken-tools/node_modules/skill-testing-ml/dist/lib/test/Assertion.js:77:27)
+    at TestParser.parseStringAssertion (/usr/local/lib/node_modules/bespoken-tools/node_modules/skill-testing-ml/dist/lib/test/TestParser.js:462:19)
+2020-02-15T20:53:13.355Z error: bst-test            Error using bst-test on Node: v10.15.3
+2020-02-15T20:53:13.358Z error: bst-test            Error: Lexical error on line 1. Unrecognized text.
+What's
+----^
+    at Parser.parseError (/usr/local/lib/node_modules/bespoken-tools/node_modules/jsonpath-bespoken/generated/parser.js:166:15)
+    at Parser.parser.yy.parseError (/usr/local/lib/node_modules/bespoken-tools/node_modules/jsonpath-bespoken/lib/parser.js:13:17)
+    at Object.parseError (/usr/local/lib/node_modules/bespoken-tools/node_modules/jsonpath-bespoken/generated/parser.js:341:28)
+    at Object.next (/usr/local/lib/node_modules/bespoken-tools/node_modules/jsonpath-bespoken/generated/parser.js:595:25)
+    at Object.lex (/usr/local/lib/node_modules/bespoken-tools/node_modules/jsonpath-bespoken/generated/parser.js:605:22)
+    at lex (/usr/local/lib/node_modules/bespoken-tools/node_modules/jsonpath-bespoken/generated/parser.js:194:28)
+    at Parser.parse (/usr/local/lib/node_modules/bespoken-tools/node_modules/jsonpath-bespoken/generated/parser.js:207:26)
+    at JSONPath.Object.<anonymous>.JSONPath.parse (/usr/local/lib/node_modules/bespoken-tools/node_modules/jsonpath-bespoken/lib/index.js:17:22)
+    at Assertions.validate (/usr/local/lib/node_modules/bespoken-tools/node_modules/skill-testing-ml/dist/lib/test/Assertion.js:77:27)
+    at TestParser.parseStringAssertion (/usr/local/lib/node_modules/bespoken-tools/node_modules/skill-testing-ml/dist/lib/test/TestParser.js:462:19)
+2020-02-15T20:53:50.710Z error: bst-test            Error using bst-test on Node: v10.15.3
+2020-02-15T20:53:50.714Z error: bst-test            Test Syntax Error: Test Syntax Error:
+	Invalid operator: the
+at /Users/etrichardson/Dropbox/Snapit and Alexa/Alexa/CarAssistant/the_car/test/index.test.yml:8:0
+    at Function.error (/usr/local/lib/node_modules/bespoken-tools/node_modules/skill-testing-ml/dist/lib/test/ParserError.js:65:19)
+    at Function.interactionError (/usr/local/lib/node_modules/bespoken-tools/node_modules/skill-testing-ml/dist/lib/test/ParserError.js:32:31)
+    at Assertions.validate (/usr/local/lib/node_modules/bespoken-tools/node_modules/skill-testing-ml/dist/lib/test/Assertion.js:84:27)
+    at TestParser.parseStringAssertion (/usr/local/lib/node_modules/bespoken-tools/node_modules/skill-testing-ml/dist/lib/test/TestParser.js:462:19)
+    at TestParser.parseInteraction (/usr/local/lib/node_modules/bespoken-tools/node_modules/skill-testing-ml/dist/lib/test/TestParser.js:301:24)
+    at TestParser.parseTest (/usr/local/lib/node_modules/bespoken-tools/node_modules/skill-testing-ml/dist/lib/test/TestParser.js:262:37)
+    at TestParser.parseTests (/usr/local/lib/node_modules/bespoken-tools/node_modules/skill-testing-ml/dist/lib/test/TestParser.js:177:31)
+    at TestParser.parse (/usr/local/lib/node_modules/bespoken-tools/node_modules/skill-testing-ml/dist/lib/test/TestParser.js:154:28)
+    at TestRunner.parseContents (/usr/local/lib/node_modules/bespoken-tools/node_modules/skill-testing-ml/dist/lib/runner/TestRunner.js:575:21)
+    at /usr/local/lib/node_modules/bespoken-tools/node_modules/skill-testing-ml/dist/lib/runner/TestRunner.js:78:39

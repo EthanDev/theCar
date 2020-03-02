@@ -1,6 +1,7 @@
 {
-    "handler": "lambda/custom/index.handler",
+    "handler": "./lambda/custom/index.js",
     "locales": "en-US",
     "interactionModel": "models/en-US.json",
-    "trace": false
+    "trace": true,
+    "deviceId": "amzn1.ask.device.AGDP2C7EG3CYF45U4LDK7GNA6TJ3JPWOLPVXRGNV2IN2W4P76B2425YLAKUVOOXFQ5COCVRG3JJLU2ZHERUWZSXPDKIYIGGT4H7X3JYXIM6NRCNJKVHCBSPSDODMI5EBXUYEIX5ASJ2UVQG34XKOXDJ674M7XDBARUWBFZAALAQQM5LYFAIUM"
 }
