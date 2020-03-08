@@ -160,7 +160,9 @@ module.exports = Object.freeze({
         HANDLE_HELP_INTENT: {
             PROMOPT: 'You can ask me a question or ask me to start the full tour. Which would you like.',
             UTTERANCE: 'I can help you. At the moment you are starting your journey to discover this vehicle.'
-        }
+        },
+        STOP_CANCEL: `<speak>Thank you for using CarSay and have a good day!</speak>`,
+
     }
 
 

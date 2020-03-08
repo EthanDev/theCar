@@ -301,7 +301,7 @@ var setSessionState = (handlerInput, pStateValue) => {
 
         attributesManager.setSessionAttributes(sessionAttributes);
 
-        resolve;
+        resolve();
     });
 
 }

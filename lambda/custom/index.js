@@ -700,6 +700,35 @@ const FallbackHandler = {
 };
 
 
+/**
+ * stopCancelHandler
+ * Handle when the user has said stop or cancel to exit the skill
+ */
+const stopCancelHandler ={
+    async canHandle(handlerInput){
+
+         console.log('..Checking stopCancelHandler');
+         console.dir(handlerInput);
+
+         return Alexa.getIntentName(handlerInput.requestEnvelope) === generalConstants.INTENTS.AMAZON_CANCEL ||
+         Alexa.getIntentName(handlerInput.requestEnvelope) === generalConstants.INTENTS.AMAZON_STOP;
+
+    },
+    async handle(handlerInput){
+
+        console.dir(handlerInput);
+        console.log('> IN stopCancelHandler');
+
+        speakOutput = generalConstants.RESPONSES.STOP_CANCEL;
+
+        return handlerInput.responseBuilder
+            .speak(speakOutput)
+            .withShouldEndSession(true)
+            .getResponse();
+    },
+}
+
+
 
 // The SkillBuilder acts as the entry point for your skill, routing all request and response
 // payloads to the handlers above. Make sure any new handlers or interceptors you've
@@ -732,6 +761,7 @@ exports.handler = Alexa.SkillBuilders.custom()
         SessionEndedRequestHandler,
         followOnHandler,
         followOnOffHandler,
+        stopCancelHandler,
         //IntentReflectorHandler, // make sure IntentReflectorHandler is last so it doesn't override your custom intent handlers
     )
     .addErrorHandlers(

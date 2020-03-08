@@ -74,7 +74,7 @@ const registerIntentHandler = {
             if (Alexa.getSlotValue(handlerInput.requestEnvelope, 'carMake')) {
 
                 vehicleVerificationIntent.slots['carMake'].value = Alexa.getSlotValue(handlerInput.requestEnvelope, 'carMake');
-                
+
             }
 
             if (Alexa.getSlotValue(handlerInput.requestEnvelope, 'carModel')) {
@@ -94,20 +94,20 @@ const registerIntentHandler = {
                     name: vehicleVerificationIntent,
                     confirmationStatus: 'NONE',
                     slots: {
-                        carMake:{
+                        carMake: {
                             name: 'carMake',
-                            value: (Alexa.getSlotValue(handlerInput.requestEnvelope, 'carMake') ? Alexa.getSlotValue(handlerInput.requestEnvelope, 'carMake') : '' ),
+                            value: (Alexa.getSlotValue(handlerInput.requestEnvelope, 'carMake') ? Alexa.getSlotValue(handlerInput.requestEnvelope, 'carMake') : ''),
                             confirmationStatus: 'NONE'
                         },
-                        carModel:{
+                        carModel: {
                             name: 'carModel',
-                            value: (Alexa.getSlotValue(handlerInput.requestEnvelope, 'carModel') ? Alexa.getSlotValue(handlerInput.requestEnvelope, 'carModel') : '' ),
+                            value: (Alexa.getSlotValue(handlerInput.requestEnvelope, 'carModel') ? Alexa.getSlotValue(handlerInput.requestEnvelope, 'carModel') : ''),
                             confirmationStatus: 'NONE'
                         },
-                        country:{
+                        country: {
                             name: 'country',
-                            value: (sessionAttributes.country ? sessionAttributes.country : '' ),
-                            confirmationStatus:'NONE'
+                            value: (sessionAttributes.country ? sessionAttributes.country : ''),
+                            confirmationStatus: 'NONE'
                         }
                     }
                 })
@@ -131,12 +131,12 @@ const inProgressVehicleVerificationHandler = {
         console.log('...checking processVehicleVerificationIntent');
         console.log('------------------------------------------------------------');
 
-        console.log('...STATE =',utils.getSessionState(handlerInput));
-        console.log('..REQUEST TYPE =', Alexa.getRequestType(handlerInput.requestEnvelope) );
-        console.log('..INTENT NAME = ', Alexa.getIntentName(handlerInput.requestEnvelope) );
-        console.log('..DIALOG STATE =', Alexa.getDialogState(handlerInput.requestEnvelope) );
+        console.log('...STATE =', utils.getSessionState(handlerInput));
+        console.log('..REQUEST TYPE =', Alexa.getRequestType(handlerInput.requestEnvelope));
+        console.log('..INTENT NAME = ', Alexa.getIntentName(handlerInput.requestEnvelope));
+        console.log('..DIALOG STATE =', Alexa.getDialogState(handlerInput.requestEnvelope));
         console.log('------------------------------------------------------------');
-        
+
 
         return utils.getSessionState(handlerInput) === generalConstants.STATE.VEHICLE_REGISTRATION &&
             Alexa.getRequestType(handlerInput.requestEnvelope) === generalConstants.REQUEST_TYPE.INTENT_REQUEST &&
@@ -385,8 +385,7 @@ const handleAcceptDemoCarIntent = {
         console.log('...Checking handleAcceptDemoCarIntent');
 
         return utils.getSessionState(handlerInput) === generalConstants.STATE.RE_ENTER_MAKE_MODEL &&
-            (Alexa.getIntentName(handlerInput.requestEnvelope) === generalConstants.INTENTS.ACCEPT_DEMO_CAR ||
-                Alexa.getIntentName(handlerInput.requestEnvelope) === generalConstants.INTENTS.VEHICLE_VERIFICATION);
+            (Alexa.getIntentName(handlerInput.requestEnvelope) === generalConstants.INTENTS.ACCEPT_DEMO_CAR);
 
     },
     async handle(handlerInput) {
@@ -438,6 +437,7 @@ const handleAcceptDemoCarIntent = {
             .speak(speakOutput)
             .withShouldEndSession(true)
             .getResponse();
+
     }
 }; // function
 
@@ -491,22 +491,61 @@ const handleRenterMakeAndModel = {
         sessionAttributes = await utils.getSessionAttributes(handlerInput);
 
         return sessionAttributes.STATE === generalConstants.STATE.RE_ENTER_MAKE_MODEL &&
-            (Alexa.getIntentName(handlerInput.requestEnvelope) === generalConstants.INTENTS.AMAZON_YES ||
-                Alexa.getIntentName(handlerInput.requestEnvelope) === generalConstants.INTENTS.AMAZON_NO);
+            ((Alexa.getIntentName(handlerInput.requestEnvelope) === generalConstants.INTENTS.AMAZON_YES ||
+                    Alexa.getIntentName(handlerInput.requestEnvelope) === generalConstants.INTENTS.AMAZON_NO ||
+                    Alexa.getIntentName(handlerInput.requestEnvelope) === generalConstants.INTENTS.AMAZON_CANCEL ||
+                    Alexa.getIntentName(handlerInput.requestEnvelope) === generalConstants.INTENTS.AMAZON_STOP) ||
+                Alexa.getIntentName(handlerInput.requestEnvelope) === generalConstants.INTENTS.VEHICLE_VERIFICATION);
+
     },
     async handle(handlerInput) {
         console.log('IN handleRenterMakeAndModel');
+        console.dir(handlerInput);
 
-        if (Alexa.getIntentName(handlerInput.requestEnvelope) === generalConstants.INTENTS.AMAZON_YES) {
+        if (Alexa.getIntentName(handlerInput.requestEnvelope) === generalConstants.INTENTS.AMAZON_YES ||
+            Alexa.getIntentName(handlerInput.requestEnvelope) === generalConstants.INTENTS.VEHICLE_VERIFICATION) {
             // The user wants to re-enter the make and model
 
-            speakOutput = 'Ok';
+            speakOutput = `Ok, let's setup another vehicle.`;
 
+            const attributesManager = handlerInput.attributesManager;
+            const sessionAttributes = attributesManager.getSessionAttributes();
+
+            const currentIntent = handlerInput.requestEnvelope.request.intent;
+            // remove what was in the session variables
+            currentIntent.slots['carMake'].value = null;
+            currentIntent.slots['carModel'].value = null;
+            currentIntent.slots['country'].value = null;
+
+            sessionAttributes[currentIntent.name] = currentIntent;
+            attributesManager.setSessionAttributes(sessionAttributes);
+
+
+            // Set the state to be generalConstants.STATE.VEHICLE_REGISTRATION
+            await utils.setSessionState(handlerInput, generalConstants.STATE.VEHICLE_REGISTRATION);
+
+                
             return handlerInput.responseBuilder
                 .addDelegateDirective({
                     name: generalConstants.INTENTS.VEHICLE_VERIFICATION,
                     confirmationStatus: 'NONE',
-                    slots: {}
+                    slots: {
+                        carMake: {
+                            name: 'carMake',
+                            value: null,
+                            confirmationStatus: 'NONE'
+                        },
+                        carModel: {
+                            name: 'carModel',
+                            value: null,
+                            confirmationStatus: 'NONE'
+                        },
+                        country: {
+                            name: 'country',
+                            value: (sessionAttributes.country ? sessionAttributes.country : null),
+                            confirmationStatus: 'NONE'
+                        }
+                    }
                 })
                 .speak(speakOutput)
                 .withShouldEndSession(false)
@@ -514,6 +553,7 @@ const handleRenterMakeAndModel = {
 
 
         } else {
+
             // End session here
 
             speakOutput = `Thank you, have a great day`;
